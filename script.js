@@ -58,7 +58,12 @@ async function fetchValidation(query) {
   }
 
   if (!response.ok) {
-    const data = await response.json().catch(() => ({}));
+    let data = {};
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error("El verificador devolvió una respuesta inválida.");
+    }
     const msg = typeof data.error === "string"
       ? data.error
       : "No se pudo validar la noticia.";

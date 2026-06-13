@@ -44,7 +44,7 @@ exports.handler = async (event) => {
       signal: controller.signal,
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + process.env.OPENAI_API_KEY,
+        Authorization: ["Bearer", process.env.OPENAI_API_KEY].join(" "),
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
