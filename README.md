@@ -9,6 +9,8 @@ Página web simple para validar noticias de República Dominicana usando OpenAI 
 3. Pega un titular o texto de noticia en el buscador.
 4. Pulsa **Validar noticia**.
 
+> ⚠️ Nota de seguridad: esta versión es 100% frontend, por lo que la API key vive en tu navegador mientras usas la app. Usa una key con límites de uso y monitorea consumo en OpenAI.
+
 La app devuelve:
 - **Veredicto**: Real, Dudosa o Falsa
 - **Resumen** de la validación

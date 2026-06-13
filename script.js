@@ -18,9 +18,10 @@ Analiza la consulta del usuario y responde SOLO en JSON con esta forma exacta:
   "fuentes": ["medio o entidad oficial 1", "medio o entidad oficial 2"]
 }
 Criterios:
-- Evalúa si la noticia parece existir y si es verídica según conocimiento disponible.
+- Evalúa si la noticia parece verosímil y potencialmente verídica según conocimiento general disponible.
 - Si no hay evidencia suficiente, usa DUDOSA.
 - Prioriza fuentes confiables de RD (Listín Diario, Diario Libre, El Caribe, Presidencia, JCE, Banco Central, etc.).
+- Aclara de forma breve si hay limitación por falta de verificación en tiempo real.
 - Nunca salgas del formato JSON.
 `;
 
@@ -87,7 +88,8 @@ async function fetchValidation(apiKey, query) {
   let parsed;
   try {
     parsed = JSON.parse(text);
-  } catch {
+  } catch (error) {
+    console.error("Error parseando respuesta JSON:", error);
     throw new Error("La respuesta no vino en formato JSON válido.");
   }
 
