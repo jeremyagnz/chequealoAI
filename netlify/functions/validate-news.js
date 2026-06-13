@@ -158,47 +158,47 @@ function parseRequestBody(body) {
   } catch {
     return null;
   }
+}
 
-  function sanitizeSources(rawSources) {
-    if (!Array.isArray(rawSources)) {
-      return defaultSources();
-    }
-
-    const sanitized = rawSources
-      .map((source) => {
-        if (source && typeof source === "object") {
-          const url = typeof source.url === "string" ? source.url.trim() : "";
-          const nombre = typeof source.nombre === "string" ? source.nombre.trim() : "";
-
-          if (/^https?:\/\/\S+/i.test(url)) {
-            return {
-              nombre: nombre || url,
-              url,
-            };
-          }
-        }
-
-        if (typeof source === "string") {
-          const value = source.trim();
-          if (/^https?:\/\/\S+/i.test(value)) {
-            return { nombre: value, url: value };
-          }
-        }
-
-        return null;
-      })
-      .filter(Boolean)
-      .slice(0, 5);
-
-    return sanitized.length ? sanitized : defaultSources();
+function sanitizeSources(rawSources) {
+  if (!Array.isArray(rawSources)) {
+    return defaultSources();
   }
 
-  function defaultSources() {
-    return [
-      { nombre: "Diario Libre (referencia general)", url: "https://diariolibre.com" },
-      { nombre: "Listín Diario (referencia general)", url: "https://listindiario.com" },
-    ];
-  }
+  const sanitized = rawSources
+    .map((source) => {
+      if (source && typeof source === "object") {
+        const url = typeof source.url === "string" ? source.url.trim() : "";
+        const nombre = typeof source.nombre === "string" ? source.nombre.trim() : "";
+
+        if (/^https?:\/\/\S+/i.test(url)) {
+          return {
+            nombre: nombre || url,
+            url,
+          };
+        }
+      }
+
+      if (typeof source === "string") {
+        const value = source.trim();
+        if (/^https?:\/\/\S+/i.test(value)) {
+          return { nombre: value, url: value };
+        }
+      }
+
+      return null;
+    })
+    .filter(Boolean)
+    .slice(0, 5);
+
+  return sanitized.length ? sanitized : defaultSources();
+}
+
+function defaultSources() {
+  return [
+    { nombre: "Diario Libre (referencia general)", url: "https://diariolibre.com" },
+    { nombre: "Listín Diario (referencia general)", url: "https://listindiario.com" },
+  ];
 }
 
 function jsonResponse(statusCode, body) {
