@@ -3,47 +3,255 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChequealoAI | Verificador de noticias RD</title>
+    <title>ChequealoAI | Verifica noticias de República Dominicana con IA</title>
+    <meta
+      name="description"
+      content="Analiza titulares y noticias de República Dominicana con una experiencia moderna, clara y optimizada para SEO. Obtén un veredicto, razones y fuentes sugeridas en segundos."
+    />
+    <meta
+      name="keywords"
+      content="verificar noticias, fact checking, República Dominicana, noticias falsas, IA, ChequealoAI"
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_DO" />
+    <meta property="og:title" content="ChequealoAI | Verifica noticias de República Dominicana con IA" />
+    <meta
+      property="og:description"
+      content="Valida noticias dominicanas con una interfaz moderna y recibe un resumen, razones clave y fuentes sugeridas."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ChequealoAI | Verifica noticias de República Dominicana con IA" />
+    <meta
+      name="twitter:description"
+      content="Comprueba si un titular parece real, dudoso o falso con una experiencia rápida y fácil de usar."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "ChequealoAI",
+        "applicationCategory": "NewsApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "es",
+        "description": "Herramienta para analizar titulares y noticias de República Dominicana y estimar si parecen reales, dudosos o falsos con ayuda de IA.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
   </head>
   <body>
-    <main class="container">
-      <header>
-        <h1>ChequealoAI</h1>
-        <p>Valida si una noticia de República Dominicana parece real, dudosa o falsa.</p>
-      </header>
+    <main>
+      <section class="hero">
+        <div class="hero__bg"></div>
+        <div class="container hero__content">
+          <div class="hero__copy">
+            <span class="eyebrow">Verificación de noticias con IA</span>
+            <h1>Una experiencia clara, rápida y confiable para revisar titulares en RD</h1>
+            <p class="hero__lead">
+              ChequealoAI te ayuda a evaluar noticias de República Dominicana con una interfaz amigable,
+              explicaciones accionables y fuentes sugeridas para validar mejor la información.
+            </p>
+            <div class="hero__actions">
+              <a class="button button--primary" href="#verificador">Probar ahora</a>
+              <a class="button button--secondary" href="#como-funciona">Cómo funciona</a>
+            </div>
+            <ul class="hero__highlights" aria-label="Beneficios principales">
+              <li>Diseño intuitivo y adaptable</li>
+              <li>Respuesta guiada con razones claras</li>
+              <li>Contenido optimizado para SEO</li>
+            </ul>
+          </div>
 
-      <section class="card">
-        <h2>Verificador de noticias</h2>
-        <p class="helper">
-          Escribe un titular o una noticia y el sistema intentará clasificarla como real, dudosa o falsa.
-        </p>
-      </section>
-
-      <section class="card">
-        <label for="newsQuery">Noticia o titular a verificar</label>
-        <textarea
-          id="newsQuery"
-          rows="5"
-          placeholder="Ejemplo: El Banco Central anunció una nueva medida cambiaria hoy..."
-        ></textarea>
-
-        <button id="validateBtn" type="button">Validar noticia</button>
-      </section>
-
-      <section id="resultCard" class="card hidden" aria-live="polite">
-        <div class="status-row">
-          <h2>Resultado</h2>
-          <span id="badge" class="badge">-</span>
+          <aside class="hero__panel card card--glass" aria-label="Resumen del servicio">
+            <p class="panel__label">Ideal para</p>
+            <h2>Usuarios que quieren detectar señales de desinformación sin fricción</h2>
+            <div class="stats-grid">
+              <article>
+                <strong>3</strong>
+                <span>Posibles veredictos</span>
+              </article>
+              <article>
+                <strong>+UX</strong>
+                <span>Experiencia enfocada en claridad</span>
+              </article>
+              <article>
+                <strong>SEO</strong>
+                <span>Estructura semántica lista para indexación</span>
+              </article>
+            </div>
+          </aside>
         </div>
-        <p id="summary"></p>
-        <h3>Razones</h3>
-        <ul id="reasons"></ul>
-        <h3>Fuentes sugeridas</h3>
-        <ul id="sources"></ul>
       </section>
 
-      <p id="error" class="error hidden"></p>
+      <section class="trust-bar">
+        <div class="container trust-bar__content">
+          <p>Basado en evaluación asistida por IA y referencias sugeridas de medios y entidades confiables.</p>
+          <div class="trust-bar__chips" aria-label="Fuentes sugeridas frecuentes">
+            <span>Listín Diario</span>
+            <span>Diario Libre</span>
+            <span>Banco Central</span>
+            <span>JCE</span>
+            <span>Presidencia</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="verificador" class="container app-shell" aria-labelledby="verificador-title">
+        <div class="section-heading">
+          <span class="eyebrow">Herramienta principal</span>
+          <h2 id="verificador-title">Verificador de noticias</h2>
+          <p>
+            Pega un titular o una noticia y recibe una respuesta estructurada para identificar señales de
+            credibilidad, dudas o posible falsedad.
+          </p>
+        </div>
+
+        <div class="app-grid">
+          <section class="card form-card">
+            <div class="card__header">
+              <div>
+                <h3>Analiza una noticia</h3>
+                <p>Mientras más contexto compartas, mejor será la evaluación.</p>
+              </div>
+              <span class="pill">UX optimizada</span>
+            </div>
+
+            <label for="newsQuery">Noticia o titular a verificar</label>
+            <textarea
+              id="newsQuery"
+              rows="7"
+              maxlength="1200"
+              placeholder="Ejemplo: El Banco Central anunció una nueva medida cambiaria hoy..."
+            ></textarea>
+
+            <div class="field-meta">
+              <small>Consejo: incluye fecha, medio o contexto si lo conoces.</small>
+              <small id="charCount">0 / 1200</small>
+            </div>
+
+            <div class="quick-prompts" aria-label="Ejemplos rápidos">
+              <button class="prompt-chip" type="button" data-prompt="El Banco Central anunció una nueva medida cambiaria hoy en República Dominicana.">
+                Medida cambiaria
+              </button>
+              <button class="prompt-chip" type="button" data-prompt="Circula en redes que se suspenderán las elecciones municipales este fin de semana.">
+                Elecciones municipales
+              </button>
+              <button class="prompt-chip" type="button" data-prompt="Una cadena afirma que una entidad pública entregará bonos sin registro oficial previo.">
+                Bono sin registro
+              </button>
+            </div>
+
+            <button id="validateBtn" class="button button--primary button--full" type="button">
+              Validar noticia
+            </button>
+          </section>
+
+          <aside class="card tips-card">
+            <h3>Qué recibirás</h3>
+            <ul class="feature-list">
+              <li><strong>Veredicto claro:</strong> Real, dudosa o falsa.</li>
+              <li><strong>Resumen accionable:</strong> explicación breve y fácil de entender.</li>
+              <li><strong>Razones clave:</strong> puntos que sustentan la evaluación.</li>
+              <li><strong>Fuentes sugeridas:</strong> entidades o medios para confirmar.</li>
+            </ul>
+
+            <div class="mini-callout">
+              <h4>Buenas prácticas</h4>
+              <p>Contrasta siempre la información con fuentes oficiales y evita compartir contenido no verificado.</p>
+            </div>
+          </aside>
+        </div>
+
+        <section id="resultCard" class="card result-card hidden" aria-live="polite" tabindex="-1">
+          <div class="status-row">
+            <div>
+              <p class="result-card__label">Resultado del análisis</p>
+              <h3>Evaluación de la noticia</h3>
+            </div>
+            <span id="badge" class="badge">-</span>
+          </div>
+
+          <p id="summary" class="result-summary"></p>
+
+          <div class="result-grid">
+            <div>
+              <h4>Razones</h4>
+              <ul id="reasons" class="result-list"></ul>
+            </div>
+            <div>
+              <h4>Fuentes sugeridas</h4>
+              <ul id="sources" class="result-list"></ul>
+            </div>
+          </div>
+        </section>
+
+        <p id="error" class="error hidden" role="alert"></p>
+      </section>
+
+      <section id="como-funciona" class="container info-grid">
+        <article class="card info-card">
+          <span class="eyebrow">Cómo funciona</span>
+          <h2>Un flujo pensado para generar confianza</h2>
+          <div class="steps">
+            <div>
+              <strong>1</strong>
+              <p>Escribes el titular o la noticia que quieres revisar.</p>
+            </div>
+            <div>
+              <strong>2</strong>
+              <p>La IA analiza el contenido y estima si parece real, dudoso o falso.</p>
+            </div>
+            <div>
+              <strong>3</strong>
+              <p>Recibes un resumen, razones y referencias para validar mejor.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card info-card">
+          <span class="eyebrow">Ventajas</span>
+          <h2>Diseño orientado a usabilidad y lectura</h2>
+          <ul class="feature-list">
+            <li>Navegación simple y jerarquía visual más clara.</li>
+            <li>Contenido escaneable para mejorar comprensión y retención.</li>
+            <li>Interfaz responsive para móvil, tablet y escritorio.</li>
+            <li>Estructura semántica con metadatos para reforzar SEO.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="container faq-section" aria-labelledby="faq-title">
+        <div class="section-heading section-heading--center">
+          <span class="eyebrow">Preguntas frecuentes</span>
+          <h2 id="faq-title">Información útil antes de compartir una noticia</h2>
+        </div>
+        <div class="faq-grid">
+          <article class="card faq-card">
+            <h3>¿ChequealoAI reemplaza la verificación periodística?</h3>
+            <p>No. Sirve como apoyo inicial para detectar señales y orientar una revisión adicional con fuentes confiables.</p>
+          </article>
+          <article class="card faq-card">
+            <h3>¿Qué mejora el SEO de esta página?</h3>
+            <p>La nueva estructura semántica, los metadatos descriptivos y el contenido útil hacen la página más comprensible para buscadores y usuarios.</p>
+          </article>
+          <article class="card faq-card">
+            <h3>¿Cómo obtener mejores resultados?</h3>
+            <p>Incluye contexto, fecha, entidad o medio relacionado y contrasta el veredicto con fuentes oficiales antes de compartir.</p>
+          </article>
+        </div>
+      </section>
     </main>
 
     <script src="/script.js" defer></script>

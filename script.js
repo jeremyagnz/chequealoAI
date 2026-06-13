@@ -6,6 +6,8 @@ const summary = document.getElementById("summary");
 const reasons = document.getElementById("reasons");
 const sources = document.getElementById("sources");
 const errorBox = document.getElementById("error");
+const charCount = document.getElementById("charCount");
+const promptButtons = document.querySelectorAll(".prompt-chip");
 const API_TIMEOUT_MS = 20000;
 
 button.addEventListener("click", async () => {
@@ -15,6 +17,7 @@ button.addEventListener("click", async () => {
 
   if (!query) {
     showError("Escribe una noticia o titular para validar.");
+    queryInput.focus();
     return;
   }
 
@@ -30,10 +33,24 @@ button.addEventListener("click", async () => {
   }
 });
 
+queryInput.addEventListener("input", updateCharCount);
+
+promptButtons.forEach((promptButton) => {
+  promptButton.addEventListener("click", () => {
+    queryInput.value = promptButton.dataset.prompt || "";
+    updateCharCount();
+    hideError();
+    queryInput.focus();
+  });
+});
+
+updateCharCount();
+
 async function fetchValidation(query) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
   let response;
+
   try {
     response = await fetch("/.netlify/functions/validate-news", {
       method: "POST",
@@ -41,9 +58,7 @@ async function fetchValidation(query) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        query,
-      }),
+      body: JSON.stringify({ query }),
     });
   } catch (error) {
     if (error.name === "AbortError") {
@@ -59,14 +74,14 @@ async function fetchValidation(query) {
 
   if (!response.ok) {
     let data = {};
+
     try {
       data = await response.json();
     } catch {
       throw new Error("El verificador devolvió una respuesta inválida.");
     }
-    const msg = typeof data.error === "string"
-      ? data.error
-      : "No se pudo validar la noticia.";
+
+    const msg = typeof data.error === "string" ? data.error : "No se pudo validar la noticia.";
     throw new Error(msg);
   }
 
@@ -86,27 +101,30 @@ function renderResult(result) {
 
   badge.textContent = style.label;
   badge.className = `badge ${style.className}`.trim();
-
   summary.textContent = result.resumen;
 
-  reasons.innerHTML = "";
-  result.razones.forEach((item) => {
-    const li = document.createElement("li");
-    li.textContent = item;
-    reasons.appendChild(li);
-  });
+  populateList(reasons, result.razones, "No se recibieron razones adicionales.");
+  populateList(sources, result.fuentes, "No se recibieron fuentes sugeridas.");
 
-  sources.innerHTML = "";
-  result.fuentes.forEach((item) => {
+  resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+  resultCard.focus();
+}
+
+function populateList(container, items, fallbackText) {
+  container.innerHTML = "";
+
+  const values = items.length ? items : [fallbackText];
+
+  values.forEach((item) => {
     const li = document.createElement("li");
     li.textContent = item;
-    sources.appendChild(li);
+    container.appendChild(li);
   });
 }
 
 function toggleLoading(isLoading) {
   button.disabled = isLoading;
-  button.textContent = isLoading ? "Validando..." : "Validar noticia";
+  button.textContent = isLoading ? "Analizando noticia..." : "Validar noticia";
 }
 
 function showError(message) {
@@ -117,6 +135,10 @@ function showError(message) {
 function hideError() {
   errorBox.textContent = "";
   errorBox.classList.add("hidden");
+}
+
+function updateCharCount() {
+  charCount.textContent = `${queryInput.value.length} / ${queryInput.maxLength}`;
 }
 
 function parseValidationResult(parsed) {
