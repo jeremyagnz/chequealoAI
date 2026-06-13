@@ -1,4 +1,3 @@
-const apiKeyInput = document.getElementById("apiKey");
 const queryInput = document.getElementById("newsQuery");
 const button = document.getElementById("validateBtn");
 const resultCard = document.getElementById("resultCard");
@@ -9,33 +8,10 @@ const sources = document.getElementById("sources");
 const errorBox = document.getElementById("error");
 const API_TIMEOUT_MS = 20000;
 
-const promptRules = `
-Eres un verificador de noticias de República Dominicana.
-Analiza la consulta del usuario y responde SOLO en JSON con esta forma exacta:
-{
-  "veredicto": "REAL|DUDOSA|FALSA",
-  "resumen": "texto breve en español",
-  "razones": ["razón 1", "razón 2"],
-  "fuentes": ["medio o entidad oficial 1", "medio o entidad oficial 2"]
-}
-Criterios:
-- Evalúa si la noticia parece verosímil y potencialmente verídica según conocimiento general disponible.
-- Si no hay evidencia suficiente, usa DUDOSA.
-- Prioriza fuentes confiables de RD (Listín Diario, Diario Libre, El Caribe, Presidencia, JCE, Banco Central, etc.).
-- Aclara de forma breve si hay limitación por falta de verificación en tiempo real.
-- Nunca salgas del formato JSON.
-`;
-
 button.addEventListener("click", async () => {
   hideError();
 
-  const apiKey = apiKeyInput.value.trim();
   const query = queryInput.value.trim();
-
-  if (!apiKey) {
-    showError("Debes ingresar tu OpenAI API Key.");
-    return;
-  }
 
   if (!query) {
     showError("Escribe una noticia o titular para validar.");
@@ -45,7 +21,7 @@ button.addEventListener("click", async () => {
   toggleLoading(true);
 
   try {
-    const aiResult = await fetchValidation(apiKey, query);
+    const aiResult = await fetchValidation(query);
     renderResult(aiResult);
   } catch (error) {
     showError(error.message || "No se pudo validar la noticia.");
@@ -54,26 +30,19 @@ button.addEventListener("click", async () => {
   }
 });
 
-async function fetchValidation(apiKey, query) {
+async function fetchValidation(query) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
   let response;
   try {
-    response = await fetch("https://api.openai.com/v1/chat/completions", {
+    response = await fetch("/.netlify/functions/validate-news", {
       method: "POST",
       signal: controller.signal,
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + apiKey,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        temperature: 0.2,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: promptRules },
-          { role: "user", content: `Noticia a validar: ${query}` },
-        ],
+        query,
       }),
     });
   } catch (error) {
@@ -83,42 +52,20 @@ async function fetchValidation(apiKey, query) {
     if (!navigator.onLine) {
       throw new Error("No hay conexión de red.");
     }
-    throw new Error("OpenAI no está disponible ahora mismo.");
+    throw new Error("No se pudo conectar con el verificador.");
   } finally {
     clearTimeout(timeoutId);
   }
 
   if (!response.ok) {
-    const msg = response.status === 401
-      ? "API Key inválida o sin permisos."
-      : "Error de conexión con OpenAI.";
+    const data = await response.json().catch(() => ({}));
+    const msg = typeof data.error === "string"
+      ? data.error
+      : "No se pudo validar la noticia.";
     throw new Error(msg);
   }
 
-  const data = await response.json();
-  const text = data?.choices?.[0]?.message?.content?.trim();
-
-  if (!text) {
-    throw new Error("Respuesta vacía del modelo.");
-  }
-
-  let parsed;
-  try {
-    parsed = JSON.parse(text);
-  } catch {
-    throw new Error("La respuesta no vino en formato JSON válido.");
-  }
-
-  if (!parsed.veredicto || !parsed.resumen) {
-    throw new Error("La respuesta del modelo está incompleta.");
-  }
-
-  return {
-    veredicto: String(parsed.veredicto).toUpperCase(),
-    resumen: parsed.resumen,
-    razones: Array.isArray(parsed.razones) ? parsed.razones : [],
-    fuentes: Array.isArray(parsed.fuentes) ? parsed.fuentes : [],
-  };
+  return parseValidationResult(await response.json());
 }
 
 function renderResult(result) {
@@ -165,4 +112,17 @@ function showError(message) {
 function hideError() {
   errorBox.textContent = "";
   errorBox.classList.add("hidden");
+}
+
+function parseValidationResult(parsed) {
+  if (!parsed?.veredicto || !parsed?.resumen) {
+    throw new Error("La respuesta del verificador está incompleta.");
+  }
+
+  return {
+    veredicto: String(parsed.veredicto).toUpperCase(),
+    resumen: parsed.resumen,
+    razones: Array.isArray(parsed.razones) ? parsed.razones : [],
+    fuentes: Array.isArray(parsed.fuentes) ? parsed.fuentes : [],
+  };
 }
