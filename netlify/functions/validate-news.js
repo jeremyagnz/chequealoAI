@@ -1,20 +1,35 @@
 const API_TIMEOUT_MS = 20000;
 
 const promptRules = `
-Eres un verificador de noticias de República Dominicana.
-Analiza la consulta del usuario y responde SOLO en JSON con esta forma exacta:
+Eres un verificador de noticias especializado en República Dominicana.
+Analiza la consulta del usuario y responde SOLO en JSON con esta estructura exacta:
 {
   "veredicto": "REAL|DUDOSA|FALSA",
-  "resumen": "texto breve en español",
-  "razones": ["razón 1", "razón 2"],
-  "fuentes": ["medio o entidad oficial 1", "medio o entidad oficial 2"]
+  "resumen": "Resumen explicativo de 2-3 oraciones en español.",
+  "razones": ["razón 1", "razón 2", "razón 3"],
+  "fuentes": [
+    {"nombre": "Nombre del medio o entidad", "url": "https://url-oficial.com"}
+  ],
+  "confiabilidad_fuente": "Alta | Media | Baja — breve explicación de por qué.",
+  "autoridad_fuente": "Breve descripción de la autoridad de las fuentes más relevantes para esta noticia.",
+  "consenso_fuentes": "Descripción de si hay consenso o divergencia entre las fuentes consultadas.",
+  "actualidad": "Descripción de qué tan actualizada o vigente es la información analizada.",
+  "evidencia": "Descripción de la evidencia disponible que apoya o refuta la noticia.",
+  "contradicciones": "Descripción de contradicciones detectadas, o 'Ninguna detectada' si no las hay."
 }
-Criterios:
-- Evalúa si la noticia parece verosímil y potencialmente verídica según conocimiento general disponible.
-- Si no hay evidencia suficiente, usa DUDOSA.
-- Prioriza fuentes confiables de RD (Listín Diario, Diario Libre, El Caribe, Presidencia, JCE, Banco Central, etc.).
-- Aclara de forma breve si hay limitación por falta de verificación en tiempo real.
-- Nunca salgas del formato JSON.
+
+Criterios de veredicto:
+- REAL: La noticia parece verosímil, con evidencia que la respalda y sin contradicciones significativas.
+- DUDOSA: No hay evidencia suficiente para confirmar o negar, o existen indicios contradictorios.
+- FALSA: Hay evidencia clara de que la noticia es incorrecta o engañosa.
+
+Fuentes prioritarias de República Dominicana (cita estas con sus URLs oficiales):
+Medios: Diario Libre (https://diariolibre.com), Listín Diario (https://listindiario.com), Noticias SIN (https://noticiassin.com), El Caribe (https://elcaribe.com.do), Hoy (https://hoy.com.do), Acento (https://acento.com.do), El Nuevo Diario (https://elnuevodiario.com.do)
+Oficiales: Presidencia (https://presidencia.gob.do), DGII (https://dgii.gov.do), Banco Central (https://bancentral.gov.do), Ministerios (https://gobiernord.gob.do), JCE (https://jce.gob.do)
+
+Prioriza siempre la transparencia, la explicabilidad y la credibilidad.
+Si no tienes información en tiempo real, indícalo claramente en el resumen.
+Nunca salgas del formato JSON.
 `;
 
 exports.handler = async (event) => {
@@ -94,6 +109,12 @@ exports.handler = async (event) => {
       resumen: parsed.resumen,
       razones: Array.isArray(parsed.razones) ? parsed.razones : [],
       fuentes: Array.isArray(parsed.fuentes) ? parsed.fuentes : [],
+      confiabilidad_fuente: parsed.confiabilidad_fuente || "",
+      autoridad_fuente: parsed.autoridad_fuente || "",
+      consenso_fuentes: parsed.consenso_fuentes || "",
+      actualidad: parsed.actualidad || "",
+      evidencia: parsed.evidencia || "",
+      contradicciones: parsed.contradicciones || "",
     });
   } catch (error) {
     if (error.name === "AbortError") {

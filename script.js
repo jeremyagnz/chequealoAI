@@ -8,7 +8,33 @@ const sources = document.getElementById("sources");
 const errorBox = document.getElementById("error");
 const charCount = document.getElementById("charCount");
 const promptButtons = document.querySelectorAll(".prompt-chip");
+const themeToggle = document.getElementById("themeToggle");
 const API_TIMEOUT_MS = 20000;
+
+// ── Dark mode ──────────────────────────────────────────────────────────────
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("theme", theme);
+  const icon = themeToggle.querySelector(".theme-toggle__icon");
+  icon.textContent = theme === "dark" ? "☀️" : "🌙";
+  themeToggle.setAttribute("aria-label", theme === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro");
+}
+
+function initTheme() {
+  const saved = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  applyTheme(saved || (prefersDark ? "dark" : "light"));
+}
+
+themeToggle.addEventListener("click", () => {
+  const current = document.documentElement.getAttribute("data-theme");
+  applyTheme(current === "dark" ? "light" : "dark");
+});
+
+initTheme();
+
+// ── Validation ─────────────────────────────────────────────────────────────
 
 button.addEventListener("click", async () => {
   hideError();
@@ -104,7 +130,14 @@ function renderResult(result) {
   summary.textContent = result.resumen;
 
   populateList(reasons, result.razones, "No se recibieron razones adicionales.");
-  populateList(sources, result.fuentes, "No se recibieron fuentes sugeridas.");
+  populateSources(sources, result.fuentes);
+
+  setCredibilityField("credConfiabilidad", result.confiabilidad_fuente);
+  setCredibilityField("credAutoridad", result.autoridad_fuente);
+  setCredibilityField("credConsenso", result.consenso_fuentes);
+  setCredibilityField("credActualidad", result.actualidad);
+  setCredibilityField("credEvidencia", result.evidencia);
+  setCredibilityField("credContradicciones", result.contradicciones);
 
   resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
   resultCard.focus();
@@ -120,6 +153,48 @@ function populateList(container, items, fallbackText) {
     li.textContent = item;
     container.appendChild(li);
   });
+}
+
+function populateSources(container, fuentes) {
+  container.innerHTML = "";
+
+  if (!fuentes || !fuentes.length) {
+    const li = document.createElement("li");
+    li.textContent = "No se recibieron fuentes sugeridas.";
+    container.appendChild(li);
+    return;
+  }
+
+  fuentes.forEach((fuente) => {
+    const li = document.createElement("li");
+
+    if (fuente && typeof fuente === "object" && fuente.url) {
+      const a = document.createElement("a");
+      a.href = fuente.url;
+      a.textContent = fuente.nombre || fuente.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.className = "source-link";
+      a.setAttribute("aria-label", `Abrir ${fuente.nombre || fuente.url} en nueva pestaña`);
+      li.appendChild(a);
+    } else {
+      li.textContent = typeof fuente === "string" ? fuente : fuente.nombre || "";
+    }
+
+    container.appendChild(li);
+  });
+}
+
+function setCredibilityField(id, text) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = text || "Sin información disponible.";
+
+  const lower = (text || "").toLowerCase();
+  el.classList.remove("cred--alta", "cred--media", "cred--baja");
+  if (lower.startsWith("alta")) el.classList.add("cred--alta");
+  else if (lower.startsWith("media")) el.classList.add("cred--media");
+  else if (lower.startsWith("baja")) el.classList.add("cred--baja");
 }
 
 function toggleLoading(isLoading) {
@@ -152,5 +227,11 @@ function parseValidationResult(parsed) {
     resumen: parsed.resumen,
     razones: Array.isArray(parsed.razones) ? parsed.razones : [],
     fuentes: Array.isArray(parsed.fuentes) ? parsed.fuentes : [],
+    confiabilidad_fuente: parsed.confiabilidad_fuente || "",
+    autoridad_fuente: parsed.autoridad_fuente || "",
+    consenso_fuentes: parsed.consenso_fuentes || "",
+    actualidad: parsed.actualidad || "",
+    evidencia: parsed.evidencia || "",
+    contradicciones: parsed.contradicciones || "",
   };
 }

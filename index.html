@@ -46,6 +46,23 @@
     </script>
   </head>
   <body>
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="site-header__brand" href="/" aria-label="ChequealoAI — inicio">
+          <span class="brand-icon" aria-hidden="true">✓</span>
+          <span>ChequealoAI</span>
+        </a>
+        <button
+          id="themeToggle"
+          class="theme-toggle"
+          type="button"
+          aria-label="Cambiar modo oscuro/claro"
+          title="Cambiar modo oscuro/claro"
+        >
+          <span class="theme-toggle__icon" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
     <main>
       <section class="hero">
         <div class="hero__bg"></div>
@@ -93,11 +110,17 @@
         <div class="container trust-bar__content">
           <p>Basado en evaluación asistida por IA y referencias sugeridas de medios y entidades confiables.</p>
           <div class="trust-bar__chips" aria-label="Fuentes sugeridas frecuentes">
-            <span>Listín Diario</span>
             <span>Diario Libre</span>
+            <span>Listín Diario</span>
+            <span>Noticias SIN</span>
+            <span>El Caribe</span>
+            <span>Hoy</span>
+            <span>Acento</span>
+            <span>El Nuevo Diario</span>
+            <span>Presidencia</span>
+            <span>DGII</span>
             <span>Banco Central</span>
             <span>JCE</span>
-            <span>Presidencia</span>
           </div>
         </div>
       </section>
@@ -179,7 +202,10 @@
               <li><strong>Veredicto claro:</strong> Real, dudosa o falsa.</li>
               <li><strong>Resumen accionable:</strong> explicación breve y fácil de entender.</li>
               <li><strong>Razones clave:</strong> puntos que sustentan la evaluación.</li>
-              <li><strong>Fuentes sugeridas:</strong> entidades o medios para confirmar.</li>
+              <li><strong>Fuentes con enlace directo:</strong> medios y entidades para confirmar.</li>
+              <li><strong>Confiabilidad y autoridad:</strong> análisis de las fuentes relevantes.</li>
+              <li><strong>Consenso y actualidad:</strong> si múltiples fuentes coinciden.</li>
+              <li><strong>Evidencia y contradicciones:</strong> lo que apoya o refuta la noticia.</li>
             </ul>
 
             <div class="mini-callout">
@@ -212,8 +238,38 @@
               <ul id="reasons" class="result-list"></ul>
             </div>
             <div>
-              <h4>Fuentes sugeridas</h4>
-              <ul id="sources" class="result-list"></ul>
+              <h4>Fuentes consultadas</h4>
+              <ul id="sources" class="result-list result-list--sources"></ul>
+            </div>
+          </div>
+
+          <div class="credibility-section">
+            <h4 class="credibility-section__title">Análisis de credibilidad</h4>
+            <div class="credibility-grid">
+              <div class="credibility-item">
+                <span class="credibility-label">Confiabilidad de la fuente</span>
+                <p id="credConfiabilidad" class="credibility-value"></p>
+              </div>
+              <div class="credibility-item">
+                <span class="credibility-label">Autoridad de la fuente</span>
+                <p id="credAutoridad" class="credibility-value"></p>
+              </div>
+              <div class="credibility-item">
+                <span class="credibility-label">Consenso entre fuentes</span>
+                <p id="credConsenso" class="credibility-value"></p>
+              </div>
+              <div class="credibility-item">
+                <span class="credibility-label">Actualidad de la información</span>
+                <p id="credActualidad" class="credibility-value"></p>
+              </div>
+              <div class="credibility-item">
+                <span class="credibility-label">Evidencia encontrada</span>
+                <p id="credEvidencia" class="credibility-value"></p>
+              </div>
+              <div class="credibility-item credibility-item--contradicciones">
+                <span class="credibility-label">Contradicciones detectadas</span>
+                <p id="credContradicciones" class="credibility-value"></p>
+              </div>
             </div>
           </div>
         </section>
