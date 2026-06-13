@@ -1,5 +1,5 @@
 const API_TIMEOUT_MS = 20000;
-const CORE_DOMINICAN_SOURCES = [
+const CORE_MEDIA_SOURCES = [
   { nombre: "Diario Libre", url: "https://diariolibre.com" },
   { nombre: "Listín Diario", url: "https://listindiario.com" },
   { nombre: "Noticias SIN", url: "https://noticiassin.com" },
@@ -7,19 +7,20 @@ const CORE_DOMINICAN_SOURCES = [
   { nombre: "Hoy", url: "https://hoy.com.do" },
   { nombre: "Acento", url: "https://acento.com.do" },
   { nombre: "El Nuevo Diario", url: "https://elnuevodiario.com.do" },
+];
+const CORE_OFFICIAL_SOURCES = [
   { nombre: "Presidencia", url: "https://presidencia.gob.do" },
   { nombre: "DGII", url: "https://dgii.gov.do" },
   { nombre: "Banco Central", url: "https://bancentral.gov.do" },
   { nombre: "Gobierno RD", url: "https://gobiernord.gob.do" },
   { nombre: "JCE", url: "https://jce.gob.do" },
 ];
+const CORE_DOMINICAN_SOURCES = [...CORE_MEDIA_SOURCES, ...CORE_OFFICIAL_SOURCES];
 const MAX_DISPLAY_SOURCES = 5;
-const CORE_MEDIA_SOURCES = CORE_DOMINICAN_SOURCES
-  .slice(0, 7)
+const CORE_MEDIA_SOURCES_TEXT = CORE_MEDIA_SOURCES
   .map((source) => `${source.nombre} (${source.url})`)
   .join(", ");
-const CORE_OFFICIAL_SOURCES = CORE_DOMINICAN_SOURCES
-  .slice(7)
+const CORE_OFFICIAL_SOURCES_TEXT = CORE_OFFICIAL_SOURCES
   .map((source) => `${source.nombre} (${source.url})`)
   .join(", ");
 
@@ -61,8 +62,8 @@ Criterios de veredicto:
 - FALSA: Hay evidencia clara de que los hechos descritos son incorrectos o engañosos.
 
 URLs de referencia de fuentes dominicanas (úsalas SOLO si el medio cubrió directamente el hecho):
-Medios: ${CORE_MEDIA_SOURCES}
-Oficiales: ${CORE_OFFICIAL_SOURCES}
+Medios: ${CORE_MEDIA_SOURCES_TEXT}
+Oficiales: ${CORE_OFFICIAL_SOURCES_TEXT}
 
 REGLA CRÍTICA SOBRE FUENTES:
 - Antes de emitir un veredicto, contrasta la noticia con TODAS las fuentes núcleo listadas en este prompt (medios y oficiales), aunque sea para confirmar ausencia de cobertura.
