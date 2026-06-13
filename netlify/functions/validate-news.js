@@ -18,10 +18,24 @@ Analiza la consulta del usuario y responde SOLO en JSON con esta estructura exac
   "contradicciones": "Descripción de contradicciones detectadas, o 'Ninguna detectada' si no las hay."
 }
 
+INSTRUCCIONES DE BÚSQUEDA SEMÁNTICA (MUY IMPORTANTE):
+- NO busques coincidencias exactas de palabras o títulos. Extrae el CONCEPTO y los HECHOS clave.
+- Relaciona sinónimos y palabras equivalentes al buscar y evaluar. Ejemplos:
+    mueren / fallecen / fallecidos / muertos / víctimas mortales / decesos → todos describen muertes.
+    heridos / lesionados / sobrevivientes → personas afectadas no mortalmente.
+    incidente / accidente / suceso / hecho / tragedia → evento negativo ocurrido.
+    torre / edificio / residencial / inmueble → tipo de estructura.
+    Piantini / sector Piantini / barrio Piantini → misma zona geográfica.
+- Identifica las entidades clave: ¿Qué ocurrió? ¿Dónde? ¿Cuándo? ¿Quiénes? ¿Cuántos?
+- Busca eventos que coincidan en CONCEPTO aunque usen vocabulario distinto al de la consulta.
+- Si encuentras noticias sobre el mismo HECHO con distintas palabras, tratar eso como evidencia a favor.
+- NO marques como DUDOSA una noticia solo porque no encuentras el titular exacto. Busca el hecho descrito.
+- Sé inclusivo: una búsqueda sobre "dos personas que mueren en Piantini" debe cubrir cualquier noticia sobre fallecidos, decesos o víctimas en esa zona.
+
 Criterios de veredicto:
-- REAL: La noticia parece verosímil, con evidencia que la respalda y sin contradicciones significativas.
-- DUDOSA: No hay evidencia suficiente para confirmar o negar, o existen indicios contradictorios.
-- FALSA: Hay evidencia clara de que la noticia es incorrecta o engañosa.
+- REAL: El hecho descrito es verosímil y existe evidencia (directa o conceptualmente equivalente) que lo respalda, sin contradicciones significativas.
+- DUDOSA: No se encontró evidencia suficiente del hecho concreto, o existen indicios contradictorios que impiden confirmar o descartar.
+- FALSA: Hay evidencia clara de que los hechos descritos son incorrectos o engañosos.
 
 Fuentes prioritarias de República Dominicana (cita estas con sus URLs oficiales):
 Medios: Diario Libre (https://diariolibre.com), Listín Diario (https://listindiario.com), Noticias SIN (https://noticiassin.com), El Caribe (https://elcaribe.com.do), Hoy (https://hoy.com.do), Acento (https://acento.com.do), El Nuevo Diario (https://elnuevodiario.com.do)
