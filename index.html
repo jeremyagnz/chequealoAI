@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChequealoAI | Verificador de noticias RD</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>ChequealoAI</h1>
+        <p>Valida si una noticia de República Dominicana parece real, dudosa o falsa.</p>
+      </header>
+
+      <section class="card">
+        <label for="apiKey">OpenAI API Key</label>
+        <input
+          id="apiKey"
+          type="password"
+          placeholder="sk-..."
+          autocomplete="off"
+        />
+        <small>La clave se usa solo en tu navegador y no se guarda.</small>
+      </section>
+
+      <section class="card">
+        <label for="newsQuery">Noticia o titular a verificar</label>
+        <textarea
+          id="newsQuery"
+          rows="5"
+          placeholder="Ejemplo: El Banco Central anunció una nueva medida cambiaria hoy..."
+        ></textarea>
+
+        <button id="validateBtn" type="button">Validar noticia</button>
+      </section>
+
+      <section id="resultCard" class="card hidden" aria-live="polite">
+        <div class="status-row">
+          <h2>Resultado</h2>
+          <span id="badge" class="badge">-</span>
+        </div>
+        <p id="summary"></p>
+        <h3>Razones</h3>
+        <ul id="reasons"></ul>
+        <h3>Fuentes sugeridas</h3>
+        <ul id="sources"></ul>
+      </section>
+
+      <p id="error" class="error hidden"></p>
+    </main>
+
+    <script src="/script.js" defer></script>
+  </body>
+</html>
