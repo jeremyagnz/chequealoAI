@@ -230,10 +230,11 @@ function populateSources(container, fuentes) {
 
   fuentes.forEach((fuente) => {
     const li = document.createElement("li");
+    const safeUrl = fuente && typeof fuente === "object" ? getSafeSourceUrl(fuente.url) : "";
 
-    if (fuente && typeof fuente === "object" && isSafeSourceUrl(fuente.url)) {
+    if (fuente && typeof fuente === "object" && safeUrl) {
       const a = document.createElement("a");
-      a.href = new URL(fuente.url).href;
+      a.href = safeUrl;
       a.textContent = fuente.nombre || fuente.url;
       a.target = "_blank";
       a.rel = "noopener noreferrer";
@@ -248,14 +249,14 @@ function populateSources(container, fuentes) {
   });
 }
 
-function isSafeSourceUrl(value) {
-  if (typeof value !== "string" || !value.trim()) return false;
+function getSafeSourceUrl(value) {
+  if (typeof value !== "string" || !value.trim()) return "";
 
   try {
     const parsed = new URL(value.trim());
-    return parsed.protocol === "https:" || parsed.protocol === "http:";
+    return parsed.protocol === "https:" || parsed.protocol === "http:" ? parsed.href : "";
   } catch {
-    return false;
+    return "";
   }
 }
 
