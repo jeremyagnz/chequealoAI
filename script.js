@@ -124,7 +124,7 @@ function populateList(container, items, fallbackText) {
 
 function toggleLoading(isLoading) {
   button.disabled = isLoading;
-  button.setAttribute("aria-busy", String(isLoading));
+  button.setAttribute("aria-busy", isLoading);
   button.textContent = isLoading ? "Analizando noticia..." : "Validar noticia";
 }
 
