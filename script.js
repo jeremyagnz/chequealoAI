@@ -254,7 +254,7 @@ function getSafeSourceUrl(value) {
 
   try {
     const parsed = new URL(value.trim());
-    return parsed.protocol === "https:" || parsed.protocol === "http:" ? parsed.href : "";
+    return parsed.protocol === "https:" ? parsed.href : "";
   } catch {
     return "";
   }

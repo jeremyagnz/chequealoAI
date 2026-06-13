@@ -208,7 +208,7 @@ function normalizeHttpUrl(value) {
 
   try {
     const parsed = new URL(value.trim());
-    return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.href : "";
+    return parsed.protocol === "https:" ? parsed.href : "";
   } catch {
     return "";
   }
