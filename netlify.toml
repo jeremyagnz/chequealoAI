@@ -1,2 +1,3 @@
 [build]
+  # Este repo todavía no tiene carpeta de build; se publica el contenido estático actual.
   publish = "."
