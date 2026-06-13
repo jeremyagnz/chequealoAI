@@ -1,4 +1,18 @@
 const API_TIMEOUT_MS = 20000;
+const CORE_DOMINICAN_SOURCES = [
+  { nombre: "Diario Libre", url: "https://diariolibre.com" },
+  { nombre: "Listín Diario", url: "https://listindiario.com" },
+  { nombre: "Noticias SIN", url: "https://noticiassin.com" },
+  { nombre: "El Caribe", url: "https://elcaribe.com.do" },
+  { nombre: "Hoy", url: "https://hoy.com.do" },
+  { nombre: "Acento", url: "https://acento.com.do" },
+  { nombre: "El Nuevo Diario", url: "https://elnuevodiario.com.do" },
+  { nombre: "Presidencia", url: "https://presidencia.gob.do" },
+  { nombre: "DGII", url: "https://dgii.gov.do" },
+  { nombre: "Banco Central", url: "https://bancentral.gov.do" },
+  { nombre: "Gobierno RD", url: "https://gobiernord.gob.do" },
+  { nombre: "JCE", url: "https://jce.gob.do" },
+];
 
 const promptRules = `
 Eres un verificador de noticias especializado en República Dominicana.
@@ -42,9 +56,11 @@ Medios: Diario Libre (https://diariolibre.com), Listín Diario (https://listindi
 Oficiales: Presidencia (https://presidencia.gob.do), DGII (https://dgii.gov.do), Banco Central (https://bancentral.gov.do), Ministerios (https://gobiernord.gob.do), JCE (https://jce.gob.do)
 
 REGLA CRÍTICA SOBRE FUENTES:
+- Antes de emitir un veredicto, contrasta la noticia con TODAS las fuentes núcleo listadas en este prompt (medios y oficiales), aunque sea para confirmar ausencia de cobertura.
 - Prioriza en el campo "fuentes" medios o entidades con cobertura directa y específica del hecho descrito.
 - NO listes un medio solo porque es conocido; intenta primero fuentes con relación clara al evento.
-- Si no puedes confirmar cobertura directa, incluye de 1 a 3 fuentes dominicanas RELACIONADAS al tema (o entidad oficial competente) como referencia para ampliar, en vez de dejar "fuentes" vacío.
+- Si no puedes confirmar cobertura directa, incluye igualmente las fuentes núcleo consultadas y marca en "razones" cuáles no tienen cobertura específica del hecho.
+- Devuelve entre 6 y 12 fuentes dominicanas verificadas en "fuentes", nunca menos de 6.
 - Nunca devuelvas el arreglo "fuentes" vacío salvo que sea absolutamente imposible.
 - Es mejor devolver pocas fuentes relevantes que muchas fuentes genéricas sin relación.
 
@@ -189,16 +205,24 @@ function sanitizeSources(rawSources) {
       return null;
     })
     .filter(Boolean)
-    .slice(0, 5);
+    .slice(0, CORE_DOMINICAN_SOURCES.length);
 
-  return sanitized.length ? sanitized : defaultSources();
+  if (!sanitized.length) {
+    return defaultSources();
+  }
+
+  const sourcesByUrl = new Map(sanitized.map((source) => [source.url, source]));
+  CORE_DOMINICAN_SOURCES.forEach((source) => {
+    if (!sourcesByUrl.has(source.url)) {
+      sourcesByUrl.set(source.url, source);
+    }
+  });
+
+  return Array.from(sourcesByUrl.values()).slice(0, CORE_DOMINICAN_SOURCES.length);
 }
 
 function defaultSources() {
-  return [
-    { nombre: "Diario Libre (referencia general)", url: "https://diariolibre.com" },
-    { nombre: "Listín Diario (referencia general)", url: "https://listindiario.com" },
-  ];
+  return CORE_DOMINICAN_SOURCES;
 }
 
 function normalizeHttpUrl(value) {
