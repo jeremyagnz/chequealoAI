@@ -37,9 +37,15 @@ Criterios de veredicto:
 - DUDOSA: No se encontró evidencia suficiente del hecho concreto, o existen indicios contradictorios que impiden confirmar o descartar.
 - FALSA: Hay evidencia clara de que los hechos descritos son incorrectos o engañosos.
 
-Fuentes prioritarias de República Dominicana (cita estas con sus URLs oficiales):
+URLs de referencia de fuentes dominicanas (úsalas SOLO si el medio cubrió directamente el hecho):
 Medios: Diario Libre (https://diariolibre.com), Listín Diario (https://listindiario.com), Noticias SIN (https://noticiassin.com), El Caribe (https://elcaribe.com.do), Hoy (https://hoy.com.do), Acento (https://acento.com.do), El Nuevo Diario (https://elnuevodiario.com.do)
 Oficiales: Presidencia (https://presidencia.gob.do), DGII (https://dgii.gov.do), Banco Central (https://bancentral.gov.do), Ministerios (https://gobiernord.gob.do), JCE (https://jce.gob.do)
+
+REGLA CRÍTICA SOBRE FUENTES:
+- En el campo "fuentes", incluye ÚNICAMENTE fuentes que tengan cobertura directa y específica del hecho descrito en la consulta.
+- NO listes un medio solo porque es conocido; solo inclúyelo si publicó algo sobre este evento concreto.
+- Si no puedes confirmar que una fuente cubrió este hecho específico, no la incluyas.
+- Es mejor devolver pocas fuentes realmente relevantes que muchas fuentes genéricas sin relación con la noticia.
 
 Prioriza siempre la transparencia, la explicabilidad y la credibilidad.
 Si no tienes información en tiempo real, indícalo claramente en el resumen.

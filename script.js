@@ -9,6 +9,8 @@ const errorBox = document.getElementById("error");
 const charCount = document.getElementById("charCount");
 const promptButtons = document.querySelectorAll(".prompt-chip");
 const themeToggle = document.getElementById("themeToggle");
+const progressBar = document.getElementById("progressBar");
+const progressFill = document.getElementById("progressFill");
 const API_TIMEOUT_MS = 20000;
 
 // ── Dark mode ──────────────────────────────────────────────────────────────
@@ -41,6 +43,57 @@ themeToggle.addEventListener("click", () => {
 
 initTheme();
 
+// ── Progress bar ────────────────────────────────────────────────────────────
+
+const PROGRESS_FAST_THRESHOLD = 30;
+const PROGRESS_SLOW_THRESHOLD = 60;
+const PROGRESS_FAST_INCREMENT = 3;
+const PROGRESS_MID_INCREMENT = 1.2;
+const PROGRESS_SLOW_INCREMENT = 0.4;
+const PROGRESS_MAX_PENDING = 85;
+const PROGRESS_TICK_MS = 200;
+const PROGRESS_FADE_DELAY_MS = 2500;
+
+let _progressInterval = null;
+let _progressValue = 0;
+
+function startProgress() {
+  _progressValue = 0;
+  progressFill.style.width = "0%";
+  progressBar.setAttribute("aria-valuenow", "0");
+  progressBar.classList.remove("hidden", "progress-bar--real", "progress-bar--dudosa", "progress-bar--falsa");
+
+  _progressInterval = setInterval(() => {
+    const increment =
+      _progressValue < PROGRESS_FAST_THRESHOLD ? PROGRESS_FAST_INCREMENT :
+      _progressValue < PROGRESS_SLOW_THRESHOLD ? PROGRESS_MID_INCREMENT :
+      PROGRESS_SLOW_INCREMENT;
+    _progressValue = Math.min(PROGRESS_MAX_PENDING, _progressValue + increment);
+    progressFill.style.width = _progressValue + "%";
+    progressBar.setAttribute("aria-valuenow", String(Math.round(_progressValue)));
+  }, PROGRESS_TICK_MS);
+}
+
+function completeProgress(veredicto) {
+  clearInterval(_progressInterval);
+  _progressValue = 100;
+  progressFill.style.width = "100%";
+  progressBar.setAttribute("aria-valuenow", "100");
+
+  const cls =
+    veredicto === "REAL" ? "progress-bar--real" :
+    veredicto === "DUDOSA" ? "progress-bar--dudosa" :
+    veredicto === "FALSA" ? "progress-bar--falsa" : null;
+  if (cls) progressBar.classList.add(cls);
+
+  setTimeout(() => progressBar.classList.add("hidden"), PROGRESS_FADE_DELAY_MS);
+}
+
+function abortProgress() {
+  clearInterval(_progressInterval);
+  progressBar.classList.add("hidden");
+}
+
 // ── Validation ─────────────────────────────────────────────────────────────
 
 button.addEventListener("click", async () => {
@@ -55,11 +108,13 @@ button.addEventListener("click", async () => {
   }
 
   toggleLoading(true);
+  startProgress();
 
   try {
     const aiResult = await fetchValidation(query);
     renderResult(aiResult);
   } catch (error) {
+    abortProgress();
     showError(error.message || "No se pudo validar la noticia.");
   } finally {
     toggleLoading(false);
@@ -122,6 +177,7 @@ async function fetchValidation(query) {
 }
 
 function renderResult(result) {
+  completeProgress(result.veredicto);
   resultCard.classList.remove("hidden");
 
   const map = {
