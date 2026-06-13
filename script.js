@@ -7,6 +7,7 @@ const summary = document.getElementById("summary");
 const reasons = document.getElementById("reasons");
 const sources = document.getElementById("sources");
 const errorBox = document.getElementById("error");
+const API_TIMEOUT_MS = 20000;
 
 const promptRules = `
 Eres un verificador de noticias de República Dominicana.
@@ -54,22 +55,38 @@ button.addEventListener("click", async () => {
 });
 
 async function fetchValidation(apiKey, query) {
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + apiKey,
-    },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      temperature: 0.2,
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: promptRules },
-        { role: "user", content: `Noticia a validar: ${query}` },
-      ],
-    }),
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  let response;
+  try {
+    response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + apiKey,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        temperature: 0.2,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: promptRules },
+          { role: "user", content: `Noticia a validar: ${query}` },
+        ],
+      }),
+    });
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error("La validación tardó demasiado. Intenta de nuevo.");
+    }
+    if (!navigator.onLine) {
+      throw new Error("No hay conexión de red.");
+    }
+    throw new Error("OpenAI no está disponible ahora mismo.");
+  } finally {
+    clearTimeout(timeoutId);
+  }
 
   if (!response.ok) {
     const msg = response.status === 401
@@ -88,8 +105,7 @@ async function fetchValidation(apiKey, query) {
   let parsed;
   try {
     parsed = JSON.parse(text);
-  } catch (error) {
-    console.error("Error parseando respuesta JSON:", error);
+  } catch {
     throw new Error("La respuesta no vino en formato JSON válido.");
   }
 
