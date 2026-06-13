@@ -13,6 +13,15 @@ const CORE_DOMINICAN_SOURCES = [
   { nombre: "Gobierno RD", url: "https://gobiernord.gob.do" },
   { nombre: "JCE", url: "https://jce.gob.do" },
 ];
+const MAX_DISPLAY_SOURCES = 5;
+const CORE_MEDIA_SOURCES = CORE_DOMINICAN_SOURCES
+  .slice(0, 7)
+  .map((source) => `${source.nombre} (${source.url})`)
+  .join(", ");
+const CORE_OFFICIAL_SOURCES = CORE_DOMINICAN_SOURCES
+  .slice(7)
+  .map((source) => `${source.nombre} (${source.url})`)
+  .join(", ");
 
 const promptRules = `
 Eres un verificador de noticias especializado en República Dominicana.
@@ -52,17 +61,16 @@ Criterios de veredicto:
 - FALSA: Hay evidencia clara de que los hechos descritos son incorrectos o engañosos.
 
 URLs de referencia de fuentes dominicanas (úsalas SOLO si el medio cubrió directamente el hecho):
-Medios: Diario Libre (https://diariolibre.com), Listín Diario (https://listindiario.com), Noticias SIN (https://noticiassin.com), El Caribe (https://elcaribe.com.do), Hoy (https://hoy.com.do), Acento (https://acento.com.do), El Nuevo Diario (https://elnuevodiario.com.do)
-Oficiales: Presidencia (https://presidencia.gob.do), DGII (https://dgii.gov.do), Banco Central (https://bancentral.gov.do), Ministerios (https://gobiernord.gob.do), JCE (https://jce.gob.do)
+Medios: ${CORE_MEDIA_SOURCES}
+Oficiales: ${CORE_OFFICIAL_SOURCES}
 
 REGLA CRÍTICA SOBRE FUENTES:
 - Antes de emitir un veredicto, contrasta la noticia con TODAS las fuentes núcleo listadas en este prompt (medios y oficiales), aunque sea para confirmar ausencia de cobertura.
-- Prioriza en el campo "fuentes" medios o entidades con cobertura directa y específica del hecho descrito.
+- Prioriza en el campo "fuentes" SOLO medios o entidades con cobertura directa y específica del hecho descrito.
 - NO listes un medio solo porque es conocido; intenta primero fuentes con relación clara al evento.
-- Si no puedes confirmar cobertura directa, incluye igualmente las fuentes núcleo consultadas y marca en "razones" cuáles no tienen cobertura específica del hecho.
-- Devuelve entre 6 y 12 fuentes dominicanas verificadas en "fuentes", nunca menos de 6.
-- Nunca devuelvas el arreglo "fuentes" vacío salvo que sea absolutamente imposible.
-- Es mejor devolver pocas fuentes relevantes que muchas fuentes genéricas sin relación.
+- Si una fuente fue consultada pero no trata el hecho específico, NO la incluyas en "fuentes"; menciónala solo en "razones" o en "consenso_fuentes" si aporta contexto.
+- Devuelve de 1 a 5 fuentes altamente relevantes en "fuentes". Si no existe cobertura directa, usa como máximo 1 o 2 fuentes oficiales o temáticas claramente relacionadas.
+- Es mejor devolver pocas fuentes relevantes que muchas fuentes genéricas, tangenciales o ajenas a la consulta.
 
 Prioriza siempre la transparencia, la explicabilidad y la credibilidad.
 Si no tienes información en tiempo real, indícalo claramente en el resumen.
@@ -178,7 +186,7 @@ function parseRequestBody(body) {
 
 function sanitizeSources(rawSources) {
   if (!Array.isArray(rawSources)) {
-    return defaultSources();
+    return [];
   }
 
   const sanitized = rawSources
@@ -204,25 +212,22 @@ function sanitizeSources(rawSources) {
 
       return null;
     })
-    .filter(Boolean)
-    .slice(0, CORE_DOMINICAN_SOURCES.length);
+    .filter(Boolean);
 
-  if (!sanitized.length) {
-    return defaultSources();
-  }
-
-  const sourcesByUrl = new Map(sanitized.map((source) => [source.url, source]));
-  CORE_DOMINICAN_SOURCES.forEach((source) => {
-    if (!sourcesByUrl.has(source.url)) {
-      sourcesByUrl.set(source.url, source);
-    }
-  });
-
-  return Array.from(sourcesByUrl.values()).slice(0, CORE_DOMINICAN_SOURCES.length);
+  return dedupeSources(sanitized).slice(0, MAX_DISPLAY_SOURCES);
 }
 
-function defaultSources() {
-  return CORE_DOMINICAN_SOURCES;
+function dedupeSources(sources) {
+  const seen = new Set();
+
+  return sources.filter((source) => {
+    if (seen.has(source.url)) {
+      return false;
+    }
+
+    seen.add(source.url);
+    return true;
+  });
 }
 
 function normalizeHttpUrl(value) {
