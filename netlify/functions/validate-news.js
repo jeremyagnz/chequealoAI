@@ -168,10 +168,10 @@ function sanitizeSources(rawSources) {
   const sanitized = rawSources
     .map((source) => {
       if (source && typeof source === "object") {
-        const url = typeof source.url === "string" ? source.url.trim() : "";
+        const url = normalizeHttpUrl(source.url);
         const nombre = typeof source.nombre === "string" ? source.nombre.trim() : "";
 
-        if (/^https?:\/\/\S+/i.test(url)) {
+        if (url) {
           return {
             nombre: nombre || url,
             url,
@@ -180,8 +180,8 @@ function sanitizeSources(rawSources) {
       }
 
       if (typeof source === "string") {
-        const value = source.trim();
-        if (/^https?:\/\/\S+/i.test(value)) {
+        const value = normalizeHttpUrl(source);
+        if (value) {
           return { nombre: value, url: value };
         }
       }
@@ -199,6 +199,19 @@ function defaultSources() {
     { nombre: "Diario Libre (referencia general)", url: "https://diariolibre.com" },
     { nombre: "Listín Diario (referencia general)", url: "https://listindiario.com" },
   ];
+}
+
+function normalizeHttpUrl(value) {
+  if (typeof value !== "string" || !value.trim()) {
+    return "";
+  }
+
+  try {
+    const parsed = new URL(value.trim());
+    return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.href : "";
+  } catch {
+    return "";
+  }
 }
 
 function jsonResponse(statusCode, body) {
