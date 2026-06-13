@@ -231,9 +231,9 @@ function populateSources(container, fuentes) {
   fuentes.forEach((fuente) => {
     const li = document.createElement("li");
 
-    if (fuente && typeof fuente === "object" && fuente.url) {
+    if (fuente && typeof fuente === "object" && isSafeSourceUrl(fuente.url)) {
       const a = document.createElement("a");
-      a.href = fuente.url;
+      a.href = new URL(fuente.url).href;
       a.textContent = fuente.nombre || fuente.url;
       a.target = "_blank";
       a.rel = "noopener noreferrer";
@@ -246,6 +246,17 @@ function populateSources(container, fuentes) {
 
     container.appendChild(li);
   });
+}
+
+function isSafeSourceUrl(value) {
+  if (typeof value !== "string" || !value.trim()) return false;
+
+  try {
+    const parsed = new URL(value.trim());
+    return parsed.protocol === "https:" || parsed.protocol === "http:";
+  } catch {
+    return false;
+  }
 }
 
 function setCredibilityField(id, text) {
