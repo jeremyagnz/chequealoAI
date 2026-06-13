@@ -74,7 +74,14 @@ exports.handler = async (event) => {
       });
     }
 
-    const parsed = JSON.parse(text);
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      return jsonResponse(502, {
+        error: "OpenAI devolvió una respuesta con formato inválido.",
+      });
+    }
 
     if (!parsed?.veredicto || !parsed?.resumen) {
       return jsonResponse(502, {
