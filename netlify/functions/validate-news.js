@@ -42,10 +42,11 @@ Medios: Diario Libre (https://diariolibre.com), Listín Diario (https://listindi
 Oficiales: Presidencia (https://presidencia.gob.do), DGII (https://dgii.gov.do), Banco Central (https://bancentral.gov.do), Ministerios (https://gobiernord.gob.do), JCE (https://jce.gob.do)
 
 REGLA CRÍTICA SOBRE FUENTES:
-- En el campo "fuentes", incluye ÚNICAMENTE fuentes que tengan cobertura directa y específica del hecho descrito en la consulta.
-- NO listes un medio solo porque es conocido; solo inclúyelo si publicó algo sobre este evento concreto.
-- Si no puedes confirmar que una fuente cubrió este hecho específico, no la incluyas.
-- Es mejor devolver pocas fuentes realmente relevantes que muchas fuentes genéricas sin relación con la noticia.
+- Prioriza en el campo "fuentes" medios o entidades con cobertura directa y específica del hecho descrito.
+- NO listes un medio solo porque es conocido; intenta primero fuentes con relación clara al evento.
+- Si no puedes confirmar cobertura directa, incluye de 1 a 3 fuentes dominicanas RELACIONADAS al tema (o entidad oficial competente) como referencia para ampliar, en vez de dejar "fuentes" vacío.
+- Nunca devuelvas el arreglo "fuentes" vacío salvo que sea absolutamente imposible.
+- Es mejor devolver pocas fuentes relevantes que muchas fuentes genéricas sin relación.
 
 Prioriza siempre la transparencia, la explicabilidad y la credibilidad.
 Si no tienes información en tiempo real, indícalo claramente en el resumen.
@@ -128,7 +129,7 @@ exports.handler = async (event) => {
       veredicto: String(parsed.veredicto).toUpperCase(),
       resumen: parsed.resumen,
       razones: Array.isArray(parsed.razones) ? parsed.razones : [],
-      fuentes: Array.isArray(parsed.fuentes) ? parsed.fuentes : [],
+      fuentes: sanitizeSources(parsed.fuentes),
       confiabilidad_fuente: parsed.confiabilidad_fuente || "",
       autoridad_fuente: parsed.autoridad_fuente || "",
       consenso_fuentes: parsed.consenso_fuentes || "",
@@ -156,6 +157,47 @@ function parseRequestBody(body) {
     return JSON.parse(body || "{}");
   } catch {
     return null;
+  }
+
+  function sanitizeSources(rawSources) {
+    if (!Array.isArray(rawSources)) {
+      return defaultSources();
+    }
+
+    const sanitized = rawSources
+      .map((source) => {
+        if (source && typeof source === "object") {
+          const url = typeof source.url === "string" ? source.url.trim() : "";
+          const nombre = typeof source.nombre === "string" ? source.nombre.trim() : "";
+
+          if (/^https?:\/\/\S+/i.test(url)) {
+            return {
+              nombre: nombre || url,
+              url,
+            };
+          }
+        }
+
+        if (typeof source === "string") {
+          const value = source.trim();
+          if (/^https?:\/\/\S+/i.test(value)) {
+            return { nombre: value, url: value };
+          }
+        }
+
+        return null;
+      })
+      .filter(Boolean)
+      .slice(0, 5);
+
+    return sanitized.length ? sanitized : defaultSources();
+  }
+
+  function defaultSources() {
+    return [
+      { nombre: "Diario Libre (referencia general)", url: "https://diariolibre.com" },
+      { nombre: "Listín Diario (referencia general)", url: "https://listindiario.com" },
+    ];
   }
 }
 
