@@ -247,10 +247,9 @@ function buildExactSourceLinks(fuentes, claim) {
   const seenLabels = new Set();
   return fuentes.flatMap((fuente) => {
     const normalizedHref = normalizeSourceUrl(fuente);
-    const trustedSource = findTrustedSource(fuente) || findTrustedSource(normalizedHref);
-    const href = (!isSpecificSourceUrl(normalizedHref) && trustedSource)
-      ? createSourceSearchUrl(trustedSource.domain, claim)
-      : normalizedHref;
+    const trustedFromRaw = findTrustedSource(fuente);
+    const trustedSource = trustedFromRaw || findTrustedSource(normalizedHref);
+    const href = resolveSourceHref(normalizedHref, trustedSource, claim);
     if (href === "#" || seenHrefs.has(href)) return [];
     const label = getSourceLabel(fuente, normalizedHref);
     const normalizedLabel = label.toLowerCase();
@@ -262,6 +261,13 @@ function buildExactSourceLinks(fuentes, claim) {
       label,
     }];
   });
+}
+
+function resolveSourceHref(normalizedHref, trustedSource, claim) {
+  if (!isSpecificSourceUrl(normalizedHref) && trustedSource) {
+    return createSourceSearchUrl(trustedSource.domain, claim);
+  }
+  return normalizedHref;
 }
 
 function buildTrustedSearchLinks(sources, claim) {
