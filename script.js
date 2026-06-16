@@ -169,7 +169,6 @@ const TRUSTED_OFFICIAL_SOURCES = [
 ];
 
 const TRUSTED_SOURCE_LOOKUP = [...TRUSTED_MEDIA_SOURCES, ...TRUSTED_OFFICIAL_SOURCES];
-const TRUSTED_SEARCH_SOURCES = [...TRUSTED_MEDIA_SOURCES, ...TRUSTED_OFFICIAL_SOURCES];
 
 function scoreColor(n) {
   if (n >= 65) return "var(--green)";
@@ -218,7 +217,7 @@ function buildMetricBars(metricas) {
 
 function buildSourceChips(fuentes, claim) {
   const exactMatches = buildExactSourceLinks(fuentes, claim);
-  const trustedOfficials = buildTrustedSearchLinks(TRUSTED_SEARCH_SOURCES, claim);
+  const trustedOfficials = buildTrustedSearchLinks(TRUSTED_SOURCE_LOOKUP, claim);
   const sections = [
     buildSourceGroup("Coincidencias encontradas", exactMatches),
     buildSourceGroup("Buscar en fuentes oficiales", trustedOfficials),
@@ -244,20 +243,20 @@ function normalizeSourceUrl(raw) {
 }
 
 function buildExactSourceLinks(fuentes, claim) {
-  const seenHref = new Set();
-  const seenLabel = new Set();
+  const seenHrefs = new Set();
+  const seenLabels = new Set();
   return fuentes.flatMap((fuente) => {
     const normalizedHref = normalizeSourceUrl(fuente);
     const trustedSource = findTrustedSource(fuente) || findTrustedSource(normalizedHref);
     const href = (!isSpecificSourceUrl(normalizedHref) && trustedSource)
       ? createSourceSearchUrl(trustedSource.domain, claim)
       : normalizedHref;
-    if (href === "#" || seenHref.has(href)) return [];
+    if (href === "#" || seenHrefs.has(href)) return [];
     const label = getSourceLabel(fuente, normalizedHref);
-    const labelKey = label.toLowerCase();
-    if (seenLabel.has(labelKey)) return [];
-    seenHref.add(href);
-    seenLabel.add(labelKey);
+    const normalizedLabel = label.toLowerCase();
+    if (seenLabels.has(normalizedLabel)) return [];
+    seenHrefs.add(href);
+    seenLabels.add(normalizedLabel);
     return [{
       href,
       label,
