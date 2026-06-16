@@ -8,7 +8,7 @@ Analiza la consulta del usuario y responde SOLO en JSON con esta forma exacta:
   "puntuacion": 82,
   "resumen": "texto breve en español (máx. 2 oraciones)",
   "razones": ["evidencia o argumento 1", "evidencia o argumento 2"],
-  "fuentes": ["listindiario.com", "diariolibre.com"],
+  "fuentes": ["https://listindiario.com/noticia-ejemplo", "https://www.diariolibre.com/noticia-ejemplo"],
   "metricas": {
     "autoridad_fuente": 92,
     "evidencia_encontrada": 88,
@@ -23,8 +23,11 @@ Criterios:
 - FALSA (puntuacion < 35): la información es incorrecta o carece de respaldo verificable.
 - Todos los valores en "metricas" son enteros de 0 a 100.
 - "puntuacion" debe ser coherente con el promedio ponderado de las métricas y el veredicto.
-- Prioriza fuentes confiables de RD: Listín Diario, Diario Libre, El Caribe, Presidencia, JCE, Banco Central, DGII, etc.
-- En "fuentes" incluye solo nombres de dominio sin http/https (ej: listindiario.com).
+- Para validar noticias nacionales, consulta y cruza estas fuentes confiables de RD (medios y oficiales):
+  Medios: listindiario.com, diariolibre.com, noticiassin.com, cdn.com.do, acento.com.do, elcaribe.com.do, hoy.com.do, elnuevodiario.com.do, rnn.com.do, ndigital.com.do, rcnoticias.com.do, z101digital.com
+  Oficiales: presidencia.gob.do, policia.gob.do, ministeriopublico.gob.do, pgr.gob.do, coe.gob.do, migracion.gob.do, jce.gob.do
+- Usa tantas de estas fuentes como sea posible para confirmar o desmentir la afirmación, priorizando coincidencia entre varios medios.
+- En "fuentes" devuelve URLs clicables (preferiblemente enlaces directos a noticias/comunicados); si no existe URL de artículo, usa la portada del medio/sitio oficial.
 - Nunca salgas del formato JSON.
 `;
 

@@ -417,6 +417,14 @@ body {
   color: var(--accent-light);
   border-color: rgba(124, 58, 237, 0.35);
 }
+.source-link {
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.source-link:hover {
+  color: var(--text);
+  border-color: var(--accent-light);
+}
 
 /* ---- ERROR ---- */
 .error-msg {

@@ -190,11 +190,34 @@ function buildMetricBars(metricas) {
 
 function buildSourceChips(fuentes) {
   if (!fuentes.length) return "";
-  const shown = fuentes.slice(0, 4);
-  const rest = fuentes.length - 4;
-  const chips = shown.map((f) => `<span class="source-chip">${f}</span>`).join("");
-  const more = rest > 0 ? `<span class="source-chip more">+${rest} más</span>` : "";
-  return `<div class="source-chips">${chips}${more}</div>`;
+  const chips = fuentes.map((f) => {
+    const href = normalizeSourceUrl(f);
+    const label = escapeHtml(String(f));
+    return `<a class="source-chip source-link" href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+  }).join("");
+  return `<div class="source-chips">${chips}</div>`;
+}
+
+function normalizeSourceUrl(raw) {
+  const value = String(raw || "").trim();
+  if (!value) return "#";
+  const withProto = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+  try {
+    const url = new URL(withProto);
+    if (url.protocol === "http:" || url.protocol === "https:") return url.href;
+  } catch {
+    return "#";
+  }
+  return "#";
+}
+
+function escapeHtml(text) {
+  return text
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes }) {
