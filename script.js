@@ -222,7 +222,7 @@ function buildMetricBars(metricas) {
 function buildSourceChips(fuentes, claim, mediaFuentes, officialFuentes) {
   const exactMatches = buildExactSourceLinks(fuentes);
   const mediaLinks = buildCategoryLinks(mediaFuentes, TRUSTED_MEDIA_SOURCES);
-  const officialLinks = buildCategoryLinks(officialFuentes, TRUSTED_OFFICIAL_SOURCES);
+  const officialLinks = buildCategoryLinks(officialFuentes, []);
   const sections = [
     buildSourceGroup("Coincidencias encontradas", exactMatches),
     buildSourceGroup("Medios dominicanos", mediaLinks),
@@ -260,12 +260,15 @@ function buildExactSourceLinks(fuentes) {
 
 function buildCategoryLinks(serperUrls, sourceList) {
   if (serperUrls && serperUrls.length > 0) {
-    const seen = new Set();
+    const seenUrls = new Set();
+    const seenLabels = new Set();
     const links = serperUrls.flatMap((url) => {
       const href = normalizeSourceUrl(url);
-      if (href === "#" || seen.has(href)) return [];
-      seen.add(href);
-      return [{ href, label: getSourceLabel(url, href) }];
+      const label = getSourceLabel(url, href);
+      if (href === "#" || seenUrls.has(href) || seenLabels.has(label)) return [];
+      seenUrls.add(href);
+      seenLabels.add(label);
+      return [{ href, label }];
     });
     if (links.length > 0) return links;
   }
