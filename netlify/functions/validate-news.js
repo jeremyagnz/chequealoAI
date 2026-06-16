@@ -26,8 +26,9 @@ Criterios:
 - Para validar noticias nacionales, consulta y cruza estas fuentes confiables de RD (medios y oficiales):
   Medios: listindiario.com, diariolibre.com, noticiassin.com, cdn.com.do, acento.com.do, elcaribe.com.do, hoy.com.do, elnuevodiario.com.do, rnn.com.do, ndigital.com.do, rcnoticias.com.do, z101digital.com
   Oficiales: presidencia.gob.do, policia.gob.do, ministeriopublico.gob.do, pgr.gob.do, coe.gob.do, migracion.gob.do, jce.gob.do
-- Usa tantas de estas fuentes como sea posible para confirmar o desmentir la afirmación, priorizando coincidencia entre varios medios.
-- En "fuentes" devuelve URLs clicables (preferiblemente enlaces directos a noticias/comunicados); si no existe URL de artículo, usa la portada del medio/sitio oficial.
+- Usa tantas de estas fuentes como sea posible para confirmar o desmentir la afirmación, priorizando coincidencia entre varios medios y fuentes oficiales cuando aplique.
+- En "fuentes" devuelve solo URLs clicables que apunten directamente a artículos, comunicados o páginas específicas claramente relacionadas con la consulta.
+- No inventes enlaces ni devuelvas portadas genéricas/homepages si no tienes una URL específica y pertinente para esa fuente; en ese caso omite esa fuente del arreglo.
 - Nunca salgas del formato JSON.
 `;
 

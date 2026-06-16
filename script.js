@@ -144,6 +144,32 @@ const METRIC_ORDER = [
   "sin_contradicciones",
 ];
 
+const TRUSTED_MEDIA_SOURCES = [
+  { label: "Listín Diario", domain: "listindiario.com" },
+  { label: "Diario Libre", domain: "diariolibre.com" },
+  { label: "Noticias SIN", domain: "noticiassin.com" },
+  { label: "CDN 37", domain: "cdn.com.do" },
+  { label: "Acento", domain: "acento.com.do" },
+  { label: "El Caribe", domain: "elcaribe.com.do" },
+  { label: "Hoy Digital", domain: "hoy.com.do" },
+  { label: "El Nuevo Diario", domain: "elnuevodiario.com.do" },
+  { label: "RNN Noticias", domain: "rnn.com.do" },
+  { label: "N Digital", domain: "ndigital.com.do" },
+  { label: "RC Noticias", domain: "rcnoticias.com.do" },
+  { label: "Z101 Digital", domain: "z101digital.com" },
+];
+
+const TRUSTED_OFFICIAL_SOURCES = [
+  { label: "Presidencia RD", domain: "presidencia.gob.do" },
+  { label: "Policía Nacional RD", domain: "policia.gob.do" },
+  { label: "Ministerio Público RD", domain: "ministeriopublico.gob.do" },
+  { label: "COE", domain: "coe.gob.do" },
+  { label: "Migración RD", domain: "migracion.gob.do" },
+  { label: "JCE", domain: "jce.gob.do" },
+];
+
+const TRUSTED_SOURCE_LOOKUP = [...TRUSTED_MEDIA_SOURCES, ...TRUSTED_OFFICIAL_SOURCES];
+
 function scoreColor(n) {
   if (n >= 65) return "var(--green)";
   if (n >= 35) return "var(--orange)";
@@ -189,14 +215,18 @@ function buildMetricBars(metricas) {
   }).join("");
 }
 
-function buildSourceChips(fuentes) {
-  if (!fuentes.length) return "";
-  const chips = fuentes.map((f) => {
-    const href = normalizeSourceUrl(f);
-    const label = escapeHtml(String(f));
-    return `<a class="source-chip source-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
-  }).join("");
-  return `<div class="source-chips">${chips}</div>`;
+function buildSourceChips(fuentes, claim) {
+  const exactMatches = buildExactSourceLinks(fuentes);
+  const trustedMedia = buildTrustedSearchLinks(TRUSTED_MEDIA_SOURCES, claim);
+  const trustedOfficials = buildTrustedSearchLinks(TRUSTED_OFFICIAL_SOURCES, claim);
+  const sections = [
+    buildSourceGroup("Coincidencias encontradas", exactMatches),
+    buildSourceGroup("Buscar en medios dominicanos", trustedMedia),
+    buildSourceGroup("Buscar en fuentes oficiales", trustedOfficials),
+  ].filter(Boolean);
+
+  if (!sections.length) return "";
+  return `<div class="sources-wrap">${sections.join("")}</div>`;
 }
 
 function normalizeSourceUrl(raw) {
@@ -211,6 +241,93 @@ function normalizeSourceUrl(raw) {
   } catch {
     // Ignore malformed values and fall back to non-navigable link.
     return "#";
+  }
+}
+
+function buildExactSourceLinks(fuentes) {
+  const seen = new Set();
+  return fuentes.flatMap((fuente) => {
+    const href = normalizeSourceUrl(fuente);
+    if (href === "#" || !isSpecificSourceUrl(href) || seen.has(href)) return [];
+    seen.add(href);
+    return [{
+      href,
+      label: getSourceLabel(fuente, href),
+    }];
+  });
+}
+
+function buildTrustedSearchLinks(sources, claim) {
+  const seen = new Set();
+  return sources.flatMap((source) => {
+    const href = createSourceSearchUrl(source.domain, claim);
+    if (seen.has(href)) return [];
+    seen.add(href);
+    return [{ href, label: source.label }];
+  });
+}
+
+function buildSourceGroup(title, links) {
+  if (!links.length) return "";
+  const chips = links.map(({ href, label }) => (
+    `<a class="source-chip source-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`
+  )).join("");
+  return `
+    <div class="source-group">
+      <p class="source-group-label">${escapeHtml(title)}</p>
+      <div class="source-chips">${chips}</div>
+    </div>
+  `;
+}
+
+function createSourceSearchUrl(domain, claim) {
+  const query = String(claim || "").trim();
+  const terms = query ? `site:${domain} "${query}"` : `site:${domain}`;
+  return `https://www.google.com/search?q=${encodeURIComponent(terms)}`;
+}
+
+function isSpecificSourceUrl(raw) {
+  try {
+    const url = new URL(raw);
+    return url.pathname && url.pathname !== "/";
+  } catch {
+    return false;
+  }
+}
+
+function getSourceLabel(raw, normalizedHref) {
+  const trustedSource = findTrustedSource(raw) || findTrustedSource(normalizedHref);
+  if (trustedSource) return trustedSource.label;
+
+  try {
+    const url = new URL(normalizedHref);
+    return url.hostname.replace(/^www\./i, "");
+  } catch {
+    return String(raw || "").trim() || "Fuente";
+  }
+}
+
+function findTrustedSource(value) {
+  const text = String(value || "").trim().toLowerCase();
+  if (!text) return null;
+
+  const hostname = extractHostname(text);
+  return TRUSTED_SOURCE_LOOKUP.find(({ label, domain }) => {
+    const matchesLabel = label.toLowerCase() === text;
+    const matchesDomain = hostname
+      ? hostname === domain || hostname.endsWith(`.${domain}`)
+      : text === domain;
+    return matchesLabel || matchesDomain;
+  }) || null;
+}
+
+function extractHostname(value) {
+  const normalized = normalizeSourceUrl(value);
+  if (normalized === "#") return "";
+  try {
+    return new URL(normalized).hostname.replace(/^www\./i, "").toLowerCase();
+  } catch {
+    return "";
   }
 }
 
@@ -243,7 +360,7 @@ function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes
       <div class="metrics-list">${buildMetricBars(metricas)}</div>
     </div>
     ${evidenceHtml}
-    ${buildSourceChips(fuentes)}
+    ${buildSourceChips(fuentes, claim)}
   `;
 }
 

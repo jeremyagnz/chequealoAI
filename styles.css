@@ -405,6 +405,22 @@ body {
   gap: 0.5rem;
   margin-top: 1.25rem;
 }
+.sources-wrap {
+  margin-top: 1.25rem;
+}
+.source-group + .source-group {
+  margin-top: 1rem;
+}
+.source-group-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.source-group .source-chips {
+  margin-top: 0.65rem;
+}
 .source-chip {
   background: var(--surface-2);
   border: 1px solid var(--border);
