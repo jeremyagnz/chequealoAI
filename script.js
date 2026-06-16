@@ -82,6 +82,8 @@ function parseResult(data) {
     razones: Array.isArray(data.razones) ? data.razones : [],
     fuentes: Array.isArray(data.fuentes) ? data.fuentes : [],
     metricas,
+    mediaFuentes: Array.isArray(data.mediaFuentes) ? data.mediaFuentes : [],
+    officialFuentes: Array.isArray(data.officialFuentes) ? data.officialFuentes : [],
   };
 }
 
@@ -112,6 +114,8 @@ function renderResult(result, query) {
     metricas: result.metricas,
     razones: result.razones,
     fuentes: result.fuentes,
+    mediaFuentes: result.mediaFuentes,
+    officialFuentes: result.officialFuentes,
   });
   resultSection.classList.remove("hidden");
   resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -215,12 +219,14 @@ function buildMetricBars(metricas) {
   }).join("");
 }
 
-function buildSourceChips(fuentes, claim) {
-  const exactMatches = buildExactSourceLinks(fuentes, claim);
-  const trustedOfficials = buildTrustedSearchLinks(TRUSTED_SOURCE_LOOKUP, claim);
+function buildSourceChips(fuentes, claim, mediaFuentes, officialFuentes) {
+  const exactMatches = buildExactSourceLinks(fuentes);
+  const mediaLinks = buildCategoryLinks(mediaFuentes, TRUSTED_MEDIA_SOURCES);
+  const officialLinks = buildCategoryLinks(officialFuentes, TRUSTED_OFFICIAL_SOURCES);
   const sections = [
     buildSourceGroup("Coincidencias encontradas", exactMatches),
-    buildSourceGroup("Buscar en fuentes oficiales", trustedOfficials),
+    buildSourceGroup("Medios dominicanos", mediaLinks),
+    buildSourceGroup("Fuentes oficiales", officialLinks),
   ].filter(Boolean);
 
   if (!sections.length) return "";
@@ -242,42 +248,29 @@ function normalizeSourceUrl(raw) {
   }
 }
 
-function buildExactSourceLinks(fuentes, claim) {
-  const seenHrefs = new Set();
-  const seenLabels = new Set();
-  return fuentes.flatMap((fuente) => {
-    const normalizedHref = normalizeSourceUrl(fuente);
-    const trustedFromRaw = findTrustedSource(fuente);
-    const trustedSource = trustedFromRaw || findTrustedSource(normalizedHref);
-    const href = resolveSourceHref(normalizedHref, trustedSource, claim);
-    if (href === "#" || seenHrefs.has(href)) return [];
-    const label = getSourceLabel(fuente, normalizedHref);
-    const normalizedLabel = label.toLowerCase();
-    if (seenLabels.has(normalizedLabel)) return [];
-    seenHrefs.add(href);
-    seenLabels.add(normalizedLabel);
-    return [{
-      href,
-      label,
-    }];
-  });
-}
-
-function resolveSourceHref(normalizedHref, trustedSource, claim) {
-  if (!isSpecificSourceUrl(normalizedHref) && trustedSource) {
-    return createSourceSearchUrl(trustedSource.domain, claim);
-  }
-  return normalizedHref;
-}
-
-function buildTrustedSearchLinks(sources, claim) {
+function buildExactSourceLinks(fuentes) {
   const seen = new Set();
-  return sources.flatMap((source) => {
-    const href = createSourceSearchUrl(source.domain, claim);
-    if (seen.has(href)) return [];
+  return fuentes.flatMap((fuente) => {
+    const href = normalizeSourceUrl(fuente);
+    if (href === "#" || !isSpecificSourceUrl(href) || seen.has(href)) return [];
     seen.add(href);
-    return [{ href, label: source.label }];
+    return [{ href, label: getSourceLabel(fuente, href) }];
   });
+}
+
+function buildCategoryLinks(serperUrls, sourceList) {
+  if (serperUrls && serperUrls.length > 0) {
+    const seen = new Set();
+    const links = serperUrls.flatMap((url) => {
+      const href = normalizeSourceUrl(url);
+      if (href === "#" || seen.has(href)) return [];
+      seen.add(href);
+      return [{ href, label: getSourceLabel(url, href) }];
+    });
+    if (links.length > 0) return links;
+  }
+  // Fallback: link to the homepage of each source in the category
+  return sourceList.map((s) => ({ href: `https://${s.domain}`, label: s.label }));
 }
 
 function buildSourceGroup(title, links) {
@@ -291,12 +284,6 @@ function buildSourceGroup(title, links) {
       <div class="source-chips">${chips}</div>
     </div>
   `;
-}
-
-function createSourceSearchUrl(domain, claim) {
-  const query = String(claim || "").trim();
-  const terms = query ? `site:${domain} "${query}"` : `site:${domain}`;
-  return `https://www.google.com/search?q=${encodeURIComponent(terms)}`;
 }
 
 function isSpecificSourceUrl(raw) {
@@ -354,7 +341,7 @@ function escapeHtml(text) {
   });
 }
 
-function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes }) {
+function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes, mediaFuentes = [], officialFuentes = [] }) {
   const vInfo = verdictInfo(veredicto);
   const evidenceHtml = razones.length
     ? `<div class="evidence-section">
@@ -373,7 +360,7 @@ function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes
       <div class="metrics-list">${buildMetricBars(metricas)}</div>
     </div>
     ${evidenceHtml}
-    ${buildSourceChips(fuentes, claim)}
+    ${buildSourceChips(fuentes, claim, mediaFuentes, officialFuentes)}
   `;
 }
 
