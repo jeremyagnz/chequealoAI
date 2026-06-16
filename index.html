@@ -7,44 +7,90 @@
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <main class="container">
-      <header>
-        <h1>ChequealoAI</h1>
-        <p>Valida si una noticia de República Dominicana parece real, dudosa o falsa.</p>
-      </header>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <span class="logo">ChequealoAI</span>
+      </div>
+    </nav>
 
-      <section class="card">
-        <h2>Verificador de noticias</h2>
-        <p class="helper">
-          Escribe un titular o una noticia y el sistema intentará clasificarla como real, dudosa o falsa.
-        </p>
-      </section>
-
-      <section class="card">
-        <label for="newsQuery">Noticia o titular a verificar</label>
-        <textarea
-          id="newsQuery"
-          rows="5"
-          placeholder="Ejemplo: El Banco Central anunció una nueva medida cambiaria hoy..."
-        ></textarea>
-
-        <button id="validateBtn" type="button">Validar noticia</button>
-      </section>
-
-      <section id="resultCard" class="card hidden" aria-live="polite">
-        <div class="status-row">
-          <h2>Resultado</h2>
-          <span id="badge" class="badge">-</span>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          Verificación con IA en tiempo real
         </div>
-        <p id="summary"></p>
-        <h3>Razones</h3>
-        <ul id="reasons"></ul>
-        <h3>Fuentes sugeridas</h3>
-        <ul id="sources"></ul>
-      </section>
+        <h1 class="hero-title">
+          La verdad, respaldada<br />
+          por <span class="hero-accent">evidencia real</span>
+        </h1>
+        <p class="hero-sub">
+          Verifica noticias, afirmaciones y rumores en segundos. Puntuación de<br />
+          credibilidad basada en fuentes verificables, no en suposiciones.
+        </p>
 
-      <p id="error" class="error hidden"></p>
-    </main>
+        <div class="search-wrapper">
+          <div class="search-bar">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+            </svg>
+            <input
+              type="text"
+              id="newsQuery"
+              aria-label="Noticia o titular a verificar"
+              placeholder="Escribe o pega una afirmación, noticia o URL..."
+              autocomplete="off"
+            />
+            <button id="validateBtn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              <span class="btn-text">Verificar</span>
+            </button>
+          </div>
+          <p class="search-meta">
+            Gratis, sin registro · Resultados en ~8 segundos ·
+            <span class="meta-accent">Fuentes verificables</span>
+          </p>
+        </div>
+
+        <div class="features-row">
+          <span class="feature"><span class="feat-check">✓</span> 5 proveedores de IA</span>
+          <span class="feat-sep">•</span>
+          <span class="feature"><span class="feat-check">✓</span> Fuentes dominicanas</span>
+          <span class="feat-sep">•</span>
+          <span class="feature"><span class="feat-check">✓</span> GDPR compliant</span>
+          <span class="feat-sep">•</span>
+          <span class="feature"><span class="feat-check">✓</span> API disponible</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live result (shown after validation) -->
+    <section id="resultSection" class="result-section hidden" aria-live="polite">
+      <div class="section-inner">
+        <div id="resultCard" class="analysis-card"></div>
+      </div>
+    </section>
+
+    <!-- Demo section -->
+    <section class="demo-section">
+      <div class="section-inner">
+        <h2 class="section-title">Así se ve un análisis real</h2>
+        <p class="section-sub">
+          Cada verificación incluye puntuación, evidencia trazable y fuentes<br />consultadas.
+        </p>
+        <div class="demo-tabs" role="tablist">
+          <button class="tab-btn active" role="tab" data-demo="confiable">Confiable (82)</button>
+          <button class="tab-btn" role="tab" data-demo="dudosa">Dudosa (51)</button>
+          <button class="tab-btn" role="tab" data-demo="falsa">Falsa (21)</button>
+        </div>
+        <div id="demoCard" class="analysis-card" role="tabpanel"></div>
+      </div>
+    </section>
+
+    <p id="error" class="error-msg hidden"></p>
 
     <script src="/script.js" defer></script>
   </body>

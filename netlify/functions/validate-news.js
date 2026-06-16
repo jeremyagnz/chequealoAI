@@ -4,16 +4,31 @@ const promptRules = `
 Eres un verificador de noticias de República Dominicana.
 Analiza la consulta del usuario y responde SOLO en JSON con esta forma exacta:
 {
-  "veredicto": "REAL|DUDOSA|FALSA",
-  "resumen": "texto breve en español",
-  "razones": ["razón 1", "razón 2"],
-  "fuentes": ["medio o entidad oficial 1", "medio o entidad oficial 2"]
+  "veredicto": "CONFIABLE|DUDOSA|FALSA",
+  "puntuacion": 82,
+  "resumen": "texto breve en español (máx. 2 oraciones)",
+  "razones": ["evidencia o argumento 1", "evidencia o argumento 2"],
+  "fuentes": ["https://listindiario.com/noticia-ejemplo", "https://www.diariolibre.com/noticia-ejemplo"],
+  "metricas": {
+    "autoridad_fuente": 92,
+    "evidencia_encontrada": 88,
+    "consenso_fuentes": 85,
+    "actualidad": 79,
+    "sin_contradicciones": 70
+  }
 }
 Criterios:
-- Evalúa si la noticia parece verosímil y potencialmente verídica según conocimiento general disponible.
-- Si no hay evidencia suficiente, usa DUDOSA.
-- Prioriza fuentes confiables de RD (Listín Diario, Diario Libre, El Caribe, Presidencia, JCE, Banco Central, etc.).
-- Aclara de forma breve si hay limitación por falta de verificación en tiempo real.
+- CONFIABLE (puntuacion >= 65): la noticia tiene evidencia sólida y fuentes confiables de RD.
+- DUDOSA (puntuacion 35-64): hay evidencia parcial, contradictoria o insuficiente.
+- FALSA (puntuacion < 35): la información es incorrecta o carece de respaldo verificable.
+- Todos los valores en "metricas" son enteros de 0 a 100.
+- "puntuacion" debe ser coherente con el promedio ponderado de las métricas y el veredicto.
+- Para validar noticias nacionales, consulta y cruza estas fuentes confiables de RD (medios y oficiales):
+  Medios: listindiario.com, diariolibre.com, noticiassin.com, cdn.com.do, acento.com.do, elcaribe.com.do, hoy.com.do, elnuevodiario.com.do, rnn.com.do, ndigital.com.do, rcnoticias.com.do, z101digital.com
+  Oficiales: presidencia.gob.do, policia.gob.do, ministeriopublico.gob.do, pgr.gob.do, coe.gob.do, migracion.gob.do, jce.gob.do
+- Usa tantas de estas fuentes como sea posible para confirmar o desmentir la afirmación, priorizando coincidencia entre varios medios y fuentes oficiales cuando aplique.
+- En "fuentes" devuelve solo URLs clicables que apunten directamente a artículos, comunicados o páginas específicas claramente relacionadas con la consulta.
+- No inventes enlaces ni devuelvas portadas genéricas/homepages si no tienes una URL específica y pertinente para esa fuente; en ese caso omite esa fuente del arreglo.
 - Nunca salgas del formato JSON.
 `;
 
@@ -89,11 +104,26 @@ exports.handler = async (event) => {
       });
     }
 
+    const clampScore = (n) => typeof n === "number" ? Math.round(Math.max(0, Math.min(100, n))) : null;
+    const metricas = parsed.metricas && typeof parsed.metricas === "object"
+      ? {
+          autoridad_fuente: clampScore(parsed.metricas.autoridad_fuente),
+          evidencia_encontrada: clampScore(parsed.metricas.evidencia_encontrada),
+          consenso_fuentes: clampScore(parsed.metricas.consenso_fuentes),
+          actualidad: clampScore(parsed.metricas.actualidad),
+          sin_contradicciones: clampScore(parsed.metricas.sin_contradicciones),
+        }
+      : null;
+
     return jsonResponse(200, {
       veredicto: String(parsed.veredicto).toUpperCase(),
+      puntuacion: typeof parsed.puntuacion === "number"
+        ? Math.round(Math.max(0, Math.min(100, parsed.puntuacion)))
+        : null,
       resumen: parsed.resumen,
       razones: Array.isArray(parsed.razones) ? parsed.razones : [],
       fuentes: Array.isArray(parsed.fuentes) ? parsed.fuentes : [],
+      metricas,
     });
   } catch (error) {
     if (error.name === "AbortError") {
