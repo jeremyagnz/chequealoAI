@@ -103,6 +103,17 @@ exports.handler = async (event) => {
       });
     }
 
+    const clampScore = (n) => typeof n === "number" ? Math.round(Math.max(0, Math.min(100, n))) : null;
+    const metricas = parsed.metricas && typeof parsed.metricas === "object"
+      ? {
+          autoridad_fuente: clampScore(parsed.metricas.autoridad_fuente),
+          evidencia_encontrada: clampScore(parsed.metricas.evidencia_encontrada),
+          consenso_fuentes: clampScore(parsed.metricas.consenso_fuentes),
+          actualidad: clampScore(parsed.metricas.actualidad),
+          sin_contradicciones: clampScore(parsed.metricas.sin_contradicciones),
+        }
+      : null;
+
     return jsonResponse(200, {
       veredicto: String(parsed.veredicto).toUpperCase(),
       puntuacion: typeof parsed.puntuacion === "number"
@@ -111,7 +122,7 @@ exports.handler = async (event) => {
       resumen: parsed.resumen,
       razones: Array.isArray(parsed.razones) ? parsed.razones : [],
       fuentes: Array.isArray(parsed.fuentes) ? parsed.fuentes : [],
-      metricas: parsed.metricas && typeof parsed.metricas === "object" ? parsed.metricas : null,
+      metricas,
     });
   } catch (error) {
     if (error.name === "AbortError") {
