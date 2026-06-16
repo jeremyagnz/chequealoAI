@@ -85,6 +85,7 @@ function parseResult(data) {
 }
 
 function estimateScore(veredicto) {
+  // "REAL" kept as fallback for any cached/older API responses
   if (veredicto === "CONFIABLE" || veredicto === "REAL") return 78;
   if (veredicto === "DUDOSA") return 48;
   return 18;
