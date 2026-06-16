@@ -128,6 +128,7 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify({
         model: "gpt-4o",
+        temperature: 0,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
