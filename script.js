@@ -13,6 +13,7 @@ queryInput.addEventListener("keydown", (e) => {
 });
 
 async function runValidation() {
+  if (validateBtn.disabled) return;
   hideError();
   const query = queryInput.value.trim();
   if (!query) {
