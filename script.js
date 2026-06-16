@@ -75,6 +75,12 @@ function parseResult(data) {
   const metricas = data.metricas && typeof data.metricas === "object"
     ? data.metricas
     : estimateMetricas(puntuacion);
+  const fuentes_confirmadoras = typeof data.fuentes_confirmadoras === "number"
+    ? data.fuentes_confirmadoras
+    : null;
+  const nivel_confianza = typeof data.nivel_confianza === "string"
+    ? data.nivel_confianza
+    : estimateConfianza(fuentes_confirmadoras, data.confirmacion_oficial);
   return {
     veredicto,
     puntuacion,
@@ -82,6 +88,10 @@ function parseResult(data) {
     razones: Array.isArray(data.razones) ? data.razones : [],
     fuentes: Array.isArray(data.fuentes) ? data.fuentes : [],
     metricas,
+    variaciones_busqueda: Array.isArray(data.variaciones_busqueda) ? data.variaciones_busqueda : [],
+    fuentes_confirmadoras,
+    confirmacion_oficial: typeof data.confirmacion_oficial === "boolean" ? data.confirmacion_oficial : null,
+    nivel_confianza,
   };
 }
 
@@ -90,6 +100,14 @@ function estimateScore(veredicto) {
   if (veredicto === "CONFIABLE" || veredicto === "REAL") return 78;
   if (veredicto === "DUDOSA") return 48;
   return 18;
+}
+
+function estimateConfianza(fuentes_confirmadoras, confirmacion_oficial) {
+  if (confirmacion_oficial) return "muy alta";
+  if (typeof fuentes_confirmadoras !== "number") return null;
+  if (fuentes_confirmadoras >= 3) return "alta";
+  if (fuentes_confirmadoras === 2) return "media";
+  return "baja";
 }
 
 function estimateMetricas(score) {
@@ -112,6 +130,10 @@ function renderResult(result, query) {
     metricas: result.metricas,
     razones: result.razones,
     fuentes: result.fuentes,
+    variaciones_busqueda: result.variaciones_busqueda,
+    fuentes_confirmadoras: result.fuentes_confirmadoras,
+    confirmacion_oficial: result.confirmacion_oficial,
+    nivel_confianza: result.nivel_confianza,
   });
   resultSection.classList.remove("hidden");
   resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -341,8 +363,56 @@ function escapeHtml(text) {
   });
 }
 
-function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes }) {
+const CONFIANZA_INFO = {
+  "baja":     { label: "Baja",     cls: "confianza-baja",     desc: "1 o menos fuentes confirmaron" },
+  "media":    { label: "Media",    cls: "confianza-media",    desc: "2 fuentes confiables confirmaron" },
+  "alta":     { label: "Alta",     cls: "confianza-alta",     desc: "3 o más fuentes confiables coinciden" },
+  "muy alta": { label: "Muy alta", cls: "confianza-muy-alta", desc: "Confirmación oficial incluida" },
+};
+
+function buildSearchProcess(variaciones_busqueda) {
+  if (!variaciones_busqueda || !variaciones_busqueda.length) return "";
+  const tags = variaciones_busqueda
+    .map((v) => `<span class="search-tag">${escapeHtml(String(v))}</span>`)
+    .join("");
+  return `
+    <div class="search-process">
+      <p class="search-process-label">Variaciones de búsqueda</p>
+      <div class="search-tags">${tags}</div>
+    </div>
+  `;
+}
+
+function buildConfidenceRow(nivel_confianza, fuentes_confirmadoras, confirmacion_oficial) {
+  const items = [];
+
+  if (nivel_confianza) {
+    const info = CONFIANZA_INFO[nivel_confianza.toLowerCase()] || {
+      label: nivel_confianza,
+      cls: "confianza-media",
+      desc: "",
+    };
+    items.push(`<span class="confidence-badge ${info.cls}" title="${escapeHtml(info.desc)}">Confianza: ${escapeHtml(info.label)}</span>`);
+  }
+
+  if (typeof fuentes_confirmadoras === "number") {
+    const plural = fuentes_confirmadoras === 1 ? "fuente confirmó" : "fuentes confirmaron";
+    items.push(`<span class="confidence-badge confianza-sources">📰 ${fuentes_confirmadoras} ${plural}</span>`);
+  }
+
+  if (confirmacion_oficial === true) {
+    items.push(`<span class="confidence-badge confianza-oficial">✓ Confirmado oficialmente</span>`);
+  }
+
+  if (!items.length) return "";
+  return `<div class="confidence-row">${items.join("")}</div>`;
+}
+
+function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes,
+  variaciones_busqueda, fuentes_confirmadoras, confirmacion_oficial, nivel_confianza }) {
   const vInfo = verdictInfo(veredicto);
+  const searchProcessHtml = buildSearchProcess(variaciones_busqueda);
+  const confidenceRowHtml = buildConfidenceRow(nivel_confianza, fuentes_confirmadoras, confirmacion_oficial);
   const evidenceHtml = razones.length
     ? `<div class="evidence-section">
         <p class="evidence-label">Evidencia clave</p>
@@ -352,6 +422,8 @@ function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes
   return `
     <p class="claim-label">Afirmación verificada</p>
     <p class="claim-text">"${escapeHtml(String(claim))}"</p>
+    ${searchProcessHtml}
+    ${confidenceRowHtml}
     <div class="scores-row">
       <div class="gauge-wrap">
         ${buildGaugeSvg(score)}
@@ -377,6 +449,15 @@ const DEMO_DATA = {
       "Listín Diario y Diario Libre cubrieron el anuncio con declaraciones directas del gobernador Héctor Valdez Albizu.",
     ],
     fuentes: ["bancentral.gov.do", "listindiario.com", "diariolibre.com", "elcaribe.com.do", "acento.com.do", "elnacional.com.do"],
+    variaciones_busqueda: [
+      "Banco Central RD aumento tasas interés enero 2025",
+      "tasa política monetaria República Dominicana 2025",
+      "BCRD 50 puntos base tasa interés",
+      "Héctor Valdez Albizu tasas interés comunicado",
+    ],
+    fuentes_confirmadoras: 4,
+    confirmacion_oficial: true,
+    nivel_confianza: "muy alta",
   },
   dudosa: {
     claim: "El gobierno dominicano eliminó completamente el impuesto a las importaciones de alimentos de la canasta básica en 2024.",
@@ -388,6 +469,14 @@ const DEMO_DATA = {
       "Múltiples medios reportaron exenciones parciales, sin confirmar eliminación total. La afirmación mezcla hechos reales con una conclusión exagerada.",
     ],
     fuentes: ["bancentral.gov.do", "listindiario.com", "diariolibre.com", "elcaribe.com.do", "elnacional.com.do", "acento.com.do"],
+    variaciones_busqueda: [
+      "gobierno dominicano elimina impuesto importación alimentos 2024",
+      "aranceles canasta básica RD 2024",
+      "exención aranceles alimentos República Dominicana",
+    ],
+    fuentes_confirmadoras: 2,
+    confirmacion_oficial: false,
+    nivel_confianza: "media",
   },
   falsa: {
     claim: "El Congreso Nacional dominicano aprobó una ley que permite jubilarse a los 45 años para todos los empleados públicos a partir de enero 2025.",
@@ -399,11 +488,31 @@ const DEMO_DATA = {
       "El sistema de pensiones dominicano (SIPEN) mantiene la edad de retiro en 60 años, sin modificaciones legislativas registradas.",
     ],
     fuentes: ["sipen.gov.do", "congreso.gob.do", "listindiario.com", "diariolibre.com"],
+    variaciones_busqueda: [
+      "Congreso RD ley jubilación 45 años empleados públicos",
+      "reforma pensiones República Dominicana 2025",
+      "retiro 45 años empleados gobierno dominicano",
+    ],
+    fuentes_confirmadoras: 0,
+    confirmacion_oficial: false,
+    nivel_confianza: "baja",
   },
 };
 
 function renderDemoCard(key) {
-  document.getElementById("demoCard").innerHTML = buildAnalysisCard(DEMO_DATA[key]);
+  const d = DEMO_DATA[key];
+  document.getElementById("demoCard").innerHTML = buildAnalysisCard({
+    claim: d.claim,
+    score: d.score,
+    veredicto: d.veredicto,
+    metricas: d.metricas,
+    razones: d.razones,
+    fuentes: d.fuentes,
+    variaciones_busqueda: d.variaciones_busqueda,
+    fuentes_confirmadoras: d.fuentes_confirmadoras,
+    confirmacion_oficial: d.confirmacion_oficial,
+    nivel_confianza: d.nivel_confianza,
+  });
 }
 
 document.querySelectorAll(".tab-btn").forEach((btn) => {
