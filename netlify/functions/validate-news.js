@@ -114,12 +114,7 @@ exports.handler = async (event) => {
 
     let parsed;
     try {
-      // The model may wrap JSON in markdown code fences; strip them if present.
-      const jsonText = (text.startsWith("```")
-        ? text.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "")
-        : text
-      ).trim();
-      parsed = JSON.parse(jsonText);
+      parsed = JSON.parse(stripCodeFences(text));
     } catch {
       return jsonResponse(502, {
         error: "OpenAI devolvió una respuesta con formato inválido.",
@@ -186,6 +181,11 @@ function parseRequestBody(body) {
   } catch {
     return null;
   }
+}
+
+function stripCodeFences(text) {
+  if (!text.startsWith("```")) return text.trim();
+  return text.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "").trim();
 }
 
 function jsonResponse(statusCode, body) {

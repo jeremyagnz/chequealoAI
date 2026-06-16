@@ -396,8 +396,8 @@ function buildConfidenceRow(nivel_confianza, fuentes_confirmadoras, confirmacion
   }
 
   if (typeof fuentes_confirmadoras === "number") {
-    const plural = fuentes_confirmadoras === 1 ? "fuente confirmó" : "fuentes confirmaron";
-    items.push(`<span class="confidence-badge confianza-sources">📰 ${fuentes_confirmadoras} ${plural}</span>`);
+    const sourceText = fuentes_confirmadoras === 1 ? "1 fuente confirmó" : `${fuentes_confirmadoras} fuentes confirmaron`;
+    items.push(`<span class="confidence-badge confianza-sources">📰 ${sourceText}</span>`);
   }
 
   if (confirmacion_oficial === true) {
