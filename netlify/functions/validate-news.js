@@ -1,4 +1,9 @@
 const API_TIMEOUT_MS = 20000;
+const SERPER_TIMEOUT_MS = 5000;
+const SERPER_MAX_RESULTS = 20;
+const SERPER_CONTEXT_RESULTS = 10;
+const MAX_MEDIA_SOURCES = 6;
+const MAX_OFFICIAL_SOURCES = 4;
 
 const MEDIA_DOMAINS = [
   "listindiario.com", "diariolibre.com", "noticiassin.com", "cdn.com.do",
@@ -48,7 +53,7 @@ async function searchSerper(query) {
   const apiKey = process.env.SERPER_API_KEY;
   if (!apiKey) return [];
   const controller = new AbortController();
-  const tid = setTimeout(() => controller.abort(), 5000);
+  const timeoutId = setTimeout(() => controller.abort(), SERPER_TIMEOUT_MS);
   try {
     const res = await fetch("https://google.serper.dev/search", {
       method: "POST",
@@ -57,7 +62,7 @@ async function searchSerper(query) {
         "Content-Type": "application/json",
         "X-API-KEY": apiKey,
       },
-      body: JSON.stringify({ q: query, gl: "do", hl: "es", num: 20 }),
+      body: JSON.stringify({ q: query, gl: "do", hl: "es", num: SERPER_MAX_RESULTS }),
     });
     if (!res.ok) return [];
     const data = await res.json().catch(() => null);
@@ -65,7 +70,7 @@ async function searchSerper(query) {
   } catch {
     return [];
   } finally {
-    clearTimeout(tid);
+    clearTimeout(timeoutId);
   }
 }
 
@@ -104,14 +109,14 @@ exports.handler = async (event) => {
 
   // Search Serper (soft fail — does not block if unavailable or slow)
   const serperResults = await searchSerper(query);
-  const mediaFuentes = filterByDomains(serperResults, MEDIA_DOMAINS).slice(0, 6);
-  const officialFuentes = filterByDomains(serperResults, OFFICIAL_DOMAINS).slice(0, 4);
+  const mediaFuentes = filterByDomains(serperResults, MEDIA_DOMAINS).slice(0, MAX_MEDIA_SOURCES);
+  const officialFuentes = filterByDomains(serperResults, OFFICIAL_DOMAINS).slice(0, MAX_OFFICIAL_SOURCES);
 
   // Build search context snippet for OpenAI
   const serperContext = serperResults.length > 0
     ? "\n\nResultados de búsqueda encontrados para esta consulta:\n" +
-      serperResults.slice(0, 10)
-        .map((r) => `- ${r.title || r.link || ""}: ${r.link || ""}`)
+      serperResults.slice(0, SERPER_CONTEXT_RESULTS)
+        .map((r) => `- ${r.title || "Sin título"}: ${r.link || ""}`)
         .join("\n")
     : "";
 
