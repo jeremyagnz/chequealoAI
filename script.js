@@ -204,10 +204,11 @@ function normalizeSourceUrl(raw) {
   const withProto = /^https?:\/\//i.test(value) ? value : `https://${value}`;
   try {
     const url = new URL(withProto);
-    if (url.protocol === "http:" || url.protocol === "https:") {
+    if (url.protocol === "http:") {
       url.protocol = "https:";
       return url.href;
     }
+    if (url.protocol === "https:") return url.href;
   } catch {
     // Ignore malformed values and fall back to non-navigable link.
     return "#";
