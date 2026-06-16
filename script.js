@@ -272,7 +272,8 @@ function buildCategoryLinks(serperUrls, sourceList) {
     });
     if (links.length > 0) return links;
   }
-  // Fallback: link to the homepage of each source in the category
+  // Fallback (media only): link to the homepage of each source in the category.
+  // Official sources pass [] for sourceList so this path is never reached for them.
   return sourceList.map((s) => ({ href: `https://${s.domain}`, label: s.label }));
 }
 
