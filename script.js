@@ -193,7 +193,7 @@ function buildSourceChips(fuentes) {
   const chips = fuentes.map((f) => {
     const href = normalizeSourceUrl(f);
     const label = escapeHtml(String(f));
-    return `<a class="source-chip source-link" href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+    return `<a class="source-chip source-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
   }).join("");
   return `<div class="source-chips">${chips}</div>`;
 }
@@ -212,12 +212,13 @@ function normalizeSourceUrl(raw) {
 }
 
 function escapeHtml(text) {
-  return text
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
+  return text.replace(/[&<>"']/g, (ch) => {
+    if (ch === "&") return "&amp;";
+    if (ch === "<") return "&lt;";
+    if (ch === ">") return "&gt;";
+    if (ch === '"') return "&quot;";
+    return "&#39;";
+  });
 }
 
 function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes }) {
