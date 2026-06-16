@@ -1,10 +1,10 @@
 # chequealoAI
 
-Página web simple para validar noticias de República Dominicana usando OpenAI (ChatGPT).
+Página web simple para validar noticias de República Dominicana. El flujo busca la noticia en Serper, filtra resultados a fuentes dominicanas confiables, y usa OpenAI para analizar y emitir un veredicto.
 
 ## Cómo usar
 
-1. Configura la variable `OPENAI_API_KEY` en Netlify.
+1. Configura las variables de entorno `OPENAI_API_KEY` y `SERPER_API_KEY` en Netlify.
 2. Abre el sitio desplegado o ejecútalo con Netlify Functions.
 3. Pega un titular o texto de noticia en el buscador.
 4. Pulsa **Validar noticia**.
@@ -39,6 +39,7 @@ Este repositorio ya incluye configuración base para desplegar en Netlify.
 En **Site configuration → Environment variables**, agrega:
 
 - `OPENAI_API_KEY`: tu clave de OpenAI
+- `SERPER_API_KEY`: tu clave de Serper (https://serper.dev)
 
 ### 3) Functions
 

@@ -1,28 +1,58 @@
 const API_TIMEOUT_MS = 25000;
 
-const promptRules = `
-Eres un verificador de noticias de República Dominicana especializado en búsqueda multi-fuente.
+const TRUSTED_DOMAINS = [
+  "listindiario.com",
+  "diariolibre.com",
+  "noticiassin.com",
+  "cdn.com.do",
+  "acento.com.do",
+  "elcaribe.com.do",
+  "hoy.com.do",
+  "elnuevodiario.com.do",
+  "rnn.com.do",
+  "ndigital.com.do",
+  "rcnoticias.com.do",
+  "z101digital.com",
+  "almomento.net",
+  "eldia.com.do",
+  "7dias.com.do",
+  "arecoa.com",
+  "diariosalud.do",
+  "telemicro.com.do",
+  "telemicro.com",
+  "telesistema11.com.do",
+  "presidencia.gob.do",
+  "policia.gob.do",
+  "pgr.gob.do",
+  "coe.gob.do",
+  "jce.gob.do",
+  "msp.gob.do",
+  "intrant.gob.do",
+  "dgii.gov.do",
+  "aduanas.gob.do",
+  "911.gob.do",
+  "mirex.gob.do",
+  "economia.gob.do",
+  "senasa.gob.do",
+  "indotel.gob.do",
+  "bancentral.gov.do",
+];
 
-Para validar la noticia del usuario, sigue EXACTAMENTE este proceso:
+const SYSTEM_PROMPT = `Eres un verificador de noticias de República Dominicana. Analiza la noticia utilizando EXCLUSIVAMENTE los resultados de búsqueda proporcionados. No uses conocimiento propio para verificar hechos.
 
-1. VARIACIONES: Genera 3-4 variaciones de búsqueda de la afirmación (palabras clave distintas pero equivalentes).
-2. BÚSQUEDA: Busca cada variación enfocándote en fuentes dominicanas confiables:
-   Medios: listindiario.com, diariolibre.com, noticiassin.com, cdn.com.do, acento.com.do, elcaribe.com.do, hoy.com.do, elnuevodiario.com.do, rnn.com.do, ndigital.com.do, rcnoticias.com.do, z101digital.com
-   Oficiales: presidencia.gob.do, policia.gob.do, ministeriopublico.gob.do, pgr.gob.do, coe.gob.do, migracion.gob.do, jce.gob.do
-3. COMPARACIÓN: Cruza los resultados comparando fecha, lugar, víctimas, nombres y declaraciones oficiales.
-4. CONFIANZA basada en cuántas fuentes confiables confirman la noticia:
-   - 0-1 fuentes confiables → nivel "baja"
-   - 2 fuentes confiables → nivel "media"
-   - 3 o más fuentes confiables coinciden → nivel "alta"
-   - Confirmación de fuente oficial además → nivel "muy alta"
+Determina:
+1. Si varias fuentes describen el mismo evento.
+2. Si existen contradicciones.
+3. Si la noticia parece verdadera.
+4. Qué fuentes respaldan la información.
 
 Responde SOLO en JSON con esta forma exacta:
 {
-  "veredicto": "CONFIABLE|DUDOSA|FALSA",
-  "puntuacion": 82,
+  "veredicto": "VERDADERA|DUDOSA|FALSA",
+  "confianza": 82,
   "resumen": "texto breve en español (máx. 2 oraciones)",
+  "fuentes": [{"medio": "Listín Diario", "url": "https://listindiario.com/..."}],
   "razones": ["evidencia o argumento 1", "evidencia o argumento 2"],
-  "fuentes": ["https://listindiario.com/noticia-especifica", "https://diariolibre.com/noticia-especifica"],
   "metricas": {
     "autoridad_fuente": 92,
     "evidencia_encontrada": 88,
@@ -30,23 +60,24 @@ Responde SOLO en JSON con esta forma exacta:
     "actualidad": 79,
     "sin_contradicciones": 70
   },
-  "variaciones_busqueda": ["variación 1", "variación 2", "variación 3"],
   "fuentes_confirmadoras": 3,
   "confirmacion_oficial": false,
   "nivel_confianza": "alta"
 }
 
-Criterios adicionales:
-- CONFIABLE (puntuacion >= 65): evidencia sólida y múltiples fuentes confiables de RD.
-- DUDOSA (puntuacion 35-64): evidencia parcial, contradictoria o insuficiente.
-- FALSA (puntuacion < 35): información incorrecta o sin respaldo verificable.
+Criterios:
+- VERDADERA (confianza >= 65): evidencia sólida y múltiples fuentes confiables de RD confirman la noticia.
+- DUDOSA (confianza 35-64): evidencia parcial, contradictoria o insuficiente.
+- FALSA (confianza < 35): información incorrecta o sin respaldo verificable.
+- nivel_confianza según fuentes_confirmadoras:
+  - 0-1 fuentes → "baja"
+  - 2 fuentes → "media"
+  - 3 o más fuentes coinciden → "alta"
+  - Fuente oficial (gob.do) confirma → "muy alta"
+- confirmacion_oficial: true solo si una fuente gubernamental o institucional oficial confirmó la noticia.
+- En "fuentes" incluye SOLO URLs de artículos específicos presentes en los resultados dados. No incluyas homepages ni inventes URLs.
+- Si no hay resultados relevantes, responde DUDOSA con confianza <= 40.
 - Todos los valores en "metricas" son enteros de 0 a 100.
-- "puntuacion" debe ser coherente con el promedio ponderado de las métricas y el veredicto.
-- En "fuentes" incluye SOLO URLs de artículos específicos encontrados. No incluyas homepages ni inventes enlaces.
-- "fuentes_confirmadoras": número entero de medios o fuentes confiables que confirmaron la noticia.
-- "confirmacion_oficial": true únicamente si una fuente gubernamental, policial o institucional oficial confirmó la noticia.
-- "nivel_confianza": "baja" | "media" | "alta" | "muy alta" según los criterios de confianza anteriores.
-- "variaciones_busqueda": arreglo con las variaciones de búsqueda que usaste.
 - Nunca salgas del formato JSON.
 `;
 
@@ -61,6 +92,12 @@ exports.handler = async (event) => {
     });
   }
 
+  if (!process.env.SERPER_API_KEY) {
+    return jsonResponse(500, {
+      error: "Falta configurar SERPER_API_KEY en Netlify.",
+    });
+  }
+
   const body = parseRequestBody(event.body);
   const query = body?.query?.trim();
 
@@ -72,19 +109,32 @@ exports.handler = async (event) => {
   const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
   try {
-    const response = await fetch("https://api.openai.com/v1/responses", {
+    // Step 1: Search Serper with the exact user query
+    const serperData = await searchSerper(query, controller.signal);
+
+    // Step 2: Filter results to trusted Dominican domains
+    const filteredResults = filterTrustedResults(serperData);
+
+    // Step 3: Format filtered results for the OpenAI prompt
+    const formattedResults = formatResultsForPrompt(filteredResults);
+
+    // Step 4: Send news + filtered results to OpenAI for analysis
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       signal: controller.signal,
       headers: {
         "Content-Type": "application/json",
-        Authorization: ["Bearer", process.env.OPENAI_API_KEY].join(" "),
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
         model: "gpt-4o",
-        tools: [{ type: "web_search_preview" }],
-        input: [
-          { role: "system", content: promptRules },
-          { role: "user", content: `Noticia a validar: ${query}` },
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          {
+            role: "user",
+            content: `NOTICIA:\n${query}\n\nRESULTADOS DE BÚSQUEDA DE FUENTES CONFIABLES:\n${formattedResults}`,
+          },
         ],
       }),
     });
@@ -98,13 +148,7 @@ exports.handler = async (event) => {
       });
     }
 
-    // Responses API returns output as an array; find the assistant message item.
-    const outputItems = Array.isArray(data?.output) ? data.output : [];
-    const messageItem = outputItems.find((item) => item.type === "message");
-    const text = messageItem?.content
-      ?.find((c) => c.type === "output_text")
-      ?.text
-      ?.trim();
+    const text = data?.choices?.[0]?.message?.content?.trim();
 
     if (!text) {
       return jsonResponse(502, {
@@ -114,7 +158,7 @@ exports.handler = async (event) => {
 
     let parsed;
     try {
-      parsed = JSON.parse(stripCodeFences(text));
+      parsed = JSON.parse(text);
     } catch {
       return jsonResponse(502, {
         error: "OpenAI devolvió una respuesta con formato inválido.",
@@ -128,6 +172,7 @@ exports.handler = async (event) => {
     }
 
     const clampScore = (n) => typeof n === "number" ? Math.round(Math.max(0, Math.min(100, n))) : null;
+    const confianza = clampScore(parsed.confianza);
     const metricas = parsed.metricas && typeof parsed.metricas === "object"
       ? {
           autoridad_fuente: clampScore(parsed.metricas.autoridad_fuente),
@@ -140,16 +185,12 @@ exports.handler = async (event) => {
 
     return jsonResponse(200, {
       veredicto: String(parsed.veredicto).toUpperCase(),
-      puntuacion: typeof parsed.puntuacion === "number"
-        ? Math.round(Math.max(0, Math.min(100, parsed.puntuacion)))
-        : null,
+      confianza,
+      puntuacion: confianza,
       resumen: parsed.resumen,
       razones: Array.isArray(parsed.razones) ? parsed.razones : [],
       fuentes: Array.isArray(parsed.fuentes) ? parsed.fuentes : [],
       metricas,
-      variaciones_busqueda: Array.isArray(parsed.variaciones_busqueda)
-        ? parsed.variaciones_busqueda.map(String)
-        : [],
       fuentes_confirmadoras: typeof parsed.fuentes_confirmadoras === "number"
         ? Math.max(0, Math.round(parsed.fuentes_confirmadoras))
         : null,
@@ -168,12 +209,58 @@ exports.handler = async (event) => {
     }
 
     return jsonResponse(500, {
-      error: "No se pudo conectar con OpenAI.",
+      error: "No se pudo conectar con el servicio de validación.",
     });
   } finally {
     clearTimeout(timeoutId);
   }
 };
+
+async function searchSerper(query, signal) {
+  const response = await fetch("https://google.serper.dev/search", {
+    method: "POST",
+    signal,
+    headers: {
+      "X-API-KEY": process.env.SERPER_API_KEY,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ q: query, num: 20 }),
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => null);
+    throw new Error(err?.message || "Serper no pudo procesar la búsqueda.");
+  }
+
+  return response.json();
+}
+
+function filterTrustedResults(data) {
+  const organic = Array.isArray(data?.organic) ? data.organic : [];
+  return organic.filter((result) => {
+    try {
+      const hostname = new URL(result.link).hostname.toLowerCase();
+      return TRUSTED_DOMAINS.some(
+        (domain) => hostname === domain || hostname.endsWith("." + domain)
+      );
+    } catch {
+      return false;
+    }
+  });
+}
+
+function formatResultsForPrompt(results) {
+  if (!results.length) {
+    return "No se encontraron resultados en fuentes dominicanas confiables.";
+  }
+  return results.map((r, i) => {
+    const parts = [`${i + 1}. ${r.title || "(sin título)"}`];
+    parts.push(`   URL: ${r.link}`);
+    if (r.snippet) parts.push(`   Extracto: ${r.snippet}`);
+    if (r.date) parts.push(`   Fecha: ${r.date}`);
+    return parts.join("\n");
+  }).join("\n\n");
+}
 
 function parseRequestBody(body) {
   try {
@@ -181,11 +268,6 @@ function parseRequestBody(body) {
   } catch {
     return null;
   }
-}
-
-function stripCodeFences(text) {
-  if (!text.startsWith("```")) return text.trim();
-  return text.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "").trim();
 }
 
 function jsonResponse(statusCode, body) {

@@ -71,6 +71,8 @@ function parseResult(data) {
   const veredicto = String(data.veredicto).toUpperCase();
   const puntuacion = typeof data.puntuacion === "number"
     ? data.puntuacion
+    : typeof data.confianza === "number"
+    ? data.confianza
     : estimateScore(veredicto);
   const metricas = data.metricas && typeof data.metricas === "object"
     ? data.metricas
@@ -96,8 +98,8 @@ function parseResult(data) {
 }
 
 function estimateScore(veredicto) {
-  // "REAL" kept as fallback for any cached/older API responses
-  if (veredicto === "CONFIABLE" || veredicto === "REAL") return 78;
+  // "REAL" and "CONFIABLE" kept as fallback for any cached/older API responses
+  if (veredicto === "CONFIABLE" || veredicto === "REAL" || veredicto === "VERDADERA") return 78;
   if (veredicto === "DUDOSA") return 48;
   return 18;
 }
@@ -200,7 +202,7 @@ function scoreColor(n) {
 
 function verdictInfo(veredicto) {
   const v = veredicto.toUpperCase();
-  if (v === "CONFIABLE" || v === "REAL") return { label: "Confiable", cls: "confiable", icon: "✓" };
+  if (v === "CONFIABLE" || v === "REAL" || v === "VERDADERA") return { label: "Verdadera", cls: "confiable", icon: "✓" };
   if (v === "DUDOSA") return { label: "Dudosa", cls: "dudosa", icon: "⚠" };
   return { label: "Falsa", cls: "falsa", icon: "✕" };
 }
@@ -269,12 +271,15 @@ function normalizeSourceUrl(raw) {
 function buildExactSourceLinks(fuentes) {
   const seen = new Set();
   return fuentes.flatMap((fuente) => {
-    const href = normalizeSourceUrl(fuente);
+    // Handle both {medio, url} objects and plain string URLs
+    const raw = typeof fuente === "object" && fuente !== null ? fuente.url : fuente;
+    const labelOverride = typeof fuente === "object" && fuente !== null ? fuente.medio || null : null;
+    const href = normalizeSourceUrl(raw);
     if (href === "#" || !isSpecificSourceUrl(href) || seen.has(href)) return [];
     seen.add(href);
     return [{
       href,
-      label: getSourceLabel(fuente, href),
+      label: labelOverride || getSourceLabel(raw, href),
     }];
   });
 }
