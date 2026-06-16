@@ -237,14 +237,14 @@ function buildMetricBars(metricas) {
   }).join("");
 }
 
-function buildSourceChips(fuentes, claim) {
+function buildSourceChips(fuentes) {
   const exactMatches = buildExactSourceLinks(fuentes);
-  const trustedMedia = buildTrustedSearchLinks(TRUSTED_MEDIA_SOURCES, claim);
-  const trustedOfficials = buildTrustedSearchLinks(TRUSTED_OFFICIAL_SOURCES, claim);
+  const trustedMedia = buildTrustedSearchLinks(TRUSTED_MEDIA_SOURCES);
+  const trustedOfficials = buildTrustedSearchLinks(TRUSTED_OFFICIAL_SOURCES);
   const sections = [
     buildSourceGroup("Coincidencias encontradas", exactMatches),
-    buildSourceGroup("Buscar en medios dominicanos", trustedMedia),
-    buildSourceGroup("Buscar en fuentes oficiales", trustedOfficials),
+    buildSourceGroup("Medios dominicanos", trustedMedia),
+    buildSourceGroup("Fuentes oficiales", trustedOfficials),
   ].filter(Boolean);
 
   if (!sections.length) return "";
@@ -279,10 +279,10 @@ function buildExactSourceLinks(fuentes) {
   });
 }
 
-function buildTrustedSearchLinks(sources, claim) {
+function buildTrustedSearchLinks(sources) {
   const seen = new Set();
   return sources.flatMap((source) => {
-    const href = createSourceSearchUrl(source.domain, claim);
+    const href = `https://${source.domain}`;
     if (seen.has(href)) return [];
     seen.add(href);
     return [{ href, label: source.label }];
@@ -300,12 +300,6 @@ function buildSourceGroup(title, links) {
       <div class="source-chips">${chips}</div>
     </div>
   `;
-}
-
-function createSourceSearchUrl(domain, claim) {
-  const query = String(claim || "").trim();
-  const terms = query ? `site:${domain} "${query}"` : `site:${domain}`;
-  return `https://www.google.com/search?q=${encodeURIComponent(terms)}`;
 }
 
 function isSpecificSourceUrl(raw) {
@@ -432,7 +426,7 @@ function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes
       <div class="metrics-list">${buildMetricBars(metricas)}</div>
     </div>
     ${evidenceHtml}
-    ${buildSourceChips(fuentes, claim)}
+    ${buildSourceChips(fuentes)}
   `;
 }
 
