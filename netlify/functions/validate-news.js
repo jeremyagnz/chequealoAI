@@ -4,16 +4,27 @@ const promptRules = `
 Eres un verificador de noticias de República Dominicana.
 Analiza la consulta del usuario y responde SOLO en JSON con esta forma exacta:
 {
-  "veredicto": "REAL|DUDOSA|FALSA",
-  "resumen": "texto breve en español",
-  "razones": ["razón 1", "razón 2"],
-  "fuentes": ["medio o entidad oficial 1", "medio o entidad oficial 2"]
+  "veredicto": "CONFIABLE|DUDOSA|FALSA",
+  "puntuacion": 82,
+  "resumen": "texto breve en español (máx. 2 oraciones)",
+  "razones": ["evidencia o argumento 1", "evidencia o argumento 2"],
+  "fuentes": ["listindiario.com", "diariolibre.com"],
+  "metricas": {
+    "autoridad_fuente": 92,
+    "evidencia_encontrada": 88,
+    "consenso_fuentes": 85,
+    "actualidad": 79,
+    "sin_contradicciones": 70
+  }
 }
 Criterios:
-- Evalúa si la noticia parece verosímil y potencialmente verídica según conocimiento general disponible.
-- Si no hay evidencia suficiente, usa DUDOSA.
-- Prioriza fuentes confiables de RD (Listín Diario, Diario Libre, El Caribe, Presidencia, JCE, Banco Central, etc.).
-- Aclara de forma breve si hay limitación por falta de verificación en tiempo real.
+- CONFIABLE (puntuacion >= 65): la noticia tiene evidencia sólida y fuentes confiables de RD.
+- DUDOSA (puntuacion 35-64): hay evidencia parcial, contradictoria o insuficiente.
+- FALSA (puntuacion < 35): la información es incorrecta o carece de respaldo verificable.
+- Todos los valores en "metricas" son enteros de 0 a 100.
+- "puntuacion" debe ser coherente con el promedio ponderado de las métricas y el veredicto.
+- Prioriza fuentes confiables de RD: Listín Diario, Diario Libre, El Caribe, Presidencia, JCE, Banco Central, DGII, etc.
+- En "fuentes" incluye solo nombres de dominio sin http/https (ej: listindiario.com).
 - Nunca salgas del formato JSON.
 `;
 
@@ -91,9 +102,13 @@ exports.handler = async (event) => {
 
     return jsonResponse(200, {
       veredicto: String(parsed.veredicto).toUpperCase(),
+      puntuacion: typeof parsed.puntuacion === "number"
+        ? Math.round(Math.max(0, Math.min(100, parsed.puntuacion)))
+        : null,
       resumen: parsed.resumen,
       razones: Array.isArray(parsed.razones) ? parsed.razones : [],
       fuentes: Array.isArray(parsed.fuentes) ? parsed.fuentes : [],
+      metricas: parsed.metricas && typeof parsed.metricas === "object" ? parsed.metricas : null,
     });
   } catch (error) {
     if (error.name === "AbortError") {
