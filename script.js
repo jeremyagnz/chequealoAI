@@ -228,16 +228,17 @@ function escapeHtml(text) {
 }
 
 function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes }) {
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const vInfo = verdictInfo(veredicto);
   const evidenceHtml = razones.length
     ? `<div class="evidence-section">
         <p class="evidence-label">Evidencia clave</p>
-        <ul class="evidence-list">${razones.map((r) => `<li>${r}</li>`).join("")}</ul>
+        <ul class="evidence-list">${razones.map((r) => `<li>${esc(r)}</li>`).join("")}</ul>
       </div>`
     : "";
   return `
     <p class="claim-label">Afirmación verificada</p>
-    <p class="claim-text">"${claim}"</p>
+    <p class="claim-text">"${esc(claim)}"</p>
     <div class="scores-row">
       <div class="gauge-wrap">
         ${buildGaugeSvg(score)}
