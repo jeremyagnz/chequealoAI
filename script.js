@@ -119,6 +119,8 @@ function renderResult(result, query) {
   });
   resultSection.classList.remove("hidden");
   resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  saveToHistory(query, result);
+  renderHistory();
 }
 
 function setLoading(on) {
@@ -367,6 +369,113 @@ function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes
     ${buildSourceChips(fuentes, claim, mediaFuentes, officialFuentes)}
   `;
 }
+
+// ---- History ----
+
+const HISTORY_KEY = "chequealoai_history";
+const HISTORY_MAX = 20;
+let historyFilter = "all";
+
+function loadHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveToHistory(query, result) {
+  const history = loadHistory();
+  const entry = {
+    id: Date.now(),
+    timestamp: new Date().toISOString(),
+    query,
+    veredicto: result.veredicto,
+    puntuacion: result.puntuacion,
+    resumen: result.resumen,
+    razones: result.razones,
+    fuentes: result.fuentes,
+    metricas: result.metricas,
+    mediaFuentes: result.mediaFuentes,
+    officialFuentes: result.officialFuentes,
+  };
+  const deduped = history.filter((h) => h.query !== query);
+  const updated = [entry, ...deduped].slice(0, HISTORY_MAX);
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+  } catch { /* ignore quota errors */ }
+}
+
+function renderHistory() {
+  const histSection = document.getElementById("historySection");
+  if (!histSection) return;
+  const history = loadHistory();
+
+  if (history.length === 0) {
+    histSection.classList.add("hidden");
+    return;
+  }
+  histSection.classList.remove("hidden");
+
+  const counts = { CONFIABLE: 0, DUDOSA: 0, FALSA: 0 };
+  history.forEach((h) => { if (h.veredicto in counts) counts[h.veredicto]++; });
+
+  const tabs = [
+    { key: "all", label: `Todas (${history.length})` },
+    { key: "CONFIABLE", label: `Confiable (${counts.CONFIABLE})` },
+    { key: "DUDOSA", label: `Dudosa (${counts.DUDOSA})` },
+    { key: "FALSA", label: `Falsa (${counts.FALSA})` },
+  ];
+  const tabsHtml = `<div class="hist-tabs" role="tablist">` +
+    tabs.map((t) =>
+      `<button class="hist-tab-btn${historyFilter === t.key ? " active" : ""}" role="tab" data-verdict="${t.key}">${t.label}</button>`
+    ).join("") +
+    `</div>`;
+
+  const filtered = historyFilter === "all" ? history : history.filter((h) => h.veredicto === historyFilter);
+  const itemsHtml = filtered.length
+    ? filtered.map((entry) => {
+        const vInfo = verdictInfo(entry.veredicto);
+        const date = new Date(entry.timestamp).toLocaleDateString("es-DO", { day: "2-digit", month: "short", year: "numeric" });
+        return `<div class="hist-item" data-id="${entry.id}" role="button" tabindex="0">
+          <div class="hist-item-header">
+            <span class="hist-score" style="color:${scoreColor(entry.puntuacion)}">${entry.puntuacion}</span>
+            <span class="verdict-chip ${vInfo.cls}">${vInfo.icon} ${vInfo.label}</span>
+            <span class="hist-date">${escapeHtml(date)}</span>
+          </div>
+          <p class="hist-query">"${escapeHtml(String(entry.query))}"</p>
+        </div>`;
+      }).join("")
+    : `<p class="hist-empty">No hay búsquedas con este filtro.</p>`;
+
+  const container = histSection.querySelector(".section-inner");
+  container.innerHTML = `
+    <h2 class="section-title">Historial de verificaciones</h2>
+    ${tabsHtml}
+    <div class="hist-list">${itemsHtml}</div>
+  `;
+
+  container.querySelectorAll(".hist-tab-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      historyFilter = btn.dataset.verdict;
+      renderHistory();
+    });
+  });
+
+  container.querySelectorAll(".hist-item").forEach((item) => {
+    const load = () => {
+      const id = Number(item.dataset.id);
+      const entry = loadHistory().find((h) => h.id === id);
+      if (!entry) return;
+      renderResult(entry, entry.query);
+    };
+    item.addEventListener("click", load);
+    item.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); load(); } });
+  });
+}
+
+// Render history on page load (in case there are stored entries)
+renderHistory();
 
 // ---- Demo section ----
 
