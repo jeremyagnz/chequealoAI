@@ -295,8 +295,13 @@ function renderDemoCard(key) {
 
 document.querySelectorAll(".tab-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
+    document.querySelectorAll(".tab-btn").forEach((b) => {
+      const isActive = b === btn;
+      b.classList.toggle("active", isActive);
+      b.setAttribute("aria-selected", String(isActive));
+      b.tabIndex = isActive ? 0 : -1;
+    });
+    document.getElementById("demoCard").setAttribute("aria-labelledby", btn.id);
     renderDemoCard(btn.dataset.demo);
   });
 });
