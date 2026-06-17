@@ -2,6 +2,10 @@
 
 Página web simple para validar noticias de República Dominicana usando OpenAI (ChatGPT).
 
+## Release
+
+- 📦 **Primer release:** [v1.0.0 - Release Notes](./RELEASE_NOTES.md)
+
 ## Cómo usar
 
 1. Configura la variable `OPENAI_API_KEY` en Netlify.
