@@ -524,7 +524,7 @@ function renderDemoCard(key) {
   demoCard.hidden = false;
   if (demoLoading && !demoLoading.hidden) {
     demoLoading.classList.add("is-hidden");
-    window.setTimeout(() => {
+    setTimeout(() => {
       demoLoading.hidden = true;
     }, DEMO_LOADING_FADE_MS);
   }
