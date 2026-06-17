@@ -44,11 +44,15 @@ body {
 .logo {
   display: inline-flex;
   align-items: center;
+  border-radius: 10px;
+  overflow: hidden;
 }
 .logo-image {
   display: block;
+  width: 180px;
   height: 38px;
-  width: auto;
+  object-fit: cover;
+  object-position: center;
 }
 .sr-only {
   position: absolute;
@@ -579,6 +583,10 @@ body {
   }
   .section-sub br {
     display: none;
+  }
+  .logo-image {
+    width: 150px;
+    height: 32px;
   }
   .search-bar button {
     padding: 0.65rem 0.9rem;
