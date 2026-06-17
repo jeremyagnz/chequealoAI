@@ -516,7 +516,9 @@ const DEMO_DATA = {
 };
 
 function renderDemoCard(key) {
-  document.getElementById("demoCard").innerHTML = buildAnalysisCard(DEMO_DATA[key]);
+  const demoCard = document.getElementById("demoCard");
+  demoCard.innerHTML = buildAnalysisCard(DEMO_DATA[key]);
+  demoCard.classList.remove("hidden");
 }
 
 document.querySelectorAll(".tab-btn").forEach((btn) => {

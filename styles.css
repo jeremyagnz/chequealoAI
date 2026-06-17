@@ -42,10 +42,24 @@ body {
   margin: 0 auto;
 }
 .logo {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--text);
-  letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: center;
+}
+.logo-image {
+  display: block;
+  height: 38px;
+  width: auto;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ---- HERO ---- */
