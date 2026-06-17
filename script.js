@@ -530,16 +530,37 @@ function renderDemoCard(key) {
   }
 }
 
-document.querySelectorAll(".tab-btn").forEach((btn) => {
+const demoTabButtons = Array.from(document.querySelectorAll(".tab-btn"));
+
+function activateDemoTab(btn) {
+  demoTabButtons.forEach((b) => {
+    const isActive = b === btn;
+    b.classList.toggle("active", isActive);
+    b.setAttribute("aria-selected", String(isActive));
+    b.tabIndex = isActive ? 0 : -1;
+  });
+  document.getElementById("demoCard").setAttribute("aria-labelledby", btn.id);
+  renderDemoCard(btn.dataset.demo);
+}
+
+demoTabButtons.forEach((btn, index) => {
   btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab-btn").forEach((b) => {
-      const isActive = b === btn;
-      b.classList.toggle("active", isActive);
-      b.setAttribute("aria-selected", String(isActive));
-      b.tabIndex = isActive ? 0 : -1;
-    });
-    document.getElementById("demoCard").setAttribute("aria-labelledby", btn.id);
-    renderDemoCard(btn.dataset.demo);
+    activateDemoTab(btn);
+  });
+  btn.addEventListener("keydown", (e) => {
+    const { key } = e;
+    if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(key)) return;
+    e.preventDefault();
+
+    let nextIndex = index;
+    if (key === "ArrowRight") nextIndex = (index + 1) % demoTabButtons.length;
+    if (key === "ArrowLeft") nextIndex = (index - 1 + demoTabButtons.length) % demoTabButtons.length;
+    if (key === "Home") nextIndex = 0;
+    if (key === "End") nextIndex = demoTabButtons.length - 1;
+
+    const nextTab = demoTabButtons[nextIndex];
+    nextTab.focus();
+    activateDemoTab(nextTab);
   });
 });
 
