@@ -6,6 +6,10 @@ ChequealoAI es una app web para verificar titulares o afirmaciones sobre Repúbl
 - análisis de IA con OpenAI,
 - y una interfaz simple que muestra puntaje, veredicto, evidencia y fuentes.
 
+## Release
+
+- 📦 **Primer release:** [v1.0.0 - Release Notes](./RELEASE_NOTES.md)
+
 ---
 
 ## ¿Cómo funciona todo?
