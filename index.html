@@ -98,10 +98,10 @@
         <p class="section-sub">
           Cada verificación incluye puntuación, evidencia trazable y fuentes<br />consultadas.
         </p>
-        <div class="demo-tabs" role="tablist">
-          <button class="tab-btn active" role="tab" data-demo="confiable">Confiable (82)</button>
-          <button class="tab-btn" role="tab" data-demo="dudosa">Dudosa (51)</button>
-          <button class="tab-btn" role="tab" data-demo="falsa">Falsa (21)</button>
+        <div class="demo-tabs" role="tablist" aria-label="Ejemplos de análisis">
+          <button id="demo-tab-confiable" class="tab-btn active" role="tab" data-demo="confiable" aria-selected="true">Confiable (82)</button>
+          <button id="demo-tab-dudosa" class="tab-btn" role="tab" data-demo="dudosa" aria-selected="false" tabindex="-1">Dudosa (51)</button>
+          <button id="demo-tab-falsa" class="tab-btn" role="tab" data-demo="falsa" aria-selected="false" tabindex="-1">Falsa (21)</button>
         </div>
         <div id="demoLoading" class="demo-loading" aria-hidden="true">
           <div class="demo-loading-head">
@@ -115,7 +115,7 @@
           <div class="demo-skeleton sk-line sk-line-lg"></div>
           <div class="demo-skeleton sk-chip-row"></div>
         </div>
-        <div id="demoCard" class="analysis-card" role="tabpanel" hidden></div>
+        <div id="demoCard" class="analysis-card" role="tabpanel" aria-labelledby="demo-tab-confiable" hidden></div>
       </div>
     </section>
 
