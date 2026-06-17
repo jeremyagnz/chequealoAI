@@ -11,6 +11,10 @@
   --green: #22c55e;
   --orange: #f59e0b;
   --red: #ef4444;
+  --demo-loading-top: rgba(31, 31, 35, 0.8);
+  --demo-loading-bottom: rgba(24, 24, 27, 0.85);
+  --demo-skeleton-start: #2a2a35;
+  --demo-skeleton-mid: #3a3a48;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
@@ -294,19 +298,35 @@ body {
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 1.75rem;
-  background: linear-gradient(180deg, rgba(31, 31, 35, 0.8), rgba(24, 24, 27, 0.85));
+  background: linear-gradient(180deg, var(--demo-loading-top), var(--demo-loading-bottom));
 }
 .demo-skeleton {
   border-radius: 999px;
-  background: linear-gradient(90deg, #2a2a35 25%, #3a3a48 45%, #2a2a35 65%);
+  background: linear-gradient(90deg, var(--demo-skeleton-start) 25%, var(--demo-skeleton-mid) 45%, var(--demo-skeleton-start) 65%);
   background-size: 200% 100%;
   animation: shimmer 1.25s ease-in-out infinite;
 }
-.sk-line { height: 12px; margin-bottom: 0.75rem; width: 100%; }
-.sk-line-sm { width: 38%; }
-.sk-line-lg { width: 70%; }
-.sk-row { height: 110px; border-radius: 14px; margin: 1rem 0; }
-.sk-chip-row { height: 30px; width: 55%; margin-bottom: 0; }
+.sk-line {
+  height: 12px;
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+.sk-line-sm {
+  width: 38%;
+}
+.sk-line-lg {
+  width: 70%;
+}
+.sk-row {
+  height: 110px;
+  border-radius: 14px;
+  margin: 1rem 0;
+}
+.sk-chip-row {
+  height: 30px;
+  width: 55%;
+  margin-bottom: 0;
+}
 .claim-label {
   font-size: 0.7rem;
   font-weight: 700;
