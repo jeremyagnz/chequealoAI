@@ -49,10 +49,10 @@ body {
 }
 .logo-image {
   display: block;
-  width: 180px;
   height: 38px;
-  object-fit: cover;
-  object-position: center;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
 }
 .sr-only {
   position: absolute;
@@ -585,8 +585,8 @@ body {
     display: none;
   }
   .logo-image {
-    width: 150px;
     height: 32px;
+    max-width: 150px;
   }
   .search-bar button {
     padding: 0.65rem 0.9rem;
