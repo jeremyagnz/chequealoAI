@@ -21,7 +21,7 @@
   --accent-30: rgba(124, 58, 237, 0.3);
   --accent-0: rgba(124, 58, 237, 0);
   --shadow-soft: rgba(0, 0, 0, 0.28);
-  --logo-glow-inset: -10px;
+  --logo-glow-offset: -10px;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
@@ -70,7 +70,7 @@ body {
 .logo::before {
   content: "";
   position: absolute;
-  inset: var(--logo-glow-inset);
+  inset: var(--logo-glow-offset);
   border-radius: 18px;
   background: radial-gradient(circle, rgba(124, 58, 237, 0.18), transparent 65%);
   z-index: -1;
@@ -681,6 +681,20 @@ body {
   font-size: 0.9rem;
 }
 
+/* ---- FOOTER ---- */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 1.2rem 0 1.6rem;
+  background: rgba(13, 13, 15, 0.7);
+}
+.footer-inner {
+  text-align: center;
+}
+.footer-inner p {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
 /* ---- UTILITIES ---- */
 .hidden {
   display: none !important;
@@ -751,15 +765,9 @@ input:focus-visible,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-content,
-  .demo-section .section-inner,
-  .analysis-card,
-  .search-bar button.is-loading .btn-icon,
-  .search-bar button.is-loading::after,
-  .demo-orb,
-  .demo-skeleton,
-  .logo::before {
-    animation: none;
-    transition: none;
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }
