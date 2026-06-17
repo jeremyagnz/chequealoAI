@@ -521,7 +521,12 @@ function renderDemoCard(key) {
   const demoCard = document.getElementById("demoCard");
   demoCard.innerHTML = buildAnalysisCard(DEMO_DATA[key]);
   demoCard.hidden = false;
-  if (demoLoading) demoLoading.hidden = true;
+  if (demoLoading && !demoLoading.hidden) {
+    demoLoading.classList.add("is-hidden");
+    window.setTimeout(() => {
+      demoLoading.hidden = true;
+    }, 260);
+  }
 }
 
 document.querySelectorAll(".tab-btn").forEach((btn) => {
