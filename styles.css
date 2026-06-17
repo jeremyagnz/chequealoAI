@@ -765,10 +765,20 @@ input:focus-visible,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0s;
-    animation-iteration-count: 1;
-    transition-duration: 0s;
-    scroll-behavior: auto;
+  .hero-content,
+  .demo-section .section-inner,
+  .analysis-card,
+  .demo-orb,
+  .demo-skeleton,
+  .logo::before,
+  .search-bar button.is-loading .btn-icon,
+  .search-bar button.is-loading::after {
+    animation: none;
+  }
+  .tab-btn,
+  .hist-item,
+  .gauge-arc,
+  .metric-bar-fill {
+    transition: none;
   }
 }
