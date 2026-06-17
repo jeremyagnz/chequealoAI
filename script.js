@@ -125,6 +125,7 @@ function renderResult(result, query) {
 
 function setLoading(on) {
   validateBtn.disabled = on;
+  validateBtn.classList.toggle("is-loading", on);
   const span = validateBtn.querySelector(".btn-text");
   if (span) span.textContent = on ? "Verificando..." : "Verificar";
 }
@@ -516,9 +517,11 @@ const DEMO_DATA = {
 };
 
 function renderDemoCard(key) {
+  const demoLoading = document.getElementById("demoLoading");
   const demoCard = document.getElementById("demoCard");
   demoCard.innerHTML = buildAnalysisCard(DEMO_DATA[key]);
   demoCard.hidden = false;
+  if (demoLoading) demoLoading.hidden = true;
 }
 
 document.querySelectorAll(".tab-btn").forEach((btn) => {
