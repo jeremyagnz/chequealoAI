@@ -14,3 +14,7 @@ Fecha: 2026-06-17
 ### 🔐 Seguridad y despliegue
 - Uso de `OPENAI_API_KEY` como variable de entorno en servidor.
 - Configuración lista para despliegue en Netlify con funciones serverless.
+
+---
+
+> 🏷️ Tag: `v1.0.0`
