@@ -21,7 +21,7 @@
   --accent-30: rgba(124, 58, 237, 0.3);
   --accent-0: rgba(124, 58, 237, 0);
   --shadow-soft: rgba(0, 0, 0, 0.28);
-  --logo-glow-offset: -10px;
+  --logo-glow-inset: -10px;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
@@ -70,7 +70,7 @@ body {
 .logo::before {
   content: "";
   position: absolute;
-  inset: var(--logo-glow-offset);
+  inset: var(--logo-glow-inset);
   border-radius: 18px;
   background: radial-gradient(circle, rgba(124, 58, 237, 0.18), transparent 65%);
   z-index: -1;
@@ -751,9 +751,15 @@ input:focus-visible,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
+  .hero-content,
+  .demo-section .section-inner,
+  .analysis-card,
+  .search-bar button.is-loading .btn-icon,
+  .search-bar button.is-loading::after,
+  .demo-orb,
+  .demo-skeleton,
+  .logo::before {
+    animation: none;
+    transition: none;
   }
 }
