@@ -4,6 +4,7 @@ const resultSection = document.getElementById("resultSection");
 const resultCard = document.getElementById("resultCard");
 const errorMsg = document.getElementById("error");
 const API_TIMEOUT_MS = 20000;
+const DEMO_LOADING_FADE_MS = 250;
 
 // ---- Validation trigger ----
 
@@ -525,7 +526,7 @@ function renderDemoCard(key) {
     demoLoading.classList.add("is-hidden");
     window.setTimeout(() => {
       demoLoading.hidden = true;
-    }, 260);
+    }, DEMO_LOADING_FADE_MS);
   }
 }
 
