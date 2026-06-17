@@ -16,6 +16,11 @@
   --demo-loading-bottom: rgba(24, 24, 27, 0.85);
   --demo-skeleton-start: #2a2a35;
   --demo-skeleton-mid: #3a3a48;
+  --demo-skeleton-accent: #4c2f86;
+  --accent-light-20: rgba(167, 139, 250, 0.2);
+  --accent-30: rgba(124, 58, 237, 0.3);
+  --accent-0: rgba(124, 58, 237, 0);
+  --shadow-soft: rgba(0, 0, 0, 0.28);
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
@@ -306,7 +311,7 @@ body {
     radial-gradient(circle at 14% 22%, rgba(124, 58, 237, 0.18), transparent 42%),
     radial-gradient(circle at 86% 74%, rgba(34, 211, 238, 0.14), transparent 48%),
     linear-gradient(180deg, var(--demo-loading-top), var(--demo-loading-bottom));
-  box-shadow: inset 0 0 0 1px rgba(167, 139, 250, 0.2), 0 10px 25px rgba(0, 0, 0, 0.28);
+  box-shadow: inset 0 0 0 1px var(--accent-light-20), 0 10px 25px var(--shadow-soft);
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .demo-loading.is-hidden {
@@ -333,7 +338,7 @@ body {
 }
 .demo-skeleton {
   border-radius: 999px;
-  background: linear-gradient(90deg, #2a2a35 20%, #4c2f86 45%, #2a2a35 70%);
+  background: linear-gradient(90deg, var(--demo-skeleton-start) 20%, var(--demo-skeleton-accent) 45%, var(--demo-skeleton-start) 70%);
   background-size: 200% 100%;
   animation: shimmer 1.25s ease-in-out infinite;
 }
@@ -658,8 +663,8 @@ body {
 }
 
 @keyframes pulse-orb {
-  0%, 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.3); }
-  50% { transform: scale(1.15); box-shadow: 0 0 0 8px rgba(124, 58, 237, 0); }
+  0%, 100% { transform: scale(0.9); box-shadow: 0 0 0 0 var(--accent-30); }
+  50% { transform: scale(1.15); box-shadow: 0 0 0 8px var(--accent-0); }
 }
 
 @keyframes enter-up {
