@@ -5,6 +5,54 @@ const resultCard = document.getElementById("resultCard");
 const errorMsg = document.getElementById("error");
 const API_TIMEOUT_MS = 20000;
 
+// ---- Navigation: mobile menu ----
+
+const navMenuBtn = document.getElementById("navMenuBtn");
+const navMobile = document.getElementById("navMobile");
+if (navMenuBtn && navMobile) {
+  navMenuBtn.addEventListener("click", () => {
+    const isOpen = navMobile.classList.toggle("open");
+    navMenuBtn.setAttribute("aria-expanded", String(isOpen));
+  });
+}
+
+const navVerifyBtn = document.getElementById("navVerifyBtn");
+if (navVerifyBtn) {
+  navVerifyBtn.addEventListener("click", () => {
+    queryInput.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(() => queryInput.focus(), 400);
+  });
+}
+
+// ---- Search suggestions ticker ----
+
+(function () {
+  const track = document.getElementById("pillsTrack");
+  if (!track) return;
+  // Duplicate pill buttons inside the same track for seamless infinite loop
+  // (animation goes 0 → -50%, so we need 2× the content in one track)
+  Array.from(track.children).forEach((pill) => {
+    track.appendChild(pill.cloneNode(true));
+  });
+  // Event delegation: works on originals and clones
+  track.parentElement.addEventListener("click", (e) => {
+    const pill = e.target.closest(".suggestion-pill");
+    if (!pill) return;
+    queryInput.value = pill.dataset.query;
+    queryInput.focus();
+  });
+})();
+
+// ---- Category cards ----
+
+document.querySelectorAll(".cat-card").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    queryInput.value = btn.dataset.query;
+    queryInput.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(() => queryInput.focus(), 450);
+  });
+});
+
 // ---- Validation trigger ----
 
 validateBtn.addEventListener("click", runValidation);
@@ -30,6 +78,19 @@ async function runValidation() {
     setLoading(false);
   }
 }
+
+// ---- URL param: auto-trigger from shared link ----
+
+(function checkSharedQuery() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const shared = params.get("q");
+    if (shared && shared.trim()) {
+      queryInput.value = shared.trim();
+      setTimeout(runValidation, 350);
+    }
+  } catch { /* ignore */ }
+})();
 
 // ---- API ----
 
@@ -116,6 +177,9 @@ function renderResult(result, query) {
     fuentes: result.fuentes,
     mediaFuentes: result.mediaFuentes,
     officialFuentes: result.officialFuentes,
+    resumen: result.resumen || "",
+    timestamp: result.timestamp || null,
+    showActions: true,
   });
   resultSection.classList.remove("hidden");
   resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -123,10 +187,73 @@ function renderResult(result, query) {
   renderHistory();
 }
 
+// ---- Progress animation ----
+
+let stepTimerIds = [];
+const STEP_DELAYS = [600, 2200, 4400, 7000, 9800];
+
+function startProgressAnimation() {
+  const progressSection = document.getElementById("progressSection");
+  if (progressSection) progressSection.classList.remove("hidden");
+  const steps = document.querySelectorAll(".progress-step");
+  steps.forEach((s) => s.classList.remove("done", "active"));
+  if (steps[0]) steps[0].classList.add("active");
+  updateProgressBar(5);
+
+  stepTimerIds = STEP_DELAYS.map((delay, i) =>
+    setTimeout(() => {
+      steps.forEach((s, si) => {
+        if (si < i) { s.classList.add("done"); s.classList.remove("active"); }
+        else if (si === i) { s.classList.add("done"); s.classList.remove("active"); }
+        else if (si === i + 1) s.classList.add("active");
+      });
+      updateProgressBar(Math.round(((i + 1) / steps.length) * 80));
+    }, delay)
+  );
+}
+
+function stopProgressAnimation() {
+  stepTimerIds.forEach(clearTimeout);
+  stepTimerIds = [];
+  const steps = document.querySelectorAll(".progress-step");
+  steps.forEach((s) => { s.classList.add("done"); s.classList.remove("active"); });
+  updateProgressBar(100);
+  setTimeout(() => {
+    const progressSection = document.getElementById("progressSection");
+    if (progressSection) progressSection.classList.add("hidden");
+  }, 350);
+}
+
+function updateProgressBar(pct) {
+  const bar = document.getElementById("progressBar");
+  if (bar) bar.style.width = `${pct}%`;
+}
+
 function setLoading(on) {
   validateBtn.disabled = on;
   const span = validateBtn.querySelector(".btn-text");
   if (span) span.textContent = on ? "Verificando..." : "Verificar";
+  if (on) {
+    resultSection.classList.add("hidden");
+    startProgressAnimation();
+  } else {
+    stopProgressAnimation();
+  }
+}
+
+// ---- Toast notification ----
+
+function showToast(message, duration) {
+  const ms = typeof duration === "number" ? duration : 3000;
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.remove("hidden");
+  requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add("toast-visible")));
+  setTimeout(() => {
+    toast.classList.remove("toast-visible");
+    setTimeout(() => toast.classList.add("hidden"), 300);
+  }, ms);
 }
 
 function showError(msg) { errorMsg.textContent = msg; errorMsg.classList.remove("hidden"); }
@@ -347,14 +474,28 @@ function escapeHtml(text) {
   });
 }
 
-function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes, mediaFuentes = [], officialFuentes = [] }) {
+function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes, mediaFuentes = [], officialFuentes = [], resumen = "", timestamp = null, showActions = false }) {
   const vInfo = verdictInfo(veredicto);
+
+  const summaryHtml = resumen
+    ? `<div class="summary-section">
+        <p class="evidence-label">Resumen del análisis</p>
+        <p class="summary-text">${escapeHtml(String(resumen))}</p>
+      </div>`
+    : "";
+
   const evidenceHtml = razones.length
     ? `<div class="evidence-section">
         <p class="evidence-label">Evidencia clave</p>
         <ul class="evidence-list">${razones.map((r) => `<li>${escapeHtml(String(r))}</li>`).join("")}</ul>
       </div>`
     : "";
+
+  const actionsHtml = showActions
+    ? buildTransparencySection(score, timestamp, mediaFuentes, officialFuentes, fuentes) +
+      buildShareSection(claim)
+    : "";
+
   return `
     <p class="claim-label">Afirmación verificada</p>
     <p class="claim-text">"${escapeHtml(String(claim))}"</p>
@@ -365,10 +506,80 @@ function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes
       </div>
       <div class="metrics-list">${buildMetricBars(metricas)}</div>
     </div>
+    ${summaryHtml}
     ${evidenceHtml}
     ${buildSourceChips(fuentes, claim, mediaFuentes, officialFuentes)}
+    ${actionsHtml}
   `;
 }
+
+function buildTransparencySection(score, timestamp, mediaFuentes, officialFuentes, fuentes) {
+  const now = timestamp ? new Date(timestamp) : new Date();
+  const dateStr = now.toLocaleDateString("es-DO", { day: "2-digit", month: "long", year: "numeric" }) + " " +
+    now.toLocaleTimeString("es-DO", { hour: "2-digit", minute: "2-digit" });
+  const totalSources = (mediaFuentes ? mediaFuentes.length : 0) +
+    (officialFuentes ? officialFuentes.length : 0) +
+    (fuentes ? fuentes.length : 0);
+  return `
+    <div class="transparency-section">
+      <p class="transparency-label">Transparencia del análisis</p>
+      <div class="transparency-grid">
+        <div class="transparency-item">
+          <span class="trans-key">Fecha del análisis</span>
+          <span class="trans-val">${escapeHtml(dateStr)}</span>
+        </div>
+        <div class="transparency-item">
+          <span class="trans-key">Nivel de confianza</span>
+          <span class="trans-val" style="color:${scoreColor(score)}">${score}/100</span>
+        </div>
+        <div class="transparency-item">
+          <span class="trans-key">Fuentes consultadas</span>
+          <span class="trans-val">${totalSources} fuentes</span>
+        </div>
+        <div class="transparency-item">
+          <span class="trans-key">Motor de análisis</span>
+          <span class="trans-val">GPT-4o mini + Serper</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function buildShareSection(claim) {
+  const claimStr = String(claim);
+  const encodedQuery = encodeURIComponent(claimStr);
+  const shareUrl = `${window.location.origin}${window.location.pathname}?q=${encodedQuery}`;
+  const shareText = `Verifiqué esta noticia en ChequealoAI: "${claimStr.slice(0, 120)}"`;
+  return `
+    <div class="share-section">
+      <p class="share-label">Compartir resultado</p>
+      <div class="share-buttons">
+        <button class="share-btn copy-btn" type="button" data-url="${escapeHtml(shareUrl)}">📋 Copiar enlace</button>
+        <a class="share-btn wa-btn" href="https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + "\n" + shareUrl)}" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+        <a class="share-btn x-btn" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener noreferrer">𝕏 Twitter</a>
+        <a class="share-btn fb-btn" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener noreferrer">f Facebook</a>
+        <a class="share-btn tg-btn" href="https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener noreferrer">✈ Telegram</a>
+      </div>
+    </div>
+  `;
+}
+
+// ---- Copy-link event delegation ----
+
+document.addEventListener("click", (e) => {
+  if (e.target.closest && e.target.closest(".copy-btn")) {
+    const btn = e.target.closest(".copy-btn");
+    const url = btn.dataset.url;
+    if (!url) return;
+    navigator.clipboard.writeText(url).then(() => {
+      const prev = btn.textContent;
+      btn.textContent = "✓ Enlace copiado";
+      btn.classList.add("copied");
+      showToast("Enlace copiado al portapapeles 📋");
+      setTimeout(() => { btn.textContent = "📋 Copiar enlace"; btn.classList.remove("copied"); }, 2500);
+    }).catch(() => showToast("No se pudo copiar el enlace"));
+  }
+});
 
 // ---- History ----
 
@@ -484,6 +695,7 @@ const DEMO_DATA = {
     claim: "El Banco Central de la República Dominicana aumentó las tasas de interés en 50 puntos base en enero 2025.",
     score: 82,
     veredicto: "CONFIABLE",
+    resumen: "El Banco Central de la República Dominicana confirmó oficialmente el ajuste mediante el comunicado N° 012-2025, respaldado por múltiples medios de comunicación dominicanos.",
     metricas: { autoridad_fuente: 92, evidencia_encontrada: 88, consenso_fuentes: 85, actualidad: 79, sin_contradicciones: 70 },
     razones: [
       "El Banco Central publicó el comunicado N° 012-2025 confirmando el ajuste de la tasa de política monetaria de 6.75% a 7.25%, efectivo al 31 de enero de 2025.",
@@ -495,6 +707,7 @@ const DEMO_DATA = {
     claim: "El gobierno dominicano eliminó completamente el impuesto a las importaciones de alimentos de la canasta básica en 2024.",
     score: 51,
     veredicto: "DUDOSA",
+    resumen: "El gobierno realizó reducciones temporales de algunos aranceles en 2024, pero la afirmación de 'eliminación completa' no está respaldada por documentos oficiales de la DGII.",
     metricas: { autoridad_fuente: 68, evidencia_encontrada: 55, consenso_fuentes: 48, actualidad: 60, sin_contradicciones: 45 },
     razones: [
       "El gobierno anunció reducciones temporales de algunos aranceles en 2024, pero no una eliminación completa del impuesto según la DGII.",
@@ -506,6 +719,7 @@ const DEMO_DATA = {
     claim: "El Congreso Nacional dominicano aprobó una ley que permite jubilarse a los 45 años para todos los empleados públicos a partir de enero 2025.",
     score: 21,
     veredicto: "FALSA",
+    resumen: "No existe ningún decreto ni ley aprobada en el Congreso Nacional que establezca jubilación a los 45 años. El sistema SIPEN mantiene la edad de retiro en 60 años sin modificaciones.",
     metricas: { autoridad_fuente: 15, evidencia_encontrada: 22, consenso_fuentes: 18, actualidad: 30, sin_contradicciones: 10 },
     razones: [
       "No existe ningún decreto ni ley aprobada en el Congreso Nacional que establezca jubilación a los 45 años para empleados públicos dominicanos.",
@@ -534,3 +748,54 @@ document.querySelectorAll(".tab-btn").forEach((btn) => {
 
 // Render initial demo
 renderDemoCard("confiable");
+
+// ---- Stats counter animation ----
+
+function animateCounter(el, target) {
+  const duration = Math.min(2200, target * 2.5);
+  const start = performance.now();
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+    const current = Math.round(eased * target);
+    el.textContent = current.toLocaleString("es-DO");
+    if (progress < 1) requestAnimationFrame(update);
+    else el.textContent = target.toLocaleString("es-DO");
+  }
+  requestAnimationFrame(update);
+}
+
+// ---- Intersection Observer for scroll animations & counters ----
+
+const scrollObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("visible");
+      if (entry.target.classList.contains("stat-card")) {
+        const numEl = entry.target.querySelector(".stat-num[data-target]");
+        if (numEl) {
+          const target = parseInt(numEl.dataset.target, 10) || 0;
+          delete numEl.dataset.target;
+          animateCounter(numEl, target);
+        }
+      }
+      scrollObserver.unobserve(entry.target);
+    });
+  },
+  { threshold: 0.15 }
+);
+
+document.querySelectorAll(".animate-on-scroll").forEach((el) => scrollObserver.observe(el));
+
+// ---- Scroll-to-top button ----
+const scrollTopBtn = document.getElementById("scrollTopBtn");
+if (scrollTopBtn) {
+  window.addEventListener("scroll", () => {
+    scrollTopBtn.classList.toggle("visible", window.scrollY > 300);
+  }, { passive: true });
+  scrollTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}

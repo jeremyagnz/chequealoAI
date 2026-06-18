@@ -3,35 +3,90 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChequealoAI | Verificador de noticias RD</title>
+    <title>ChequealoAI | Verificador de Noticias con IA — República Dominicana</title>
+    <meta name="description" content="Verifica noticias, afirmaciones y rumores en segundos con inteligencia artificial. Analizamos fuentes oficiales y medios confiables de República Dominicana." />
+    <meta name="keywords" content="verificador de noticias, fake news, República Dominicana, chequea, fact-checking, inteligencia artificial, noticias RD" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="ChequealoAI" />
+    <link rel="canonical" href="https://chequealoai.netlify.app/" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="ChequealoAI | Verificador de Noticias con IA" />
+    <meta property="og:description" content="Verifica noticias en segundos con IA. Fuentes oficiales y medios confiables de República Dominicana." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://chequealoai.netlify.app/" />
+    <meta property="og:image" content="https://chequealoai.netlify.app/og-image.png" />
+    <meta property="og:locale" content="es_DO" />
+    <meta property="og:site_name" content="ChequealoAI" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@chequealoai" />
+    <meta name="twitter:title" content="ChequealoAI | Verificador de Noticias con IA" />
+    <meta name="twitter:description" content="Verifica noticias en segundos con IA. Fuentes oficiales y medios confiables de República Dominicana." />
+    <meta name="twitter:image" content="https://chequealoai.netlify.app/og-image.png" />
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "ChequealoAI",
+      "description": "Plataforma de verificación de noticias con inteligencia artificial para República Dominicana",
+      "url": "https://chequealoai.netlify.app/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "inLanguage": "es",
+      "countryOfOrigin": "DO",
+      "featureList": ["Verificación con IA", "Fuentes dominicanas", "Análisis en tiempo real", "Sin registro requerido"]
+    }
+    </script>
+
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
       <div class="navbar-inner">
-        <span class="logo">ChequealoAI</span>
+        <a href="/" class="logo" aria-label="ChequealoAI inicio">
+          <span class="logo-check">✓</span>ChequealoAI
+        </a>
+        <div class="navbar-links">
+          <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
+          <a href="/fuentes.html" class="nav-link">Fuentes</a>
+          <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+        </div>
+        <button class="nav-cta-btn" id="navVerifyBtn" type="button">Verificar noticia</button>
+        <button class="nav-menu-btn" id="navMenuBtn" aria-label="Abrir menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <div class="navbar-mobile" id="navMobile" aria-label="Menú móvil">
+        <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
+        <a href="/fuentes.html" class="nav-link">Fuentes</a>
+        <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
       </div>
     </nav>
 
     <!-- Hero -->
-    <section class="hero">
+    <section class="hero" aria-labelledby="hero-title">
       <div class="hero-content">
-        <div class="hero-badge">
+        <div class="hero-badge fade-in-up" style="animation-delay:0.05s">
           <span class="badge-dot"></span>
           Verificación con IA en tiempo real
         </div>
-        <h1 class="hero-title">
-          La verdad, respaldada<br />
-          por <span class="hero-accent">evidencia real</span>
+        <h1 class="hero-title fade-in-up" id="hero-title" style="animation-delay:0.15s">
+          ¿Es verdad o es falsa?<br />
+          <span class="hero-accent">Verifícalo en segundos.</span>
         </h1>
-        <p class="hero-sub">
-          Verifica noticias, afirmaciones y rumores en segundos. Puntuación de<br />
-          credibilidad basada en fuentes verificables, no en suposiciones.
+        <p class="hero-sub fade-in-up" style="animation-delay:0.25s">
+          Analizamos fuentes oficiales, medios confiables e inteligencia artificial<br />
+          para darte la verdad sobre cualquier noticia o afirmación.
         </p>
 
-        <div class="search-wrapper">
-          <div class="search-bar">
+        <div class="search-wrapper fade-in-up" style="animation-delay:0.35s">
+          <div class="search-bar" id="searchBar">
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
             </svg>
@@ -42,27 +97,113 @@
               placeholder="Escribe o pega una afirmación, noticia o URL..."
               autocomplete="off"
             />
-            <button id="validateBtn" type="button">
+            <button id="validateBtn" type="button" aria-label="Verificar noticia">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
               <span class="btn-text">Verificar</span>
             </button>
           </div>
+
+          <!-- Search suggestions -->
+          <div class="search-suggestions" id="searchSuggestions">
+            <span class="suggestions-label">Ejemplos:</span>
+            <div class="pills-ticker">
+              <div class="pills-track" id="pillsTrack">
+                <button class="suggestion-pill" type="button" data-query="El Banco Central de la República Dominicana aumentó las tasas de interés en enero 2025">Banco Central sube tasas</button>
+                <button class="suggestion-pill" type="button" data-query="El gobierno dominicano eliminó el impuesto a la canasta básica en 2024">Gobierno elimina impuesto canasta</button>
+                <button class="suggestion-pill" type="button" data-query="Nuevo medicamento cura el dengue en 3 días según médicos dominicanos">Medicamento cura dengue en RD</button>
+                <button class="suggestion-pill" type="button" data-query="La JCE anuló los resultados de las elecciones municipales dominicanas">JCE anuló elecciones municipales</button>
+              </div>
+            </div>
+          </div>
+
           <p class="search-meta">
             Gratis, sin registro · Resultados en ~8 segundos ·
             <span class="meta-accent">Fuentes verificables</span>
           </p>
         </div>
 
-        <div class="features-row">
-          <span class="feature"><span class="feat-check">✓</span> 5 proveedores de IA</span>
-          <span class="feat-sep">•</span>
+        <div class="hero-ctas fade-in-up" style="animation-delay:0.45s">
+          <a href="#demo-section" class="cta-secondary">Ver ejemplo real →</a>
+        </div>
+
+        <div class="features-row fade-in-up" style="animation-delay:0.55s">
           <span class="feature"><span class="feat-check">✓</span> Fuentes dominicanas</span>
           <span class="feat-sep">•</span>
-          <span class="feature"><span class="feat-check">✓</span> GDPR compliant</span>
+          <span class="feature"><span class="feat-check">✓</span> IA avanzada</span>
           <span class="feat-sep">•</span>
-          <span class="feature"><span class="feat-check">✓</span> API disponible</span>
+          <span class="feature"><span class="feat-check">✓</span> Sin registro</span>
+          <span class="feat-sep">•</span>
+          <span class="feature"><span class="feat-check">✓</span> 100% gratuito</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats section -->
+    <section class="stats-section" aria-label="Estadísticas de la plataforma">
+      <div class="section-inner">
+        <div class="stats-grid">
+          <div class="stat-card animate-on-scroll">
+            <div class="stat-top">
+              <span class="stat-num" data-target="12847">0</span>
+            </div>
+            <span class="stat-label">Verificaciones realizadas</span>
+          </div>
+          <div class="stat-card animate-on-scroll">
+            <div class="stat-top">
+              <span class="stat-num" data-target="98">0</span><span class="stat-suffix">%</span>
+            </div>
+            <span class="stat-label">Precisión del análisis</span>
+          </div>
+          <div class="stat-card animate-on-scroll">
+            <div class="stat-top">
+              <span class="stat-num" data-target="18">0</span>
+            </div>
+            <span class="stat-label">Fuentes confiables</span>
+          </div>
+          <div class="stat-card animate-on-scroll">
+            <div class="stat-top">
+              <span class="stat-num" data-target="8">0</span><span class="stat-suffix">s</span>
+            </div>
+            <span class="stat-label">Tiempo promedio</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress section (shown during validation) -->
+    <section id="progressSection" class="progress-section hidden" aria-live="polite" aria-label="Progreso del análisis">
+      <div class="section-inner">
+        <div class="progress-card">
+          <div class="progress-header">
+            <div class="progress-spinner" aria-hidden="true"></div>
+            <h3 class="progress-title">Analizando tu consulta…</h3>
+          </div>
+          <div class="progress-steps" role="list">
+            <div class="progress-step" id="step-1" role="listitem"><span class="step-dot"></span><span class="step-text">Analizando texto</span></div>
+            <div class="progress-step" id="step-2" role="listitem"><span class="step-dot"></span><span class="step-text">Buscando fuentes oficiales</span></div>
+            <div class="progress-step" id="step-3" role="listitem"><span class="step-dot"></span><span class="step-text">Contrastando información</span></div>
+            <div class="progress-step" id="step-4" role="listitem"><span class="step-dot"></span><span class="step-text">Calculando credibilidad</span></div>
+            <div class="progress-step" id="step-5" role="listitem"><span class="step-dot"></span><span class="step-text">Generando informe</span></div>
+          </div>
+          <div class="progress-bar-track" aria-hidden="true">
+            <div class="progress-bar-fill" id="progressBar"></div>
+          </div>
+          <div class="skeleton-card" aria-hidden="true">
+            <div class="skeleton-line sk-wide"></div>
+            <div class="skeleton-line sk-medium"></div>
+            <div class="skeleton-row">
+              <div class="skeleton-circle"></div>
+              <div class="skeleton-col">
+                <div class="skeleton-line sk-full"></div>
+                <div class="skeleton-line sk-full"></div>
+                <div class="skeleton-line sk-wide"></div>
+                <div class="skeleton-line sk-full"></div>
+                <div class="skeleton-line sk-medium"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -70,7 +211,7 @@
     <!-- Live result (shown after validation) -->
     <section id="resultSection" class="result-section hidden" aria-live="polite">
       <div class="section-inner">
-        <div id="resultCard" class="analysis-card"></div>
+        <div id="resultCard" class="analysis-card result-animate"></div>
       </div>
     </section>
 
@@ -81,23 +222,173 @@
       </div>
     </section>
 
-    <!-- Demo section -->
-    <section class="demo-section">
+    <!-- How it works section -->
+    <section class="how-section" id="how-it-works" aria-labelledby="how-title">
       <div class="section-inner">
-        <h2 class="section-title">Así se ve un análisis real</h2>
-        <p class="section-sub">
-          Cada verificación incluye puntuación, evidencia trazable y fuentes<br />consultadas.
+        <h2 class="section-title animate-on-scroll" id="how-title">¿Cómo funciona?</h2>
+        <p class="section-sub animate-on-scroll">
+          Un proceso transparente de 4 pasos para verificar cualquier noticia en segundos.
+        </p>
+        <div class="how-grid">
+          <div class="how-card animate-on-scroll stagger-1">
+            <div class="how-num">01</div>
+            <div class="how-icon" aria-hidden="true">🔍</div>
+            <h3 class="how-card-title">Ingresa la noticia</h3>
+            <p class="how-desc">Escribe o pega el titular, afirmación o URL que quieres verificar.</p>
+          </div>
+          <div class="how-card animate-on-scroll stagger-2">
+            <div class="how-num">02</div>
+            <div class="how-icon" aria-hidden="true">🌐</div>
+            <h3 class="how-card-title">Buscamos fuentes</h3>
+            <p class="how-desc">Consultamos en tiempo real medios dominicanos y fuentes oficiales del gobierno.</p>
+          </div>
+          <div class="how-card animate-on-scroll stagger-3">
+            <div class="how-num">03</div>
+            <div class="how-icon" aria-hidden="true">🤖</div>
+            <h3 class="how-card-title">IA analiza y contrasta</h3>
+            <p class="how-desc">Nuestra IA cruza la información encontrada y calcula un score de credibilidad.</p>
+          </div>
+          <div class="how-card animate-on-scroll stagger-4">
+            <div class="how-num">04</div>
+            <div class="how-icon" aria-hidden="true">📊</div>
+            <h3 class="how-card-title">Recibe el veredicto</h3>
+            <p class="how-desc">Obtén un informe completo con evidencias, fuentes y explicación detallada.</p>
+          </div>
+        </div>
+        <div class="section-cta animate-on-scroll">
+          <a href="/como-funciona.html" class="cta-link">Saber más sobre el proceso →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trusted sources section -->
+    <section class="sources-section" aria-labelledby="sources-title">
+      <div class="section-inner">
+        <h2 class="section-title animate-on-scroll" id="sources-title">Fuentes que analizamos</h2>
+        <p class="section-sub animate-on-scroll">
+          Verificamos contra 18 fuentes de alta credibilidad: medios de comunicación y entidades oficiales.
+        </p>
+        <div class="trusted-categories">
+          <div class="trusted-category animate-on-scroll">
+            <h3 class="trusted-cat-title">📰 Medios de comunicación</h3>
+            <div class="trusted-grid">
+              <a href="https://listindiario.com" target="_blank" rel="noopener noreferrer" class="trusted-chip level-high"><span class="chip-level">Alta</span>Listín Diario</a>
+              <a href="https://diariolibre.com" target="_blank" rel="noopener noreferrer" class="trusted-chip level-high"><span class="chip-level">Alta</span>Diario Libre</a>
+              <a href="https://noticiassin.com" target="_blank" rel="noopener noreferrer" class="trusted-chip level-high"><span class="chip-level">Alta</span>Noticias SIN</a>
+              <a href="https://cdn.com.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-high"><span class="chip-level">Alta</span>CDN 37</a>
+              <a href="https://acento.com.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-medium"><span class="chip-level">Media</span>Acento</a>
+              <a href="https://elcaribe.com.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-high"><span class="chip-level">Alta</span>El Caribe</a>
+              <a href="https://hoy.com.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-medium"><span class="chip-level">Media</span>Hoy Digital</a>
+              <a href="https://elnuevodiario.com.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-medium"><span class="chip-level">Media</span>El Nuevo Diario</a>
+              <a href="https://rnn.com.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-medium"><span class="chip-level">Media</span>RNN Noticias</a>
+              <a href="https://ndigital.com.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-medium"><span class="chip-level">Media</span>N Digital</a>
+              <a href="https://rcnoticias.com.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-medium"><span class="chip-level">Media</span>RC Noticias</a>
+              <a href="https://z101digital.com" target="_blank" rel="noopener noreferrer" class="trusted-chip level-medium"><span class="chip-level">Media</span>Z101 Digital</a>
+            </div>
+          </div>
+          <div class="trusted-category animate-on-scroll stagger-2">
+            <h3 class="trusted-cat-title">🏛️ Fuentes oficiales</h3>
+            <div class="trusted-grid">
+              <a href="https://presidencia.gob.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-official"><span class="chip-level">Oficial</span>Presidencia RD</a>
+              <a href="https://policia.gob.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-official"><span class="chip-level">Oficial</span>Policía Nacional</a>
+              <a href="https://ministeriopublico.gob.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-official"><span class="chip-level">Oficial</span>Ministerio Público</a>
+              <a href="https://coe.gob.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-official"><span class="chip-level">Oficial</span>COE</a>
+              <a href="https://migracion.gob.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-official"><span class="chip-level">Oficial</span>Migración RD</a>
+              <a href="https://jce.gob.do" target="_blank" rel="noopener noreferrer" class="trusted-chip level-official"><span class="chip-level">Oficial</span>JCE</a>
+            </div>
+          </div>
+        </div>
+        <div class="section-cta animate-on-scroll">
+          <a href="/fuentes.html" class="cta-link">Ver todas las fuentes →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Demo section -->
+    <section class="demo-section" id="demo-section" aria-labelledby="demo-title">
+      <div class="section-inner">
+        <h2 class="section-title animate-on-scroll" id="demo-title">Así se ve un análisis real</h2>
+        <p class="section-sub animate-on-scroll">
+          Cada verificación incluye puntuación, evidencia trazable y fuentes consultadas.
         </p>
         <div class="demo-tabs" role="tablist">
-          <button class="tab-btn active" role="tab" data-demo="confiable">Confiable (82)</button>
-          <button class="tab-btn" role="tab" data-demo="dudosa">Dudosa (51)</button>
-          <button class="tab-btn" role="tab" data-demo="falsa">Falsa (21)</button>
+          <button class="tab-btn active" role="tab" data-demo="confiable" aria-selected="true">✓ Confiable (82)</button>
+          <button class="tab-btn" role="tab" data-demo="dudosa" aria-selected="false" tabindex="-1">⚠ Dudosa (51)</button>
+          <button class="tab-btn" role="tab" data-demo="falsa" aria-selected="false" tabindex="-1">✕ Falsa (21)</button>
         </div>
         <div id="demoCard" class="analysis-card" role="tabpanel"></div>
       </div>
     </section>
 
-    <p id="error" class="error-msg hidden"></p>
+    <!-- Categories section -->
+    <section class="categories-section" aria-labelledby="cat-title">
+      <div class="section-inner">
+        <h2 class="section-title animate-on-scroll" id="cat-title">Verificar por categoría</h2>
+        <p class="section-sub animate-on-scroll">Selecciona una categoría y te preparamos una consulta de ejemplo.</p>
+        <div class="categories-grid">
+          <button class="cat-card animate-on-scroll stagger-1" type="button" data-query="Noticias y afirmaciones de política dominicana en 2025 que necesitan verificación">
+            <span class="cat-icon" aria-hidden="true">🏛️</span>
+            <span class="cat-name">Política</span>
+          </button>
+          <button class="cat-card animate-on-scroll stagger-2" type="button" data-query="Noticias económicas de República Dominicana en 2025 sobre precios, impuestos o economía">
+            <span class="cat-icon" aria-hidden="true">💰</span>
+            <span class="cat-name">Economía</span>
+          </button>
+          <button class="cat-card animate-on-scroll stagger-3" type="button" data-query="Noticias de salud pública en República Dominicana en 2025 sobre enfermedades o medicamentos">
+            <span class="cat-icon" aria-hidden="true">🏥</span>
+            <span class="cat-name">Salud</span>
+          </button>
+          <button class="cat-card animate-on-scroll stagger-4" type="button" data-query="Noticias de seguridad y crimen en República Dominicana en 2025">
+            <span class="cat-icon" aria-hidden="true">🛡️</span>
+            <span class="cat-name">Seguridad</span>
+          </button>
+          <button class="cat-card animate-on-scroll stagger-5" type="button" data-query="Noticias y resultados de deportes dominicanos en 2025 que necesitan verificación">
+            <span class="cat-icon" aria-hidden="true">⚽</span>
+            <span class="cat-name">Deportes</span>
+          </button>
+          <button class="cat-card animate-on-scroll stagger-6" type="button" data-query="Noticias de tecnología e innovación digital en República Dominicana en 2025">
+            <span class="cat-icon" aria-hidden="true">💻</span>
+            <span class="cat-name">Tecnología</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <p id="error" class="error-msg hidden" role="alert"></p>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast hidden" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <span class="footer-logo"><span class="logo-check">✓</span>ChequealoAI</span>
+            <p class="footer-desc">Verificador de noticias con inteligencia artificial para República Dominicana.</p>
+          </div>
+          <nav class="footer-nav" aria-label="Navegación del pie de página">
+            <div class="footer-col">
+              <h4 class="footer-col-title">Plataforma</h4>
+              <a href="/" class="footer-link">Inicio</a>
+              <a href="/como-funciona.html" class="footer-link">Cómo funciona</a>
+              <a href="/verificaciones.html" class="footer-link">Verificaciones</a>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Recursos</h4>
+              <a href="/fuentes.html" class="footer-link">Fuentes confiables</a>
+              <a href="/#how-it-works" class="footer-link">Metodología</a>
+            </div>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2025 ChequealoAI · Hecho en República Dominicana 🇩🇴</p>
+          <p class="footer-disclaimer">Los resultados son orientativos y no reemplazan la verificación periodística profesional.</p>
+        </div>
+      </div>
+    </footer>
+
+    <button id="scrollTopBtn" aria-label="Volver arriba">&#8679;</button>
 
     <script src="/script.js" defer></script>
   </body>

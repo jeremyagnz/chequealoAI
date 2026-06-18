@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cómo Funciona | ChequealoAI — Verificador de Noticias con IA</title>
+    <meta name="description" content="Descubre cómo ChequealoAI verifica noticias usando inteligencia artificial, búsqueda en fuentes oficiales y medios dominicanos confiables." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://chequealoai.netlify.app/como-funciona.html" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Cómo Funciona ChequealoAI | Verificador de Noticias" />
+    <meta property="og:description" content="Proceso transparente de 4 pasos para verificar noticias con IA en República Dominicana." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://chequealoai.netlify.app/como-funciona.html" />
+    <meta property="og:site_name" content="ChequealoAI" />
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "name": "Cómo funciona ChequealoAI",
+      "description": "Proceso de verificación de noticias con inteligencia artificial para República Dominicana",
+      "url": "https://chequealoai.netlify.app/como-funciona.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "ChequealoAI",
+        "url": "https://chequealoai.netlify.app/"
+      },
+      "inLanguage": "es"
+    }
+    </script>
+
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+      <div class="navbar-inner">
+        <a href="/" class="logo" aria-label="ChequealoAI inicio">
+          <span class="logo-check">✓</span>ChequealoAI
+        </a>
+        <div class="navbar-links">
+          <a href="/como-funciona.html" class="nav-link" aria-current="page">Cómo funciona</a>
+          <a href="/fuentes.html" class="nav-link">Fuentes</a>
+          <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+        </div>
+        <a href="/" class="nav-cta-btn">Verificar noticia</a>
+        <button class="nav-menu-btn" id="navMenuBtn" aria-label="Abrir menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <div class="navbar-mobile" id="navMobile">
+        <a href="/como-funciona.html" class="nav-link" aria-current="page">Cómo funciona</a>
+        <a href="/fuentes.html" class="nav-link">Fuentes</a>
+        <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+      </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <div class="page-hero">
+      <div class="page-hero-badge">
+        <span>🔍</span> Metodología
+      </div>
+      <h1 class="page-title">¿Cómo funciona ChequealoAI?</h1>
+      <p class="page-subtitle">
+        Un proceso transparente de 4 pasos que combina búsqueda web en tiempo real con análisis de inteligencia artificial para verificar cualquier noticia.
+      </p>
+    </div>
+
+    <!-- Content -->
+    <main class="page-content">
+
+      <!-- Step by step -->
+      <section class="content-section">
+        <h2>Proceso de verificación paso a paso</h2>
+        <div class="how-grid" style="margin-top: 1.5rem;">
+          <div class="how-card">
+            <div class="how-num">01</div>
+            <div class="how-icon">🔍</div>
+            <h3 class="how-card-title">Ingresa la noticia</h3>
+            <p class="how-desc">Escribes o pegas el titular, la afirmación completa o una URL en el buscador. No necesitas registrarte ni crear cuenta.</p>
+          </div>
+          <div class="how-card">
+            <div class="how-num">02</div>
+            <div class="how-icon">🌐</div>
+            <h3 class="how-card-title">Búsqueda en tiempo real</h3>
+            <p class="how-desc">Usamos la API de Serper (Google Search) para buscar los 20 resultados más relevantes sobre tu consulta en medios y fuentes dominicanas.</p>
+          </div>
+          <div class="how-card">
+            <div class="how-num">03</div>
+            <div class="how-icon">🤖</div>
+            <h3 class="how-card-title">Análisis con IA</h3>
+            <p class="how-desc">GPT-4o mini analiza los resultados encontrados, contrasta las fuentes y evalúa la credibilidad de la afirmación según 5 métricas.</p>
+          </div>
+          <div class="how-card">
+            <div class="how-num">04</div>
+            <div class="how-icon">📊</div>
+            <h3 class="how-card-title">Veredicto con evidencia</h3>
+            <p class="how-desc">Recibes un informe con veredicto (Confiable, Dudosa o Falsa), puntuación, evidencias, fuentes clicables y métricas detalladas.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scoring system -->
+      <section class="content-section">
+        <h2>Sistema de puntuación y veredictos</h2>
+        <p>
+          Cada verificación genera una puntuación de 0 a 100 basada en el promedio ponderado de 5 métricas clave. El veredicto se asigna según estos rangos:
+        </p>
+        <div class="how-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 1.25rem;">
+          <div class="how-card">
+            <div class="how-icon">✅</div>
+            <h3 class="how-card-title" style="color: var(--green);">Confiable (65–100)</h3>
+            <p class="how-desc">La noticia tiene evidencia sólida y múltiples fuentes confiables de República Dominicana la respaldan.</p>
+          </div>
+          <div class="how-card">
+            <div class="how-icon">⚠️</div>
+            <h3 class="how-card-title" style="color: var(--orange);">Dudosa (35–64)</h3>
+            <p class="how-desc">Hay evidencia parcial, contradictoria o insuficiente. La información requiere mayor verificación.</p>
+          </div>
+          <div class="how-card">
+            <div class="how-icon">❌</div>
+            <h3 class="how-card-title" style="color: var(--red);">Falsa (0–34)</h3>
+            <p class="how-desc">La información es incorrecta, carece de respaldo verificable o contradice fuentes oficiales.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Metrics -->
+      <section class="content-section">
+        <h2>Las 5 métricas de credibilidad</h2>
+        <p>Cada verificación evalúa 5 dimensiones independientes que miden el <strong>respaldo</strong> de la afirmación, no solo la existencia de información sobre el tema:</p>
+        <ul>
+          <li><strong>Autoridad de fuente:</strong> ¿La fuente original de la afirmación es reconocida y confiable?</li>
+          <li><strong>Evidencia encontrada:</strong> ¿Existe evidencia directa que confirme la afirmación en múltiples medios?</li>
+          <li><strong>Consenso de fuentes:</strong> ¿Los distintos medios y fuentes oficiales coinciden en apoyar la afirmación?</li>
+          <li><strong>Actualidad:</strong> ¿La información es reciente y el evento verificado existe en el período indicado?</li>
+          <li><strong>Sin contradicciones:</strong> ¿Ninguna fuente creíble contradice o desmiente la afirmación?</li>
+        </ul>
+      </section>
+
+      <!-- Technology -->
+      <section class="content-section">
+        <h2>Tecnología utilizada</h2>
+        <ul>
+          <li><strong>Modelo de IA:</strong> OpenAI GPT-4o mini con temperatura baja (0.2) para respuestas consistentes y reproducibles.</li>
+          <li><strong>Búsqueda web:</strong> Serper API (Google Search) con 20 resultados filtrados por dominios confiables dominicanos.</li>
+          <li><strong>Respuesta:</strong> Formato JSON estructurado para garantizar consistencia en todos los campos.</li>
+          <li><strong>Infraestructura:</strong> Netlify Functions (serverless) — las claves de API nunca se exponen al navegador.</li>
+          <li><strong>Privacidad:</strong> Las consultas no se almacenan en ningún servidor. El historial es local en tu navegador.</li>
+        </ul>
+      </section>
+
+      <!-- Limitations -->
+      <section class="content-section">
+        <h2>Limitaciones importantes</h2>
+        <p>ChequealoAI es una herramienta de orientación rápida. Ten en cuenta:</p>
+        <ul>
+          <li>Los resultados reflejan lo publicado en internet al momento del análisis, no una investigación periodística exhaustiva.</li>
+          <li>Noticias muy recientes (menos de 24 horas) pueden tener cobertura limitada en las fuentes.</li>
+          <li>La IA puede cometer errores. Los resultados no sustituyen la verificación profesional.</li>
+          <li>Para noticias internacionales, la cobertura en fuentes dominicanas puede ser menor.</li>
+        </ul>
+      </section>
+
+      <!-- CTA -->
+      <div style="text-align: center; padding: 2rem 0;">
+        <a href="/" class="nav-cta-btn" style="display: inline-block; padding: 0.75rem 2rem; font-size: 1rem; text-decoration: none; border-radius: 10px;">
+          Verificar una noticia ahora →
+        </a>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <span class="footer-logo"><span class="logo-check">✓</span>ChequealoAI</span>
+            <p class="footer-desc">Verificador de noticias con inteligencia artificial para República Dominicana.</p>
+          </div>
+          <nav class="footer-nav">
+            <div class="footer-col">
+              <h4 class="footer-col-title">Plataforma</h4>
+              <a href="/" class="footer-link">Inicio</a>
+              <a href="/como-funciona.html" class="footer-link">Cómo funciona</a>
+              <a href="/verificaciones.html" class="footer-link">Verificaciones</a>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Recursos</h4>
+              <a href="/fuentes.html" class="footer-link">Fuentes confiables</a>
+              <a href="/#how-it-works" class="footer-link">Metodología</a>
+            </div>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2025 ChequealoAI · Hecho en República Dominicana 🇩🇴</p>
+          <p class="footer-disclaimer">Los resultados son orientativos y no reemplazan la verificación periodística profesional.</p>
+        </div>
+      </div>
+    </footer>
+
+    <button id="scrollTopBtn" aria-label="Volver arriba">&#8679;</button>
+
+    <script>
+      // Mobile nav
+      const btn = document.getElementById("navMenuBtn");
+      const mob = document.getElementById("navMobile");
+      if (btn && mob) btn.addEventListener("click", () => {
+        const open = mob.classList.toggle("open");
+        btn.setAttribute("aria-expanded", String(open));
+      });
+
+      // Scroll animations
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } });
+      }, { threshold: 0.1 });
+      document.querySelectorAll(".animate-on-scroll").forEach((el) => obs.observe(el));
+
+      // Scroll-to-top button
+      const scrollTopBtn = document.getElementById("scrollTopBtn");
+      if (scrollTopBtn) {
+        window.addEventListener("scroll", () => {
+          scrollTopBtn.classList.toggle("visible", window.scrollY > 300);
+        }, { passive: true });
+        scrollTopBtn.addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
+    </script>
+  </body>
+</html>

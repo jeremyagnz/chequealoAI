@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fuentes Confiables | ChequealoAI — Verificador de Noticias</title>
+    <meta name="description" content="Lista completa de las 18 fuentes confiables que usa ChequealoAI para verificar noticias: medios dominicanos y entidades oficiales del gobierno." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://chequealoai.netlify.app/fuentes.html" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Fuentes Confiables | ChequealoAI" />
+    <meta property="og:description" content="18 fuentes verificadas: medios de comunicación dominicanos y entidades oficiales del gobierno de República Dominicana." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://chequealoai.netlify.app/fuentes.html" />
+    <meta property="og:site_name" content="ChequealoAI" />
+
+    <link rel="stylesheet" href="/styles.css" />
+
+    <style>
+      .sources-table { width: 100%; border-collapse: collapse; margin-top: 1.25rem; }
+      .sources-table th {
+        text-align: left;
+        font-size: 0.73rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 0.6rem 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .sources-table td {
+        padding: 0.85rem 1rem;
+        font-size: 0.875rem;
+        color: var(--muted-2);
+        border-bottom: 1px solid rgba(42,42,53,0.6);
+        vertical-align: middle;
+      }
+      .sources-table tr:hover td { background: rgba(255,255,255,0.02); }
+      .src-name { font-weight: 600; color: var(--text); }
+      .src-link { color: var(--accent-light); text-decoration: none; font-size: 0.8rem; }
+      .src-link:hover { text-decoration: underline; }
+      .badge {
+        display: inline-block;
+        font-size: 0.67rem;
+        font-weight: 700;
+        padding: 0.15rem 0.45rem;
+        border-radius: 4px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .badge-high { background: rgba(34,197,94,0.15); color: var(--green); }
+      .badge-medium { background: rgba(245,158,11,0.15); color: var(--orange); }
+      .badge-official { background: rgba(96,165,250,0.15); color: var(--blue); }
+      .section-divider {
+        margin: 2.5rem 0 1.25rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--muted-2);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .section-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+      <div class="navbar-inner">
+        <a href="/" class="logo" aria-label="ChequealoAI inicio">
+          <span class="logo-check">✓</span>ChequealoAI
+        </a>
+        <div class="navbar-links">
+          <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
+          <a href="/fuentes.html" class="nav-link" aria-current="page">Fuentes</a>
+          <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+        </div>
+        <a href="/" class="nav-cta-btn">Verificar noticia</a>
+        <button class="nav-menu-btn" id="navMenuBtn" aria-label="Abrir menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <div class="navbar-mobile" id="navMobile">
+        <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
+        <a href="/fuentes.html" class="nav-link" aria-current="page">Fuentes</a>
+        <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+      </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <div class="page-hero">
+      <div class="page-hero-badge">
+        <span>📰</span> Transparencia
+      </div>
+      <h1 class="page-title">Fuentes confiables que analizamos</h1>
+      <p class="page-subtitle">
+        ChequealoAI verifica noticias contra 18 fuentes de alta credibilidad: medios de comunicación dominicanos y entidades oficiales del gobierno.
+      </p>
+    </div>
+
+    <!-- Content -->
+    <main class="page-content">
+
+      <section class="content-section">
+        <h2>Criterios de selección</h2>
+        <p>Las fuentes incluidas en ChequealoAI cumplen con los siguientes criterios:</p>
+        <ul>
+          <li>Trayectoria verificada y reconocida en República Dominicana.</li>
+          <li>Procesos editoriales o institucionales establecidos.</li>
+          <li>Presencia digital activa con contenido indexado.</li>
+          <li>Historial de precisión y responsabilidad informativa.</li>
+        </ul>
+      </section>
+
+      <!-- Media sources table -->
+      <section class="content-section">
+        <div class="section-divider">📰 Medios de comunicación (12 fuentes)</div>
+        <table class="sources-table" aria-label="Medios de comunicación confiables">
+          <thead>
+            <tr>
+              <th>Medio</th>
+              <th>Dominio</th>
+              <th>Confianza</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="src-name">Listín Diario</span></td>
+              <td><a class="src-link" href="https://listindiario.com" target="_blank" rel="noopener noreferrer">listindiario.com</a></td>
+              <td><span class="badge badge-high">Alta</span></td>
+              <td>Periódico fundado en 1889, uno de los más antiguos y respetados del Caribe.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">Diario Libre</span></td>
+              <td><a class="src-link" href="https://diariolibre.com" target="_blank" rel="noopener noreferrer">diariolibre.com</a></td>
+              <td><span class="badge badge-high">Alta</span></td>
+              <td>Diario de distribución gratuita, amplia cobertura nacional y reconocido en todo el país.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">Noticias SIN</span></td>
+              <td><a class="src-link" href="https://noticiassin.com" target="_blank" rel="noopener noreferrer">noticiassin.com</a></td>
+              <td><span class="badge badge-high">Alta</span></td>
+              <td>Canal 9 de televisión, uno de los noticieros más vistos de República Dominicana.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">CDN 37</span></td>
+              <td><a class="src-link" href="https://cdn.com.do" target="_blank" rel="noopener noreferrer">cdn.com.do</a></td>
+              <td><span class="badge badge-high">Alta</span></td>
+              <td>Canal Digital de Noticias, referente del periodismo televisivo dominicano.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">El Caribe</span></td>
+              <td><a class="src-link" href="https://elcaribe.com.do" target="_blank" rel="noopener noreferrer">elcaribe.com.do</a></td>
+              <td><span class="badge badge-high">Alta</span></td>
+              <td>Periódico con más de 70 años de historia, enfocado en análisis y reportaje profundo.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">Acento</span></td>
+              <td><a class="src-link" href="https://acento.com.do" target="_blank" rel="noopener noreferrer">acento.com.do</a></td>
+              <td><span class="badge badge-medium">Media</span></td>
+              <td>Medio digital de análisis e investigación periodística independiente.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">Hoy Digital</span></td>
+              <td><a class="src-link" href="https://hoy.com.do" target="_blank" rel="noopener noreferrer">hoy.com.do</a></td>
+              <td><span class="badge badge-medium">Media</span></td>
+              <td>Periódico digital con cobertura amplia de temas nacionales e internacionales.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">El Nuevo Diario</span></td>
+              <td><a class="src-link" href="https://elnuevodiario.com.do" target="_blank" rel="noopener noreferrer">elnuevodiario.com.do</a></td>
+              <td><span class="badge badge-medium">Media</span></td>
+              <td>Periódico con cobertura de noticias locales, regionales y nacionales.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">RNN Noticias</span></td>
+              <td><a class="src-link" href="https://rnn.com.do" target="_blank" rel="noopener noreferrer">rnn.com.do</a></td>
+              <td><span class="badge badge-medium">Media</span></td>
+              <td>Red de Noticias Nacional, canal de televisión con cobertura 24 horas.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">N Digital</span></td>
+              <td><a class="src-link" href="https://ndigital.com.do" target="_blank" rel="noopener noreferrer">ndigital.com.do</a></td>
+              <td><span class="badge badge-medium">Media</span></td>
+              <td>Portal de noticias con fuerte presencia en redes sociales y cobertura digital.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">RC Noticias</span></td>
+              <td><a class="src-link" href="https://rcnoticias.com.do" target="_blank" rel="noopener noreferrer">rcnoticias.com.do</a></td>
+              <td><span class="badge badge-medium">Media</span></td>
+              <td>Noticiero de Radio Comercial con amplia audiencia en todo el territorio nacional.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">Z101 Digital</span></td>
+              <td><a class="src-link" href="https://z101digital.com" target="_blank" rel="noopener noreferrer">z101digital.com</a></td>
+              <td><span class="badge badge-medium">Media</span></td>
+              <td>Noticiero de Z101 FM con contenido digital de actualidad y noticias de última hora.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Official sources table -->
+      <section class="content-section">
+        <div class="section-divider">🏛️ Fuentes oficiales (6 fuentes)</div>
+        <table class="sources-table" aria-label="Fuentes oficiales del gobierno">
+          <thead>
+            <tr>
+              <th>Institución</th>
+              <th>Dominio</th>
+              <th>Tipo</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="src-name">Presidencia RD</span></td>
+              <td><a class="src-link" href="https://presidencia.gob.do" target="_blank" rel="noopener noreferrer">presidencia.gob.do</a></td>
+              <td><span class="badge badge-official">Oficial</span></td>
+              <td>Sitio oficial de la Presidencia de la República Dominicana.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">Policía Nacional RD</span></td>
+              <td><a class="src-link" href="https://policia.gob.do" target="_blank" rel="noopener noreferrer">policia.gob.do</a></td>
+              <td><span class="badge badge-official">Oficial</span></td>
+              <td>Institución de seguridad pública, fuente oficial en temas de orden y crimen.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">Ministerio Público</span></td>
+              <td><a class="src-link" href="https://ministeriopublico.gob.do" target="_blank" rel="noopener noreferrer">ministeriopublico.gob.do</a></td>
+              <td><span class="badge badge-official">Oficial</span></td>
+              <td>Órgano del sistema de justicia penal dominicano.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">COE</span></td>
+              <td><a class="src-link" href="https://coe.gob.do" target="_blank" rel="noopener noreferrer">coe.gob.do</a></td>
+              <td><span class="badge badge-official">Oficial</span></td>
+              <td>Centro de Operaciones de Emergencias, fuente oficial en desastres y emergencias.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">Migración RD</span></td>
+              <td><a class="src-link" href="https://migracion.gob.do" target="_blank" rel="noopener noreferrer">migracion.gob.do</a></td>
+              <td><span class="badge badge-official">Oficial</span></td>
+              <td>Dirección General de Migración de la República Dominicana.</td>
+            </tr>
+            <tr>
+              <td><span class="src-name">JCE</span></td>
+              <td><a class="src-link" href="https://jce.gob.do" target="_blank" rel="noopener noreferrer">jce.gob.do</a></td>
+              <td><span class="badge badge-official">Oficial</span></td>
+              <td>Junta Central Electoral, fuente oficial en temas electorales y del estado civil.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="content-section">
+        <h2>¿Quieres sugerir una fuente?</h2>
+        <p>
+          Si conoces un medio o entidad oficial que cumpla con nuestros criterios y no esté incluido aún, puedes contribuir al proyecto a través del repositorio público en GitHub.
+        </p>
+      </section>
+
+      <!-- CTA -->
+      <div style="text-align: center; padding: 2rem 0;">
+        <a href="/" class="nav-cta-btn" style="display: inline-block; padding: 0.75rem 2rem; font-size: 1rem; text-decoration: none; border-radius: 10px;">
+          Verificar una noticia ahora →
+        </a>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <span class="footer-logo"><span class="logo-check">✓</span>ChequealoAI</span>
+            <p class="footer-desc">Verificador de noticias con inteligencia artificial para República Dominicana.</p>
+          </div>
+          <nav class="footer-nav">
+            <div class="footer-col">
+              <h4 class="footer-col-title">Plataforma</h4>
+              <a href="/" class="footer-link">Inicio</a>
+              <a href="/como-funciona.html" class="footer-link">Cómo funciona</a>
+              <a href="/verificaciones.html" class="footer-link">Verificaciones</a>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Recursos</h4>
+              <a href="/fuentes.html" class="footer-link">Fuentes confiables</a>
+              <a href="/#how-it-works" class="footer-link">Metodología</a>
+            </div>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2025 ChequealoAI · Hecho en República Dominicana 🇩🇴</p>
+          <p class="footer-disclaimer">Los resultados son orientativos y no reemplazan la verificación periodística profesional.</p>
+        </div>
+      </div>
+    </footer>
+
+    <button id="scrollTopBtn" aria-label="Volver arriba">&#8679;</button>
+
+    <script>
+      const btn = document.getElementById("navMenuBtn");
+      const mob = document.getElementById("navMobile");
+      if (btn && mob) btn.addEventListener("click", () => {
+        const open = mob.classList.toggle("open");
+        btn.setAttribute("aria-expanded", String(open));
+      });
+
+      // Scroll-to-top button
+      const scrollTopBtn = document.getElementById("scrollTopBtn");
+      if (scrollTopBtn) {
+        window.addEventListener("scroll", () => {
+          scrollTopBtn.classList.toggle("visible", window.scrollY > 300);
+        }, { passive: true });
+        scrollTopBtn.addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
+    </script>
+  </body>
+</html>
