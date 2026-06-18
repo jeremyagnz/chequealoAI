@@ -73,9 +73,9 @@ body.loading-active {
   background-image: var(--brand-logo-image);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.3);
+  background-size: contain;
+  border: 0;
+  box-shadow: none;
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -86,7 +86,7 @@ body.loading-active {
 }
 .logo:hover .brand-logo-nav {
   transform: translateY(-1px);
-  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.35);
+  box-shadow: none;
 }
 .navbar-links {
   display: flex;
