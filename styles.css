@@ -1531,8 +1531,6 @@ body.loading-active {
   .transparency-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
-  .navbar-inner { justify-content: space-between; }
-  .logo { margin-left: auto; }
   .scores-row { grid-template-columns: 1fr; }
   .gauge-wrap { flex-direction: row; justify-content: flex-start; }
   .demo-tabs { max-width: 100%; }
@@ -1546,10 +1544,5 @@ body.loading-active {
   .transparency-grid { grid-template-columns: 1fr; }
   .navbar-links { display: none; }
   .nav-cta-btn { display: none; }
-  .nav-menu-btn {
-    display: flex;
-    order: -1;
-    margin-right: auto;
-  }
   .footer-nav { flex-wrap: wrap; gap: 1.5rem; }
 }
