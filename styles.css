@@ -69,20 +69,19 @@ body.loading-active {
   flex-shrink: 0;
 }
 .brand-logo {
-  --brand-logo-zoom: 126%;
-  --brand-logo-position-y: 50%;
+  --brand-logo-frame-crop-zoom: 126%;
+  --brand-logo-frame-crop-y: 50%;
   display: block;
   background-image: var(--brand-logo-image);
   background-repeat: no-repeat;
-  background-position: center var(--brand-logo-position-y);
-  background-size: var(--brand-logo-zoom) auto;
+  background-position: center var(--brand-logo-frame-crop-y);
+  background-size: var(--brand-logo-frame-crop-zoom) auto;
   border: 0;
   box-shadow: none;
   flex-shrink: 0;
   overflow: hidden;
 }
 .brand-logo-nav {
-  --brand-logo-zoom: 128%;
   width: min(34vw, 228px);
   height: 56px;
   border-radius: 18px;
@@ -1306,7 +1305,6 @@ body.loading-active {
   gap: 0;
 }
 .brand-logo-footer {
-  --brand-logo-zoom: 124%;
   width: min(48vw, 260px);
   height: 72px;
   border-radius: 22px;
