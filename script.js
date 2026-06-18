@@ -29,10 +29,12 @@ if (navVerifyBtn) {
 (function () {
   const track = document.getElementById("pillsTrack");
   if (!track) return;
-  // Duplicate pills for seamless infinite loop
-  const clone = track.cloneNode(true);
-  track.parentElement.appendChild(clone);
-  // Event delegation: works on original and clone
+  // Duplicate pill buttons inside the same track for seamless infinite loop
+  // (animation goes 0 → -50%, so we need 2× the content in one track)
+  Array.from(track.children).forEach((pill) => {
+    track.appendChild(pill.cloneNode(true));
+  });
+  // Event delegation: works on originals and clones
   track.parentElement.addEventListener("click", (e) => {
     const pill = e.target.closest(".suggestion-pill");
     if (!pill) return;
