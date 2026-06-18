@@ -69,6 +69,7 @@ body.loading-active {
   flex-shrink: 0;
 }
 .brand-logo {
+  /* Recorta el marco incluido en la imagen original del logo. */
   --brand-logo-frame-crop-zoom: 126%;
   --brand-logo-frame-crop-y: 50%;
   display: block;
