@@ -1519,8 +1519,12 @@ body.loading-active {
   }
 }
 @media (max-width: 768px) {
-  .navbar-inner { justify-content: space-between; }
-  .logo { margin-left: auto; }
+  .navbar-inner {
+    justify-content: space-between;
+  }
+  .logo {
+    margin-left: auto;
+  }
   .navbar-links { display: none; }
   .nav-cta-btn { display: none; }
   .nav-menu-btn {
