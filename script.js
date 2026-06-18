@@ -191,10 +191,38 @@ function renderResult(result, query) {
 
 let stepTimerIds = [];
 const STEP_DELAYS = [600, 2200, 4400, 7000, 9800];
+const progressSection = document.getElementById("progressSection");
+let lastFocusedElement = null;
+
+function setBackgroundContentInert(inert) {
+  if (!progressSection) return;
+  Array.from(document.body.children).forEach((child) => {
+    if (child === progressSection) return;
+    child.inert = inert;
+    if (inert) child.setAttribute("aria-hidden", "true");
+    else child.removeAttribute("aria-hidden");
+  });
+}
+
+function showProgressOverlay() {
+  if (!progressSection) return;
+  lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  setBackgroundContentInert(true);
+  progressSection.classList.remove("hidden");
+  progressSection.focus({ preventScroll: true });
+}
+
+function hideProgressOverlay() {
+  if (!progressSection) return;
+  progressSection.classList.add("hidden");
+  setBackgroundContentInert(false);
+  if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+    lastFocusedElement.focus({ preventScroll: true });
+  }
+}
 
 function startProgressAnimation() {
-  const progressSection = document.getElementById("progressSection");
-  if (progressSection) progressSection.classList.remove("hidden");
+  showProgressOverlay();
   const steps = document.querySelectorAll(".progress-step");
   steps.forEach((s) => s.classList.remove("done", "active"));
   if (steps[0]) steps[0].classList.add("active");
@@ -219,8 +247,7 @@ function stopProgressAnimation() {
   steps.forEach((s) => { s.classList.add("done"); s.classList.remove("active"); });
   updateProgressBar(100);
   setTimeout(() => {
-    const progressSection = document.getElementById("progressSection");
-    if (progressSection) progressSection.classList.add("hidden");
+    hideProgressOverlay();
   }, 350);
 }
 

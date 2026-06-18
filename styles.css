@@ -831,7 +831,7 @@ body.loading-active {
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background: rgba(2, 6, 23, 0.78);
+  background: rgba(2, 6, 23, 0.9);
   backdrop-filter: blur(18px);
 }
 .progress-card {
