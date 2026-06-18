@@ -199,14 +199,14 @@ function setBackgroundContentInert(inert) {
   Array.from(document.body.children).forEach((child) => {
     if (child === progressSection) return;
     child.inert = inert;
-    if (inert) child.setAttribute("aria-hidden", "true");
-    else child.removeAttribute("aria-hidden");
   });
 }
 
 function showProgressOverlay() {
   if (!progressSection) return;
-  lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  lastFocusedElement = document.activeElement && typeof document.activeElement.focus === "function"
+    ? document.activeElement
+    : null;
   setBackgroundContentInert(true);
   progressSection.classList.remove("hidden");
   progressSection.focus({ preventScroll: true });
