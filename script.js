@@ -778,3 +778,14 @@ const scrollObserver = new IntersectionObserver(
 );
 
 document.querySelectorAll(".animate-on-scroll").forEach((el) => scrollObserver.observe(el));
+
+// ---- Scroll-to-top button ----
+const scrollTopBtn = document.getElementById("scrollTopBtn");
+if (scrollTopBtn) {
+  window.addEventListener("scroll", () => {
+    scrollTopBtn.classList.toggle("visible", window.scrollY > 300);
+  }, { passive: true });
+  scrollTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}

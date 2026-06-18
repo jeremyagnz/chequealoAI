@@ -305,6 +305,8 @@
       </div>
     </footer>
 
+    <button id="scrollTopBtn" aria-label="Volver arriba">&#8679;</button>
+
     <script>
       const btn = document.getElementById("navMenuBtn");
       const mob = document.getElementById("navMobile");
@@ -312,6 +314,17 @@
         const open = mob.classList.toggle("open");
         btn.setAttribute("aria-expanded", String(open));
       });
+
+      // Scroll-to-top button
+      const scrollTopBtn = document.getElementById("scrollTopBtn");
+      if (scrollTopBtn) {
+        window.addEventListener("scroll", () => {
+          scrollTopBtn.classList.toggle("visible", window.scrollY > 300);
+        }, { passive: true });
+        scrollTopBtn.addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
     </script>
   </body>
 </html>

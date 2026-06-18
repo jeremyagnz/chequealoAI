@@ -1376,6 +1376,38 @@ body {
 .stagger-5 { transition-delay: 0.33s; }
 .stagger-6 { transition-delay: 0.40s; }
 
+/* ---- SCROLL TO TOP ---- */
+#scrollTopBtn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 999;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent, #3b82f6);
+  color: #fff;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.75rem);
+  transition: opacity 0.3s, visibility 0.3s, transform 0.3s, background 0.2s;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+#scrollTopBtn.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+#scrollTopBtn:hover {
+  background: var(--accent-dark, #2563eb);
+}
+
 /* ---- RESPONSIVE (extended) ---- */
 @media (max-width: 1024px) {
   .how-grid {

@@ -203,6 +203,8 @@
       </div>
     </footer>
 
+    <button id="scrollTopBtn" aria-label="Volver arriba">&#8679;</button>
+
     <script>
       // Mobile nav
       const btn = document.getElementById("navMenuBtn");
@@ -217,6 +219,17 @@
         entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } });
       }, { threshold: 0.1 });
       document.querySelectorAll(".animate-on-scroll").forEach((el) => obs.observe(el));
+
+      // Scroll-to-top button
+      const scrollTopBtn = document.getElementById("scrollTopBtn");
+      if (scrollTopBtn) {
+        window.addEventListener("scroll", () => {
+          scrollTopBtn.classList.toggle("visible", window.scrollY > 300);
+        }, { passive: true });
+        scrollTopBtn.addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
     </script>
   </body>
 </html>
