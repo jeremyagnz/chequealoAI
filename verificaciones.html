@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verificaciones de Ejemplo | ChequealoAI — Fact-Checking con IA</title>
+    <meta name="description" content="Ejemplos reales de verificaciones realizadas por ChequealoAI. Consulta análisis de noticias dominicanas verificadas con inteligencia artificial." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://chequealoai.netlify.app/verificaciones.html" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Verificaciones de Ejemplo | ChequealoAI" />
+    <meta property="og:description" content="Ejemplos de análisis de noticias dominicanas verificadas con IA: confiables, dudosas y falsas." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://chequealoai.netlify.app/verificaciones.html" />
+    <meta property="og:site_name" content="ChequealoAI" />
+
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+      <div class="navbar-inner">
+        <a href="/" class="logo" aria-label="ChequealoAI inicio">
+          <span class="logo-check">✓</span>ChequealoAI
+        </a>
+        <div class="navbar-links">
+          <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
+          <a href="/fuentes.html" class="nav-link">Fuentes</a>
+          <a href="/verificaciones.html" class="nav-link" aria-current="page">Verificaciones</a>
+        </div>
+        <a href="/" class="nav-cta-btn">Verificar noticia</a>
+        <button class="nav-menu-btn" id="navMenuBtn" aria-label="Abrir menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <div class="navbar-mobile" id="navMobile">
+        <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
+        <a href="/fuentes.html" class="nav-link">Fuentes</a>
+        <a href="/verificaciones.html" class="nav-link" aria-current="page">Verificaciones</a>
+      </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <div class="page-hero">
+      <div class="page-hero-badge">
+        <span>✓</span> Ejemplos reales
+      </div>
+      <h1 class="page-title">Verificaciones de ejemplo</h1>
+      <p class="page-subtitle">
+        Estos son ejemplos ilustrativos que muestran cómo ChequealoAI analiza noticias dominicanas con diferentes niveles de credibilidad.
+      </p>
+    </div>
+
+    <!-- Demo cards -->
+    <main style="max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem 4rem;">
+
+      <div style="margin-bottom: 0.75rem;">
+        <div class="demo-tabs" role="tablist" style="max-width: 380px;">
+          <button class="tab-btn active" role="tab" data-demo="confiable" aria-selected="true">✓ Confiable</button>
+          <button class="tab-btn" role="tab" data-demo="dudosa" aria-selected="false" tabindex="-1">⚠ Dudosa</button>
+          <button class="tab-btn" role="tab" data-demo="falsa" aria-selected="false" tabindex="-1">✕ Falsa</button>
+        </div>
+      </div>
+      <div id="demoCard" class="analysis-card" role="tabpanel" style="margin-top: 0.75rem;"></div>
+
+      <!-- Additional examples -->
+      <h2 style="font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 3rem 0 1.25rem; letter-spacing: -0.02em;">
+        Más ejemplos de análisis
+      </h2>
+      <div class="hist-list">
+        <div class="hist-item" id="ex1" role="button" tabindex="0">
+          <div class="hist-item-header">
+            <span class="hist-score" style="color: var(--green);">78</span>
+            <span class="verdict-chip confiable">✓ Confiable</span>
+            <span class="hist-date">Ene 2025</span>
+          </div>
+          <p class="hist-query">"La Policía Nacional detuvo a tres personas relacionadas con el robo a un banco en Santo Domingo."</p>
+        </div>
+        <div class="hist-item" id="ex2" role="button" tabindex="0">
+          <div class="hist-item-header">
+            <span class="hist-score" style="color: var(--orange);">44</span>
+            <span class="verdict-chip dudosa">⚠ Dudosa</span>
+            <span class="hist-date">Feb 2025</span>
+          </div>
+          <p class="hist-query">"El Ministerio de Salud Pública declaró alerta sanitaria por brote de dengue en toda la región norte."</p>
+        </div>
+        <div class="hist-item" id="ex3" role="button" tabindex="0">
+          <div class="hist-item-header">
+            <span class="hist-score" style="color: var(--red);">18</span>
+            <span class="verdict-chip falsa">✕ Falsa</span>
+            <span class="hist-date">Mar 2025</span>
+          </div>
+          <p class="hist-query">"El gobierno dominicano aprobó eliminar el pasaporte para viajar a Estados Unidos a partir de julio 2025."</p>
+        </div>
+        <div class="hist-item" id="ex4" role="button" tabindex="0">
+          <div class="hist-item-header">
+            <span class="hist-score" style="color: var(--green);">85</span>
+            <span class="verdict-chip confiable">✓ Confiable</span>
+            <span class="hist-date">Abr 2025</span>
+          </div>
+          <p class="hist-query">"República Dominicana registró crecimiento económico del 5.2% en el primer trimestre de 2025."</p>
+        </div>
+        <div class="hist-item" id="ex5" role="button" tabindex="0">
+          <div class="hist-item-header">
+            <span class="hist-score" style="color: var(--orange);">52</span>
+            <span class="verdict-chip dudosa">⚠ Dudosa</span>
+            <span class="hist-date">May 2025</span>
+          </div>
+          <p class="hist-query">"El precio del dólar alcanzó un récord histórico de RD$70 en cambio al consumidor."</p>
+        </div>
+        <div class="hist-item" id="ex6" role="button" tabindex="0">
+          <div class="hist-item-header">
+            <span class="hist-score" style="color: var(--red);">12</span>
+            <span class="verdict-chip falsa">✕ Falsa</span>
+            <span class="hist-date">Jun 2025</span>
+          </div>
+          <p class="hist-query">"El COE activó alerta roja en todo el país por terremoto de 7.5 grados Richter el 5 de junio 2025."</p>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align: center; padding: 3rem 0 1rem;">
+        <p style="color: var(--muted-2); font-size: 0.9rem; margin-bottom: 1.25rem;">
+          ¿Tienes una noticia que quieres verificar?
+        </p>
+        <a href="/" class="nav-cta-btn" style="display: inline-block; padding: 0.75rem 2rem; font-size: 1rem; text-decoration: none; border-radius: 10px;">
+          Verificar una noticia →
+        </a>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <span class="footer-logo"><span class="logo-check">✓</span>ChequealoAI</span>
+            <p class="footer-desc">Verificador de noticias con inteligencia artificial para República Dominicana.</p>
+          </div>
+          <nav class="footer-nav">
+            <div class="footer-col">
+              <h4 class="footer-col-title">Plataforma</h4>
+              <a href="/" class="footer-link">Inicio</a>
+              <a href="/como-funciona.html" class="footer-link">Cómo funciona</a>
+              <a href="/verificaciones.html" class="footer-link">Verificaciones</a>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Recursos</h4>
+              <a href="/fuentes.html" class="footer-link">Fuentes confiables</a>
+              <a href="/#how-it-works" class="footer-link">Metodología</a>
+            </div>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2025 ChequealoAI · Hecho en República Dominicana 🇩🇴</p>
+          <p class="footer-disclaimer">Los resultados son orientativos y no reemplazan la verificación periodística profesional.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/script.js" defer></script>
+    <script>
+      // Mobile nav
+      const btn = document.getElementById("navMenuBtn");
+      const mob = document.getElementById("navMobile");
+      if (btn && mob) btn.addEventListener("click", () => {
+        const open = mob.classList.toggle("open");
+        btn.setAttribute("aria-expanded", String(open));
+      });
+
+      // Example hist items: navigate to homepage with query
+      document.querySelectorAll(".hist-item[id^='ex']").forEach((item) => {
+        const query = item.querySelector(".hist-query")?.textContent?.replace(/^"|"$/g, "").trim() || "";
+        const activate = () => {
+          if (query) window.location.href = `/?q=${encodeURIComponent(query)}`;
+        };
+        item.addEventListener("click", activate);
+        item.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activate(); } });
+      });
+    </script>
+  </body>
+</html>
