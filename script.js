@@ -231,6 +231,8 @@ function updateProgressBar(pct) {
 
 function setLoading(on) {
   validateBtn.disabled = on;
+  validateBtn.setAttribute("aria-busy", String(on));
+  document.body.classList.toggle("loading-active", on);
   const span = validateBtn.querySelector(".btn-text");
   if (span) span.textContent = on ? "Verificando..." : "Verificar";
   if (on) {
