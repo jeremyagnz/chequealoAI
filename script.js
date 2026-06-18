@@ -24,14 +24,22 @@ if (navVerifyBtn) {
   });
 }
 
-// ---- Search suggestions ----
+// ---- Search suggestions ticker ----
 
-document.querySelectorAll(".suggestion-pill").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    queryInput.value = btn.dataset.query;
+(function () {
+  const track = document.getElementById("pillsTrack");
+  if (!track) return;
+  // Duplicate pills for seamless infinite loop
+  const clone = track.cloneNode(true);
+  track.parentElement.appendChild(clone);
+  // Event delegation: works on original and clone
+  track.parentElement.addEventListener("click", (e) => {
+    const pill = e.target.closest(".suggestion-pill");
+    if (!pill) return;
+    queryInput.value = pill.dataset.query;
     queryInput.focus();
   });
-});
+})();
 
 // ---- Category cards ----
 
