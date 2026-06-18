@@ -1522,11 +1522,9 @@ body.loading-active {
   .navbar-inner {
     justify-content: space-between;
   }
-  .brand-logo-nav {
-    --brand-logo-frame-crop-y: 54%;
-  }
   .logo {
     margin-left: auto;
+    transform: translateY(-2px);
   }
   .navbar-links { display: none; }
   .nav-cta-btn { display: none; }
