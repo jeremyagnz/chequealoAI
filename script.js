@@ -6,9 +6,9 @@ const errorMsg = document.getElementById("error");
 const API_TIMEOUT_MS = 20000;
 const SUPPORTED_TOPICS = new Set(["politica", "economia", "salud", "seguridad", "deportes", "tecnologia"]);
 const TOPIC_PATTERNS = [
-  { topic: "deportes", regex: /\b(deporte|deportes|f[úu]tbol|beisbol|b[ée]isbol|baloncesto|nba|mlb|liga|gol|partido|torneo|atleta|selecci[oó]n)\b/i },
+  { topic: "deportes", regex: /\b(deporte|deportes|f[úu]tbol|beisbol|b[eé]isbol|baloncesto|nba|mlb|liga|gol|partido|torneo|atleta|selecci[oó]n)\b/i },
   { topic: "salud", regex: /\b(salud|m[ée]dico|m[ée]dicos|hospital|enfermedad|virus|vacuna|medicamento|epidemia|dengue|covid)\b/i },
-  { topic: "politica", regex: /\b(pol[ií]tica|gobierno|presidente|congreso|senado|diputados|jce|elecci[oó]n|elecciones|decreto|ministerio)\b/i },
+  { topic: "politica", regex: /\b(pol[ií]tica|gobierno|presidente|congreso|senado|diputados|jce|elecci[oó]n(es)?|decreto|ministerio)\b/i },
   { topic: "economia", regex: /\b(econom[ií]a|impuesto|inflaci[oó]n|banco central|tasas?|precio|presupuesto|subsidio|pib)\b/i },
   { topic: "seguridad", regex: /\b(seguridad|crimen|polic[ií]a|robo|homicidio|violencia|delito|atraco)\b/i },
   { topic: "tecnologia", regex: /\b(tecnolog[ií]a|digital|ia|inteligencia artificial|software|app|internet|ciberseguridad|innovaci[oó]n)\b/i },
