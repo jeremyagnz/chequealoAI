@@ -794,12 +794,6 @@ function buildPrintDocument(data) {
         </div>
       </div>
 
-      <!-- Footer -->
-      <div style="background:#f3f4f6;padding:12px 28px;">
-        <div style="font-size:10px;color:#9ca3af;margin-bottom:4px;">Esta verificación es orientativa. Los resultados de IA pueden contener errores. Verifica siempre en fuentes primarias.</div>
-        <div style="font-size:10px;color:#a78bfa;word-break:break-all;">${escapeHtml(shareUrl)}</div>
-      </div>
-
     </div>`;
 }
 
@@ -808,8 +802,6 @@ function buildShareSection(claim) {
   const encodedQuery = encodeURIComponent(claimStr);
   const shareUrl = `${window.location.origin}${window.location.pathname}?q=${encodedQuery}`;
   const shareText = `Verifiqué esta noticia en ChequealoAI: "${claimStr.slice(0, 120)}"`;
-  const emailSubject = encodeURIComponent(`Verificación de noticia en ChequealoAI`);
-  const emailBody = encodeURIComponent(`${shareText}\n\nVer resultado completo: ${shareUrl}`);
   return `
     <div class="share-section">
       <p class="share-label">Compartir resultado</p>
@@ -821,7 +813,6 @@ function buildShareSection(claim) {
         <a class="share-btn tg-btn" href="https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener noreferrer">✈ Telegram</a>
         <button class="share-btn print-btn" type="button" data-action="print">🖨️ Imprimir</button>
         <button class="share-btn pdf-btn" type="button" data-action="pdf" data-filename="${escapeHtml("chequealoai-" + claimStr.slice(0, 40).replace(/\s+/g, "-").toLowerCase())}">📄 Descargar PDF</button>
-        <a class="share-btn email-btn" href="mailto:?subject=${emailSubject}&body=${emailBody}">✉️ Correo</a>
       </div>
     </div>
   `;
