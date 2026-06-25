@@ -1165,6 +1165,29 @@ body.loading-active {
   font-weight: 500;
 }
 
+/* ---- STARS RATING ---- */
+.stars-display {
+  display: inline-flex;
+  gap: 1px;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.star {
+  display: inline-block;
+}
+.star-full {
+  color: #f5a623;
+}
+.star-empty {
+  color: var(--border);
+}
+.star-half {
+  background: linear-gradient(to right, #f5a623 50%, var(--border) 50%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 /* ---- SHARE SECTION (in card) ---- */
 .share-section {
   margin-top: 1.5rem;

@@ -387,6 +387,32 @@ function scoreColor(n) {
   return "var(--red)";
 }
 
+function scoreToStars(score) {
+  if (score >= 90) return 5;
+  if (score >= 80) return 4.5;
+  if (score >= 70) return 4;
+  if (score >= 60) return 3.5;
+  if (score >= 50) return 3;
+  if (score >= 40) return 2.5;
+  if (score >= 30) return 2;
+  if (score >= 20) return 1.5;
+  if (score >= 10) return 1;
+  return 0.5;
+}
+
+function renderStars(score) {
+  const stars = scoreToStars(score);
+  const full = Math.floor(stars);
+  const half = stars % 1 !== 0;
+  const empty = 5 - full - (half ? 1 : 0);
+  let html = `<span class="stars-display" aria-label="${stars} de 5 estrellas">`;
+  for (let i = 0; i < full; i++) html += `<span class="star star-full">★</span>`;
+  if (half) html += `<span class="star star-half">★</span>`;
+  for (let i = 0; i < empty; i++) html += `<span class="star star-empty">★</span>`;
+  html += `</span>`;
+  return html;
+}
+
 function verdictInfo(veredicto) {
   const v = veredicto.toUpperCase();
   if (v === "CONFIABLE" || v === "REAL") return { label: "Confiable", cls: "confiable", icon: "✓" };
@@ -616,7 +642,7 @@ function buildTransparencySection(score, timestamp, mediaFuentes, officialFuente
         </div>
         <div class="transparency-item">
           <span class="trans-key">Nivel de confianza</span>
-          <span class="trans-val" style="color:${scoreColor(score)}">${score}/100</span>
+          <span class="trans-val">${renderStars(score)}</span>
         </div>
         <div class="transparency-item">
           <span class="trans-key">Fuentes consultadas</span>
