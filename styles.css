@@ -1249,6 +1249,9 @@ body.loading-active {
 .share-btn.pdf-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .share-btn.email-btn:hover { border-color: #34d399; color: #34d399; }
 
+/* ---- Print container (hidden on screen, shown only when printing) ---- */
+#printContainer { display: none; }
+
 /* ---- HOW IT WORKS SECTION ---- */
 .how-section {
   padding: 5rem 1.5rem;
@@ -1701,23 +1704,11 @@ body.loading-active {
 }
 
 @media print {
-  body > *:not(#resultSection) { display: none !important; }
-  #resultSection { display: block !important; }
-  .share-section,
-  .navbar,
-  .hero-section,
-  .how-section,
-  .demo-section,
-  .history-section,
-  .categories-section,
-  .stats-section,
-  .cta-section,
-  footer,
-  #scrollTopBtn { display: none !important; }
-  .result-section { padding: 0 !important; }
-  .analysis-card {
-    box-shadow: none !important;
-    border: 1px solid #ccc !important;
-    page-break-inside: avoid;
+  body > *:not(#printContainer) { display: none !important; }
+  #printContainer {
+    display: block !important;
+    position: static !important;
+    left: auto !important;
+    width: auto !important;
   }
 }
