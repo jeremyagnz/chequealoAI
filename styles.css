@@ -1122,7 +1122,7 @@ body.loading-active {
   transition: max-height 0.3s ease, padding 0.25s ease;
 }
 .summary-accordion.open .summary-accordion-body {
-  max-height: 600px;
+  max-height: 2000px;
   padding: 0 1.2rem 1rem;
 }
 .summary-text {

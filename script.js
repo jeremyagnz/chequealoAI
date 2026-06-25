@@ -653,7 +653,7 @@ function buildShareSection(claim) {
 // ---- Summary accordion toggle ----
 
 document.addEventListener("click", (e) => {
-  const header = e.target.closest && e.target.closest(".summary-accordion-header");
+  const header = e.target.closest(".summary-accordion-header");
   if (!header) return;
   const accordion = header.closest(".summary-accordion");
   if (!accordion) return;
