@@ -731,7 +731,7 @@ document.addEventListener("click", (e) => {
   btn.textContent = "⏳ Generando…";
   btn.disabled = true;
   const opt = {
-    margin: [10, 12, 10, 12],
+    margin: [10, 12, 10, 12], // [top, right, bottom, left] in mm
     filename,
     image: { type: "jpeg", quality: 0.95 },
     html2canvas: { scale: 2, useCORS: true, logging: false },
@@ -747,7 +747,7 @@ document.addEventListener("click", (e) => {
       btn.disabled = false;
     });
   } else {
-    showToast("Librería PDF no disponible, usando impresión");
+    showToast("No se pudo cargar la librería de PDF. Intenta usar Imprimir.");
     btn.textContent = prev;
     btn.disabled = false;
     window.print();
