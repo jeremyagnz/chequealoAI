@@ -662,6 +662,8 @@ function buildShareSection(claim) {
   const encodedQuery = encodeURIComponent(claimStr);
   const shareUrl = `${window.location.origin}${window.location.pathname}?q=${encodedQuery}`;
   const shareText = `Verifiqué esta noticia en ChequealoAI: "${claimStr.slice(0, 120)}"`;
+  const emailSubject = encodeURIComponent(`Verificación de noticia en ChequealoAI`);
+  const emailBody = encodeURIComponent(`${shareText}\n\nVer resultado completo: ${shareUrl}`);
   return `
     <div class="share-section">
       <p class="share-label">Compartir resultado</p>
@@ -671,6 +673,9 @@ function buildShareSection(claim) {
         <a class="share-btn x-btn" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener noreferrer">𝕏 Twitter</a>
         <a class="share-btn fb-btn" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener noreferrer">f Facebook</a>
         <a class="share-btn tg-btn" href="https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener noreferrer">✈ Telegram</a>
+        <button class="share-btn print-btn" type="button" data-action="print">🖨️ Imprimir</button>
+        <button class="share-btn pdf-btn" type="button" data-action="pdf" data-filename="${escapeHtml("chequealoai-" + claimStr.slice(0, 40).replace(/\s+/g, "-").toLowerCase())}">📄 Descargar PDF</button>
+        <a class="share-btn email-btn" href="mailto:?subject=${emailSubject}&body=${emailBody}">✉️ Correo</a>
       </div>
     </div>
   `;
@@ -703,6 +708,49 @@ document.addEventListener("click", (e) => {
       showToast("Enlace copiado al portapapeles 📋");
       setTimeout(() => { btn.textContent = "📋 Copiar enlace"; btn.classList.remove("copied"); }, 2500);
     }).catch(() => showToast("No se pudo copiar el enlace"));
+  }
+});
+
+// ---- Print event delegation ----
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-action='print']");
+  if (!btn) return;
+  window.print();
+});
+
+// ---- PDF download event delegation ----
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-action='pdf']");
+  if (!btn) return;
+  const card = document.getElementById("resultCard");
+  if (!card) return;
+  const filename = (btn.dataset.filename || "chequealoai-resultado") + ".pdf";
+  const prev = btn.textContent;
+  btn.textContent = "⏳ Generando…";
+  btn.disabled = true;
+  const opt = {
+    margin: [10, 12, 10, 12],
+    filename,
+    image: { type: "jpeg", quality: 0.95 },
+    html2canvas: { scale: 2, useCORS: true, logging: false },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+  };
+  if (typeof html2pdf !== "undefined") {
+    html2pdf().set(opt).from(card).save().then(() => {
+      btn.textContent = prev;
+      btn.disabled = false;
+    }).catch(() => {
+      showToast("No se pudo generar el PDF");
+      btn.textContent = prev;
+      btn.disabled = false;
+    });
+  } else {
+    showToast("Librería PDF no disponible, usando impresión");
+    btn.textContent = prev;
+    btn.disabled = false;
+    window.print();
   }
 });
 

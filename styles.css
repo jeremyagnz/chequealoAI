@@ -1244,6 +1244,10 @@ body.loading-active {
 .share-btn.x-btn:hover { border-color: #e7e9ea; color: #e7e9ea; }
 .share-btn.fb-btn:hover { border-color: #1877f2; color: #1877f2; }
 .share-btn.tg-btn:hover { border-color: #2aabee; color: #2aabee; }
+.share-btn.print-btn:hover { border-color: #a78bfa; color: #a78bfa; }
+.share-btn.pdf-btn:hover { border-color: #f87171; color: #f87171; }
+.share-btn.pdf-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.share-btn.email-btn:hover { border-color: #34d399; color: #34d399; }
 
 /* ---- HOW IT WORKS SECTION ---- */
 .how-section {
@@ -1694,4 +1698,26 @@ body.loading-active {
   .navbar-links { display: none; }
   .nav-cta-btn { display: none; }
   .footer-nav { flex-wrap: wrap; gap: 1.5rem; }
+}
+
+@media print {
+  body > *:not(#resultSection) { display: none !important; }
+  #resultSection { display: block !important; }
+  .share-section,
+  .navbar,
+  .hero-section,
+  .how-section,
+  .demo-section,
+  .history-section,
+  .categories-section,
+  .stats-section,
+  .cta-section,
+  footer,
+  #scrollTopBtn { display: none !important; }
+  .result-section { padding: 0 !important; }
+  .analysis-card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    page-break-inside: avoid;
+  }
 }
