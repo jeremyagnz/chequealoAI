@@ -556,9 +556,17 @@ function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes
   const vInfo = verdictInfo(veredicto);
 
   const summaryHtml = resumen
-    ? `<div class="summary-section">
-        <p class="evidence-label">Resumen del análisis</p>
-        <p class="summary-text">${escapeHtml(String(resumen))}</p>
+    ? `<div class="summary-accordion open">
+        <button class="summary-accordion-header" type="button" aria-expanded="true" aria-controls="summary-body">
+          <span class="summary-accordion-title">
+            <span aria-hidden="true">📋</span>
+            Resumen del análisis
+          </span>
+          <svg class="summary-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="summary-accordion-body" id="summary-body" aria-hidden="false">
+          <p class="summary-text">${escapeHtml(String(resumen))}</p>
+        </div>
       </div>`
     : "";
 
@@ -641,6 +649,19 @@ function buildShareSection(claim) {
     </div>
   `;
 }
+
+// ---- Summary accordion toggle ----
+
+document.addEventListener("click", (e) => {
+  const header = e.target.closest && e.target.closest(".summary-accordion-header");
+  if (!header) return;
+  const accordion = header.closest(".summary-accordion");
+  if (!accordion) return;
+  const isOpen = accordion.classList.toggle("open");
+  header.setAttribute("aria-expanded", String(isOpen));
+  const body = accordion.querySelector(".summary-accordion-body");
+  if (body) body.setAttribute("aria-hidden", String(!isOpen));
+});
 
 // ---- Copy-link event delegation ----
 
