@@ -679,7 +679,11 @@ function buildPrintDocument(data) {
   const vColor = vColors[vInfo.cls] || "#6b7280";
   const scoreColor = score >= 65 ? "#16a34a" : score >= 35 ? "#d97706" : "#dc2626";
 
-  const now = timestamp ? new Date(timestamp) : new Date();
+  const now = (() => {
+    if (!timestamp) return new Date();
+    const d = new Date(timestamp);
+    return isNaN(d.getTime()) ? new Date() : d;
+  })();
   const dateStr = now.toLocaleDateString("es-DO", { day: "2-digit", month: "long", year: "numeric" }) +
     " a las " + now.toLocaleTimeString("es-DO", { hour: "2-digit", minute: "2-digit" });
   const shareUrl = `${window.location.origin}${window.location.pathname}?q=${encodeURIComponent(String(claim))}`;
@@ -883,7 +887,7 @@ document.addEventListener("click", (e) => {
   document.body.appendChild(tempEl);
 
   const opt = {
-    margin: [10, 12, 10, 12], // [top, right, bottom, left] in mm
+    margin: [10, 12, 10, 12], // html2pdf array order: [top, left, bottom, right] in mm
     filename,
     image: { type: "jpeg", quality: 0.97 },
     html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: "#ffffff" },
