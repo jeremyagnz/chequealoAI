@@ -4,6 +4,17 @@ const resultSection = document.getElementById("resultSection");
 const resultCard = document.getElementById("resultCard");
 const errorMsg = document.getElementById("error");
 const API_TIMEOUT_MS = 20000;
+const SUPPORTED_TOPICS = new Set(["politica", "economia", "salud", "seguridad", "deportes", "tecnologia"]);
+const TOPIC_PATTERNS = [
+  { topic: "deportes", regex: /\b(deporte|deportes|f[úu]tbol|beisbol|b[ée]isbol|baloncesto|nba|mlb|liga|gol|partido|torneo|atleta|selecci[oó]n)\b/i },
+  { topic: "salud", regex: /\b(salud|m[ée]dico|m[ée]dicos|hospital|enfermedad|virus|vacuna|medicamento|epidemia|dengue|covid)\b/i },
+  { topic: "politica", regex: /\b(pol[ií]tica|gobierno|presidente|congreso|senado|diputados|jce|elecci[oó]n|elecciones|decreto|ministerio)\b/i },
+  { topic: "economia", regex: /\b(econom[ií]a|impuesto|inflaci[oó]n|banco central|tasas?|precio|presupuesto|subsidio|pib)\b/i },
+  { topic: "seguridad", regex: /\b(seguridad|crimen|polic[ií]a|robo|homicidio|violencia|delito|atraco)\b/i },
+  { topic: "tecnologia", regex: /\b(tecnolog[ií]a|digital|ia|inteligencia artificial|software|app|internet|ciberseguridad|innovaci[oó]n)\b/i },
+];
+let selectedTopicHint = "general";
+let activeValidationTopic = "general";
 
 // ---- Navigation: mobile menu ----
 
@@ -47,6 +58,7 @@ if (navVerifyBtn) {
 
 document.querySelectorAll(".cat-card").forEach((btn) => {
   btn.addEventListener("click", () => {
+    selectedTopicHint = normalizeTopic(btn.dataset.topic);
     queryInput.value = btn.dataset.query;
     queryInput.scrollIntoView({ behavior: "smooth", block: "center" });
     setTimeout(() => queryInput.focus(), 450);
@@ -68,6 +80,8 @@ async function runValidation() {
     showError("Escribe una noticia o titular para validar.");
     return;
   }
+  const detectedTopic = detectTopic(query);
+  activeValidationTopic = detectedTopic !== "general" ? detectedTopic : selectedTopicHint;
   setLoading(true);
   try {
     const result = await fetchValidation(query);
@@ -76,6 +90,7 @@ async function runValidation() {
     showError(err.message || "No se pudo validar la noticia.");
   } finally {
     setLoading(false);
+    selectedTopicHint = "general";
   }
 }
 
@@ -272,11 +287,36 @@ function setLoading(on) {
   const span = validateBtn.querySelector(".btn-text");
   if (span) span.textContent = on ? "Verificando..." : "Verificar";
   if (on) {
+    applyTopicTheme(activeValidationTopic);
     resultSection.classList.add("hidden");
     startProgressAnimation();
   } else {
     stopProgressAnimation();
+    clearTopicTheme();
   }
+}
+
+function normalizeTopic(raw) {
+  const topic = String(raw || "").toLowerCase().trim();
+  return SUPPORTED_TOPICS.has(topic) ? topic : "general";
+}
+
+function detectTopic(query) {
+  const text = String(query || "").trim();
+  if (!text) return "general";
+  const match = TOPIC_PATTERNS.find(({ regex }) => regex.test(text));
+  return match ? match.topic : "general";
+}
+
+function applyTopicTheme(topic) {
+  const normalized = normalizeTopic(topic);
+  if (progressSection) progressSection.setAttribute("data-topic", normalized);
+  document.body.setAttribute("data-active-topic", normalized);
+}
+
+function clearTopicTheme() {
+  if (progressSection) progressSection.removeAttribute("data-topic");
+  document.body.removeAttribute("data-active-topic");
 }
 
 // ---- Toast notification ----
