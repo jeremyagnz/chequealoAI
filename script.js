@@ -5,6 +5,18 @@ const resultCard = document.getElementById("resultCard");
 const errorMsg = document.getElementById("error");
 const API_TIMEOUT_MS = 20000;
 
+const SUPPORTED_TOPICS = new Set(["politica", "economia", "salud", "seguridad", "deportes", "tecnologia"]);
+const TOPIC_PATTERNS = [
+  { topic: "deportes", regex: /\b(deporte|deportes|f[úu]tbol|beisbol|b[eé]isbol|baloncesto|nba|mlb|liga|gol|partido|torneo|atleta|selecci[oó]n)\b/i },
+  { topic: "salud", regex: /\b(salud|m[ée]dico|m[ée]dicos|hospital|enfermedad|virus|vacuna|medicamento|epidemia|dengue|covid)\b/i },
+  { topic: "politica", regex: /\b(pol[ií]tica|gobierno|presidente|congreso|senado|diputados|jce|elecci[oó]n(es)?|decreto|ministerio)\b/i },
+  { topic: "economia", regex: /\b(econom[ií]a|impuesto|inflaci[oó]n|banco central|tasas?|precio|presupuesto|subsidio|pib)\b/i },
+  { topic: "seguridad", regex: /\b(seguridad|crimen|polic[ií]a|robo|homicidio|violencia|delito|atraco)\b/i },
+  { topic: "tecnologia", regex: /\b(tecnolog[ií]a|digital|ia|inteligencia artificial|software|app|internet|ciberseguridad|innovaci[oó]n)\b/i },
+];
+let selectedTopicHint = "general";
+let activeValidationTopic = "general";
+
 // ---- Navigation: mobile menu ----
 
 const navMenuBtn = document.getElementById("navMenuBtn");
@@ -47,6 +59,7 @@ if (navVerifyBtn) {
 
 document.querySelectorAll(".cat-card").forEach((btn) => {
   btn.addEventListener("click", () => {
+    selectedTopicHint = normalizeTopic(btn.dataset.topic);
     queryInput.value = btn.dataset.query;
     queryInput.scrollIntoView({ behavior: "smooth", block: "center" });
     setTimeout(() => queryInput.focus(), 450);
@@ -68,6 +81,8 @@ async function runValidation() {
     showError("Escribe una noticia o titular para validar.");
     return;
   }
+  const detectedTopic = detectTopic(query);
+  activeValidationTopic = detectedTopic !== "general" ? detectedTopic : selectedTopicHint;
   setLoading(true);
   try {
     const result = await fetchValidation(query);
@@ -76,6 +91,7 @@ async function runValidation() {
     showError(err.message || "No se pudo validar la noticia.");
   } finally {
     setLoading(false);
+    selectedTopicHint = "general";
   }
 }
 
@@ -272,11 +288,36 @@ function setLoading(on) {
   const span = validateBtn.querySelector(".btn-text");
   if (span) span.textContent = on ? "Verificando..." : "Verificar";
   if (on) {
+    applyTopicTheme(activeValidationTopic);
     resultSection.classList.add("hidden");
     startProgressAnimation();
   } else {
     stopProgressAnimation();
+    clearTopicTheme();
   }
+}
+
+function normalizeTopic(raw) {
+  const topic = String(raw || "").toLowerCase().trim();
+  return SUPPORTED_TOPICS.has(topic) ? topic : "general";
+}
+
+function detectTopic(query) {
+  const text = String(query || "").trim();
+  if (!text) return "general";
+  const match = TOPIC_PATTERNS.find(({ regex }) => regex.test(text));
+  return match ? match.topic : "general";
+}
+
+function applyTopicTheme(topic) {
+  const normalized = normalizeTopic(topic);
+  if (progressSection) progressSection.setAttribute("data-topic", normalized);
+  document.body.setAttribute("data-active-topic", normalized);
+}
+
+function clearTopicTheme() {
+  if (progressSection) progressSection.removeAttribute("data-topic");
+  document.body.removeAttribute("data-active-topic");
 }
 
 // ---- Toast notification ----
@@ -345,6 +386,32 @@ function scoreColor(n) {
   if (n >= 65) return "var(--green)";
   if (n >= 35) return "var(--orange)";
   return "var(--red)";
+}
+
+function scoreToStars(score) {
+  if (score >= 90) return 5;
+  if (score >= 80) return 4.5;
+  if (score >= 70) return 4;
+  if (score >= 60) return 3.5;
+  if (score >= 50) return 3;
+  if (score >= 40) return 2.5;
+  if (score >= 30) return 2;
+  if (score >= 20) return 1.5;
+  if (score >= 10) return 1;
+  return 0.5;
+}
+
+function renderStars(score) {
+  const stars = scoreToStars(score);
+  const full = Math.floor(stars);
+  const half = stars % 1 !== 0;
+  const empty = 5 - full - (half ? 1 : 0);
+  let html = `<span class="stars-display" aria-label="${stars} de 5 estrellas">`;
+  for (let i = 0; i < full; i++) html += `<span class="star star-full">★</span>`;
+  if (half) html += `<span class="star star-half">★</span>`;
+  for (let i = 0; i < empty; i++) html += `<span class="star star-empty">★</span>`;
+  html += `</span>`;
+  return html;
 }
 
 function verdictInfo(veredicto) {
@@ -516,9 +583,17 @@ function buildAnalysisCard({ claim, score, veredicto, metricas, razones, fuentes
   const vInfo = verdictInfo(veredicto);
 
   const summaryHtml = resumen
-    ? `<div class="summary-section">
-        <p class="evidence-label">Resumen del análisis</p>
-        <p class="summary-text">${escapeHtml(String(resumen))}</p>
+    ? `<div class="summary-accordion open">
+        <button class="summary-accordion-header" type="button" aria-expanded="true" aria-controls="summary-body">
+          <span class="summary-accordion-title">
+            <span aria-hidden="true">📋</span>
+            Resumen del análisis
+          </span>
+          <svg class="summary-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="summary-accordion-body" id="summary-body" aria-hidden="false">
+          <p class="summary-text">${escapeHtml(String(resumen))}</p>
+        </div>
       </div>`
     : "";
 
@@ -568,7 +643,7 @@ function buildTransparencySection(score, timestamp, mediaFuentes, officialFuente
         </div>
         <div class="transparency-item">
           <span class="trans-key">Nivel de confianza</span>
-          <span class="trans-val" style="color:${scoreColor(score)}">${score}/100</span>
+          <span class="trans-val">${renderStars(score)}</span>
         </div>
         <div class="transparency-item">
           <span class="trans-key">Fuentes consultadas</span>
@@ -601,23 +676,6 @@ function buildShareSection(claim) {
     </div>
   `;
 }
-
-// ---- Copy-link event delegation ----
-
-document.addEventListener("click", (e) => {
-  if (e.target.closest && e.target.closest(".copy-btn")) {
-    const btn = e.target.closest(".copy-btn");
-    const url = btn.dataset.url;
-    if (!url) return;
-    navigator.clipboard.writeText(url).then(() => {
-      const prev = btn.textContent;
-      btn.textContent = "✓ Enlace copiado";
-      btn.classList.add("copied");
-      showToast("Enlace copiado al portapapeles 📋");
-      setTimeout(() => { btn.textContent = "📋 Copiar enlace"; btn.classList.remove("copied"); }, 2500);
-    }).catch(() => showToast("No se pudo copiar el enlace"));
-  }
-});
 
 // ---- History ----
 

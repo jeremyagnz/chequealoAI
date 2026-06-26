@@ -22,7 +22,7 @@ Analiza la consulta del usuario y responde SOLO en JSON con esta forma exacta:
 {
   "veredicto": "CONFIABLE|DUDOSA|FALSA",
   "puntuacion": 82,
-  "resumen": "texto breve en español (máx. 2 oraciones)",
+  "resumen": "texto explicativo en español (máx. 15 oraciones) describiendo la evidencia encontrada, las fuentes consultadas y el razonamiento detrás del veredicto",
   "razones": ["evidencia o argumento 1", "evidencia o argumento 2"],
   "fuentes": ["https://listindiario.com/noticia-ejemplo", "https://www.diariolibre.com/noticia-ejemplo"],
   "metricas": {

@@ -855,6 +855,24 @@ body.loading-active {
   border-radius: 28px;
   padding: 2rem 1.5rem 1.5rem;
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+  position: relative;
+  overflow: hidden;
+}
+@keyframes topic-glow {
+  0%, 100% { transform: translateX(-22%) scale(1); opacity: 0.35; }
+  50% { transform: translateX(24%) scale(1.08); opacity: 0.55; }
+}
+.progress-card::after {
+  content: "";
+  position: absolute;
+  inset: -40% auto auto -35%;
+  width: 72%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.28), transparent 68%);
+  filter: blur(2px);
+  pointer-events: none;
+  animation: topic-glow 3s ease-in-out infinite;
 }
 .progress-header {
   display: flex;
@@ -944,6 +962,54 @@ body.loading-active {
   width: 0%;
   transition: width 0.5s ease;
 }
+.progress-section[data-topic="deportes"] .progress-card::after {
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.3), transparent 68%);
+}
+.progress-section[data-topic="deportes"] .progress-spinner {
+  filter: drop-shadow(0 0 24px rgba(34, 197, 94, 0.45));
+}
+.progress-section[data-topic="deportes"] .progress-bar-fill {
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+}
+.progress-section[data-topic="salud"] .progress-card::after {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.3), transparent 68%);
+}
+.progress-section[data-topic="salud"] .progress-spinner {
+  filter: drop-shadow(0 0 24px rgba(59, 130, 246, 0.45));
+}
+.progress-section[data-topic="salud"] .progress-bar-fill {
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+}
+.progress-section[data-topic="politica"] .progress-card::after {
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.32), transparent 68%);
+}
+.progress-section[data-topic="politica"] .progress-spinner {
+  filter: drop-shadow(0 0 24px rgba(168, 85, 247, 0.45));
+}
+.progress-section[data-topic="politica"] .progress-bar-fill {
+  background: linear-gradient(90deg, #7c3aed, #a78bfa);
+}
+.progress-section[data-topic="economia"] .progress-card::after {
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.32), transparent 68%);
+}
+.progress-section[data-topic="economia"] .progress-spinner {
+  filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.45));
+}
+.progress-section[data-topic="seguridad"] .progress-card::after {
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.3), transparent 68%);
+}
+.progress-section[data-topic="seguridad"] .progress-spinner {
+  filter: drop-shadow(0 0 24px rgba(239, 68, 68, 0.45));
+}
+.progress-section[data-topic="tecnologia"] .progress-card::after {
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.3), transparent 68%);
+}
+.progress-section[data-topic="tecnologia"] .progress-spinner {
+  filter: drop-shadow(0 0 24px rgba(6, 182, 212, 0.45));
+}
+.progress-section[data-topic="tecnologia"] .progress-bar-fill {
+  background: linear-gradient(90deg, #0891b2, #22d3ee);
+}
 
 /* ---- SKELETON LOADERS ---- */
 .skeleton-card {
@@ -997,19 +1063,72 @@ body.loading-active {
   animation: card-appear 0.4s ease forwards;
 }
 
-/* ---- SUMMARY SECTION (in card) ---- */
-.summary-section {
+/* ---- SUMMARY ACCORDION (in card) ---- */
+.summary-accordion {
   margin-top: 1.5rem;
-  padding: 1rem 1.2rem;
   background: rgba(124, 58, 237, 0.07);
   border: 1px solid rgba(124, 58, 237, 0.2);
-  border-radius: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.summary-accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.85rem 1.2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  gap: 0.75rem;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  border-radius: 12px;
+  transition: background 0.15s;
+}
+.summary-accordion-header:hover {
+  background: rgba(124, 58, 237, 0.06);
+}
+.summary-accordion-header:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: -2px;
+}
+.summary-accordion-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.summary-chevron {
+  width: 16px;
+  height: 16px;
+  color: var(--accent-light);
+  flex-shrink: 0;
+  margin-left: auto;
+  transition: transform 0.25s ease;
+}
+.summary-accordion.open .summary-chevron {
+  transform: rotate(180deg);
+}
+.summary-accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 1.2rem;
+  transition: max-height 0.3s ease, padding 0.25s ease;
+}
+.summary-accordion.open .summary-accordion-body {
+  max-height: 2000px;
+  padding: 0 1.2rem 1rem;
 }
 .summary-text {
   font-size: 0.9rem;
   color: var(--muted-2);
   line-height: 1.65;
-  margin-top: 0.4rem;
 }
 
 /* ---- TRANSPARENCY SECTION (in card) ---- */
@@ -1044,6 +1163,29 @@ body.loading-active {
   font-size: 0.82rem;
   color: var(--muted-2);
   font-weight: 500;
+}
+
+/* ---- STARS RATING ---- */
+.stars-display {
+  display: inline-flex;
+  gap: 1px;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.star {
+  display: inline-block;
+}
+.star-full {
+  color: #f5a623;
+}
+.star-empty {
+  color: var(--border);
+}
+.star-half {
+  background: linear-gradient(to right, #f5a623 50%, var(--border) 50%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* ---- SHARE SECTION (in card) ---- */
@@ -1553,3 +1695,5 @@ body.loading-active {
   .nav-cta-btn { display: none; }
   .footer-nav { flex-wrap: wrap; gap: 1.5rem; }
 }
+
+
