@@ -56,11 +56,12 @@
 
   function initAnalytics() {
     if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID === "G-XXXXXXXXXX") return;
+    if (!/^G-[A-Z0-9]+$/i.test(GA_MEASUREMENT_ID)) return;
     if (typeof window.gtag === "function") return;
 
     window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      window.dataLayer.push(arguments);
+    function gtag(...args) {
+      window.dataLayer.push(args);
     }
 
     window.gtag = gtag;
@@ -75,7 +76,11 @@
 
   // Apply saved/preferred theme immediately (runs before DOM paint)
   applyTheme(getPreferredTheme());
-  initAnalytics();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAnalytics, { once: true });
+  } else {
+    initAnalytics();
+  }
 
   // Wire up the toggle button once DOM is ready
   function wireButton() {
