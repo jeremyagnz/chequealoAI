@@ -76,11 +76,7 @@
 
   // Apply saved/preferred theme immediately (runs before DOM paint)
   applyTheme(getPreferredTheme());
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initAnalytics, { once: true });
-  } else {
-    initAnalytics();
-  }
+  initAnalytics();
 
   // Wire up the toggle button once DOM is ready
   function wireButton() {
