@@ -29,30 +29,80 @@
 
 /* ---- LIGHT THEME ---- */
 [data-theme="light"] {
-  --bg: #faf5ff;
+  --bg: #f0f7ff;
   --surface: #ffffff;
-  --surface-2: #f3e8ff;
-  --border: #ddd6fe;
+  --surface-2: #e0edf8;
+  --border: #b3d0f0;
   --text: #18181b;
   --muted: #6b7280;
   --muted-2: #374151;
-  --accent: #7c3aed;
-  --accent-light: #6d28d9;
+  --accent: #003D7A;
+  --accent-light: #002d5a;
   --green: #16a34a;
   --orange: #d97706;
   --red: #dc2626;
   --blue: #2563eb;
-  --nav-menu-btn-bg: rgba(250, 245, 255, 0.9);
-  --nav-menu-btn-hover-bg: rgba(124, 58, 237, 0.08);
-  --navbar-bg: rgba(250, 245, 255, 0.92);
-  --navbar-mobile-bg: rgba(250, 245, 255, 0.97);
-  --hero-badge-border: #ddd6fe;
-  --search-bar-border: #8b5cf6;
-  --overlay-bg: rgba(245, 240, 255, 0.9);
-  --progress-card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(243, 232, 255, 0.98));
-  --glass-bg: rgba(124, 58, 237, 0.04);
-  --glass-border: rgba(124, 58, 237, 0.08);
+  --nav-menu-btn-bg: rgba(240, 247, 255, 0.9);
+  --nav-menu-btn-hover-bg: rgba(0, 61, 122, 0.08);
+  --navbar-bg: rgba(240, 247, 255, 0.92);
+  --navbar-mobile-bg: rgba(240, 247, 255, 0.97);
+  --hero-badge-border: #b3d0f0;
+  --search-bar-border: #003D7A;
+  --overlay-bg: rgba(240, 247, 255, 0.9);
+  --progress-card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(224, 237, 255, 0.98));
+  --glass-bg: rgba(0, 61, 122, 0.04);
+  --glass-border: rgba(0, 61, 122, 0.08);
   --brand-logo-image: url("/chequealo-logo-pro.svg");
+}
+
+/* ---- LIGHT THEME — hardcoded purple overrides ---- */
+[data-theme="light"] .nav-cta-btn:hover {
+  background: #002d5a;
+}
+[data-theme="light"] .hero-badge {
+  background: rgba(0, 61, 122, 0.08);
+}
+[data-theme="light"] .search-bar:focus-within {
+  box-shadow: 0 0 0 3px rgba(0, 61, 122, 0.18);
+}
+[data-theme="light"] .search-bar button:hover:not(:disabled) {
+  background: #002d5a;
+}
+[data-theme="light"] .source-chip.more {
+  border-color: rgba(0, 61, 122, 0.35);
+}
+[data-theme="light"] .cta-secondary:hover {
+  background: rgba(0, 61, 122, 0.1);
+}
+[data-theme="light"] .suggestion-pill:hover {
+  background: rgba(0, 61, 122, 0.08);
+}
+[data-theme="light"] .stat-card:hover {
+  border-color: rgba(0, 61, 122, 0.4);
+}
+[data-theme="light"] .progress-section[data-topic="politica"] .progress-bar-fill {
+  background: linear-gradient(90deg, #003D7A, #4d8fca);
+}
+[data-theme="light"] .summary-accordion {
+  background: rgba(0, 61, 122, 0.07);
+  border-color: rgba(0, 61, 122, 0.2);
+}
+[data-theme="light"] .summary-accordion-header:hover {
+  background: rgba(0, 61, 122, 0.06);
+}
+[data-theme="light"] .share-btn.copy-btn {
+  background: rgba(0, 61, 122, 0.1);
+  border-color: rgba(0, 61, 122, 0.3);
+  color: var(--accent-light);
+}
+[data-theme="light"] .how-card:hover {
+  border-color: rgba(0, 61, 122, 0.4);
+}
+[data-theme="light"] .cat-card:hover {
+  background: rgba(0, 61, 122, 0.06);
+}
+[data-theme="light"] .page-badge {
+  background: rgba(0, 61, 122, 0.07);
 }
 
 *, *::before, *::after {
