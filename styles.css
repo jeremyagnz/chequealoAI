@@ -54,8 +54,6 @@
   --glass-border: rgba(124, 58, 237, 0.08);
 }
 
-/* Smooth transition when switching themes */
-
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -1730,7 +1728,7 @@ body.loading-active {
   }
   .navbar-links { display: none; }
   .nav-cta-btn { display: none; }
-  .theme-toggle-btn { order: 1; }
+  .theme-toggle-btn { order: 1; } /* Keep toggle visible after logo on mobile */
   .nav-menu-btn {
     display: flex;
     order: -1;
