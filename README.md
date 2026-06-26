@@ -106,6 +106,8 @@ Configura estas variables en Netlify:
 - `OPENAI_API_KEY` (obligatoria): clave para llamar OpenAI.
 - `SERPER_API_KEY` (opcional): habilita contexto de búsqueda web para mejorar evidencia.
 
+Para activar Google Analytics (GA4), define tu Measurement ID en `theme.js` reemplazando `G-XXXXXXXXXX` en la constante `GA_MEASUREMENT_ID`.
+
 > Nunca expongas estas claves en el frontend ni en commits.
 
 ---
