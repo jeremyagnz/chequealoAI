@@ -1,0 +1,90 @@
+<svg viewBox="0 0 950 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .logo-text { font-family: 'Arial', 'Helvetica', sans-serif; font-weight: 900; letter-spacing: 1px; }
+      .text-dark { fill: #003D7A; }
+      .text-gold { fill: #D4AF37; }
+    </style>
+    
+    <!-- Gradiente para la lupa (dorado) -->
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFE680;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#D4AF37;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9A8C38;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Gradiente para el círculo de la lupa (más profundidad) -->
+    <radialGradient id="circleShadow" cx="35%" cy="35%">
+      <stop offset="0%" style="stop-color:#FFF5CC;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#D4AF37;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B7F1F;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Sombra proyectada -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="3" dy="4" stdDeviation="4" flood-opacity="0.25"/>
+    </filter>
+    
+    <!-- Sombra más suave -->
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+    
+    <!-- Brillo intenso -->
+    <filter id="brightReflection">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1"/>
+    </filter>
+  </defs>
+  
+
+  <!-- TEXTO: "Che" con sombra -->
+  <text x="32" y="137" font-size="130" class="logo-text" fill="#00264d" opacity="0.2">Che</text>
+  <text x="30" y="135" font-size="130" class="logo-text text-dark">Che</text>
+  
+  <!-- LUPA (reemplaza la "o") con efecto 3D -->
+  <g transform="translate(350, 75)" filter="url(#shadow)">
+    
+    <!-- Sombra del círculo (parte trasera oscura) -->
+    <circle cx="0" cy="0" r="45" fill="none" stroke="#6B4423" stroke-width="10" opacity="0.3"/>
+    
+    <!-- Círculo principal con gradiente radial -->
+    <circle cx="0" cy="0" r="45" fill="none" stroke="url(#circleShadow)" stroke-width="9"/>
+    
+    <!-- Reflejos brillantes en la parte superior izquierda -->
+    <circle cx="-18" cy="-18" r="12" fill="#FFF9E6" opacity="0.6" filter="url(#brightReflection)"/>
+    <circle cx="-14" cy="-14" r="8" fill="#FFFAEB" opacity="0.8"/>
+    <circle cx="-10" cy="-10" r="4" fill="#FFFFFF" opacity="1"/>
+    
+    <!-- Reflejo secundario -->
+    <ellipse cx="15" cy="-20" rx="8" ry="6" fill="#FFE680" opacity="0.4"/>
+    
+    <!-- Mango de la lupa con gradiente -->
+    <defs>
+      <linearGradient id="handleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FFE680;stop-opacity:1" />
+        <stop offset="50%" style="stop-color:#D4AF37;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#8B7F1F;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+    
+    <!-- Sombra del mango -->
+    <line x1="33" y1="33" x2="86" y2="86" stroke="#6B4423" stroke-width="12" stroke-linecap="round" opacity="0.2"/>
+    
+    <!-- Mango principal con gradiente -->
+    <line x1="32" y1="32" x2="85" y2="85" stroke="url(#handleGradient)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Reflejo en el mango -->
+    <line x1="32" y1="30" x2="83" y2="83" stroke="#FFF5CC" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+    
+    <!-- Punta del mango (esfera 3D) -->
+    <circle cx="85" cy="85" r="7" fill="url(#handleGradient)"/>
+    <circle cx="82" cy="82" r="3" fill="#FFFFFF" opacity="0.7"/>
+  </g>
+  
+  <!-- TEXTO: "uéalo" con sombra -->
+  <text x="407" y="137" font-size="130" class="logo-text" fill="#00264d" opacity="0.2">uéalo</text>
+  <text x="405" y="135" font-size="130" class="logo-text text-dark">uéalo</text>
+  
+  <!-- ETIQUETA "AI" (opcional) -->
+  <!-- <text x="870" y="125" font-size="38" class="logo-text text-gold" opacity="0.9">AI</text> -->
+</svg>
