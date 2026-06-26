@@ -182,8 +182,9 @@
       <div class="section-inner">
         <div class="progress-card">
           <div class="progress-header">
-            <div class="progress-spinner" aria-hidden="true"></div>
+            <img src="spinner-chequealo.svg" class="progress-spinner" aria-hidden="true" alt="" loading="eager">
             <h3 class="progress-title">Analizando tu consulta…</h3>
+            <div class="progress-timer" id="progress-timer">⏱️ ~8 segundos restantes</div>
           </div>
           <div class="progress-steps" role="list">
             <div class="progress-step" id="step-1" role="listitem"><span class="step-dot"></span><span class="step-text">Analizando texto</span></div>
@@ -192,8 +193,11 @@
             <div class="progress-step" id="step-4" role="listitem"><span class="step-dot"></span><span class="step-text">Calculando credibilidad</span></div>
             <div class="progress-step" id="step-5" role="listitem"><span class="step-dot"></span><span class="step-text">Generando informe</span></div>
           </div>
-          <div class="progress-bar-track" aria-hidden="true">
-            <div class="progress-bar-fill" id="barra-progreso"></div>
+          <div class="progress-bar-wrapper" aria-hidden="true">
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="barra-progreso"></div>
+            </div>
+            <span class="progress-bar-label" id="progress-bar-label">0%</span>
           </div>
           <div class="skeleton-card" aria-hidden="true">
             <div class="skeleton-line sk-wide"></div>

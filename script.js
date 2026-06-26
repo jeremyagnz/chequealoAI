@@ -253,9 +253,43 @@ document.addEventListener("click", (e) => {
 // ---- Progress animation ----
 
 let stepTimerIds = [];
+let countdownId = null;
 const STEP_DELAYS = [600, 2200, 4400, 7000, 9800];
 const progressSection = document.getElementById("seccion-progreso");
 let lastFocusedElement = null;
+
+function startCountdown(seconds) {
+  clearInterval(countdownId);
+  let remaining = seconds;
+  const timerEl = document.getElementById("progress-timer");
+  if (!timerEl) return;
+
+  function tick() {
+    if (remaining > 0) {
+      const s = remaining !== 1 ? "s" : "";
+      timerEl.textContent = `⏱️ ~${remaining} segundo${s} restante${s}`;
+      timerEl.classList.toggle("urgent", remaining < 3);
+      remaining--;
+    } else {
+      timerEl.textContent = "⏱️ Finalizando…";
+      timerEl.classList.add("urgent");
+      clearInterval(countdownId);
+    }
+  }
+
+  tick();
+  countdownId = setInterval(tick, 1000);
+}
+
+function stopCountdown() {
+  clearInterval(countdownId);
+  countdownId = null;
+  const timerEl = document.getElementById("progress-timer");
+  if (timerEl) {
+    timerEl.textContent = "";
+    timerEl.classList.remove("urgent");
+  }
+}
 
 function enforceProgressFocus(event) {
   if (!progressSection || progressSection.classList.contains("hidden")) return;
@@ -299,6 +333,7 @@ function startProgressAnimation() {
   steps.forEach((s) => s.classList.remove("done", "active"));
   if (steps[0]) steps[0].classList.add("active");
   updateProgressBar(5);
+  startCountdown(8);
 
   stepTimerIds = STEP_DELAYS.map((delay, i) =>
     setTimeout(() => {
@@ -315,6 +350,7 @@ function startProgressAnimation() {
 function stopProgressAnimation() {
   stepTimerIds.forEach(clearTimeout);
   stepTimerIds = [];
+  stopCountdown();
   const steps = document.querySelectorAll(".progress-step");
   steps.forEach((s) => { s.classList.add("done"); s.classList.remove("active"); });
   updateProgressBar(100);
@@ -326,6 +362,8 @@ function stopProgressAnimation() {
 function updateProgressBar(pct) {
   const bar = document.getElementById("barra-progreso");
   if (bar) bar.style.width = `${pct}%`;
+  const label = document.getElementById("progress-bar-label");
+  if (label) label.textContent = `${pct}%`;
 }
 
 function setLoading(on) {
