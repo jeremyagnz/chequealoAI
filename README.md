@@ -107,6 +107,7 @@ Configura estas variables en Netlify:
 - `SERPER_API_KEY` (opcional): habilita contexto de búsqueda web para mejorar evidencia.
 
 Para activar Google Analytics (GA4), antes de desplegar define tu Measurement ID en `theme.js` asignando la constante `GA_MEASUREMENT_ID` (por ejemplo: `G-ABC123XYZ9`). Este ID no es una credencial secreta.
+En este repo, `netlify.toml` ya omite `GA_MEASUREMENT_ID` del escaneo de secretos de Netlify para evitar falsos positivos al usar ese identificador público en frontend.
 
 > Nunca expongas estas claves (por ejemplo `OPENAI_API_KEY` / `SERPER_API_KEY`) en el frontend ni en commits.
 
