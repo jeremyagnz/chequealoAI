@@ -248,21 +248,20 @@ body.loading-active {
   justify-content: center;
   width: 38px;
   height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--surface);
+  border: none;
+  background: transparent;
   color: var(--text);
   cursor: pointer;
-  font-size: 1.1rem;
   flex-shrink: 0;
-  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  transition: transform 0.2s, opacity 0.2s;
   padding: 0;
-  line-height: 1;
+}
+[data-theme="light"] .theme-toggle-btn {
+  color: #003D7A;
 }
 .theme-toggle-btn:hover {
-  border-color: var(--accent-light);
-  background: var(--nav-menu-btn-hover-bg);
-  transform: rotate(18deg) scale(1.08);
+  transform: rotate(18deg) scale(1.12);
+  opacity: 0.8;
 }
 .navbar-mobile {
   display: none;
