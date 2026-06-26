@@ -98,6 +98,7 @@ body.loading-active {
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  position: relative;
 }
 .logo {
   text-decoration: none;
@@ -105,6 +106,9 @@ body.loading-active {
   align-items: center;
   gap: 0;
   flex-shrink: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .brand-logo {
   /* Crops the frame included in the original logo image. */
@@ -1721,10 +1725,6 @@ body.loading-active {
 @media (max-width: 768px) {
   .navbar-inner {
     justify-content: space-between;
-  }
-  .logo {
-    margin-left: auto;
-    transform: translateY(-2px);
   }
   .navbar-links { display: none; }
   .nav-cta-btn { display: none; }
