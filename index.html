@@ -74,13 +74,13 @@
     </nav>
 
     <!-- Hero -->
-    <section class="hero" aria-labelledby="hero-title">
+    <section class="hero" aria-labelledby="titulo-principal">
       <div class="hero-content">
         <div class="hero-badge fade-in-up" style="animation-delay:0.05s">
           <span class="badge-dot"></span>
           Verificación con IA en tiempo real
         </div>
-        <h1 class="hero-title fade-in-up" id="hero-title" style="animation-delay:0.15s">
+        <h1 class="hero-title fade-in-up" id="titulo-principal" style="animation-delay:0.15s">
           ¿Es verdad o es falsa?<br />
           <span class="hero-accent">Verifícalo en segundos.</span>
         </h1>
@@ -181,7 +181,7 @@
     </section>
 
     <!-- Progress section (shown during validation) -->
-    <section id="progressSection" class="progress-section hidden" aria-live="polite" aria-label="Progreso del análisis" tabindex="-1">
+    <section id="seccion-progreso" class="progress-section hidden" aria-live="polite" aria-label="Progreso del análisis" tabindex="-1">
       <div class="section-inner">
         <div class="progress-card">
           <div class="progress-header">
@@ -196,7 +196,7 @@
             <div class="progress-step" id="step-5" role="listitem"><span class="step-dot"></span><span class="step-text">Generando informe</span></div>
           </div>
           <div class="progress-bar-track" aria-hidden="true">
-            <div class="progress-bar-fill" id="progressBar"></div>
+            <div class="progress-bar-fill" id="barra-progreso"></div>
           </div>
           <div class="skeleton-card" aria-hidden="true">
             <div class="skeleton-line sk-wide"></div>
@@ -217,23 +217,23 @@
     </section>
 
     <!-- Live result (shown after validation) -->
-    <section id="resultSection" class="result-section hidden" aria-live="polite">
+    <section id="seccion-resultado" class="result-section hidden" aria-live="polite">
       <div class="section-inner">
         <div id="resultCard" class="analysis-card result-animate"></div>
       </div>
     </section>
 
     <!-- History section -->
-    <section id="historySection" class="history-section hidden" aria-label="Historial de verificaciones">
+    <section id="seccion-historial" class="history-section hidden" aria-label="Historial de verificaciones">
       <div class="section-inner">
         <!-- populated by JS -->
       </div>
     </section>
 
     <!-- How it works section -->
-    <section class="how-section" id="como-funciona" aria-labelledby="how-title">
+    <section class="how-section" id="como-funciona" aria-labelledby="titulo-como-funciona">
       <div class="section-inner">
-        <h2 class="section-title animate-on-scroll" id="how-title">¿Cómo funciona?</h2>
+        <h2 class="section-title animate-on-scroll" id="titulo-como-funciona">¿Cómo funciona?</h2>
         <p class="section-sub animate-on-scroll">
           Un proceso transparente de 4 pasos para verificar cualquier noticia en segundos.
         </p>
@@ -270,9 +270,9 @@
     </section>
 
     <!-- Trusted sources section -->
-    <section class="sources-section" id="fuentes" aria-labelledby="sources-title">
+    <section class="sources-section" id="fuentes" aria-labelledby="titulo-fuentes">
       <div class="section-inner">
-        <h2 class="section-title animate-on-scroll" id="sources-title">Fuentes que analizamos</h2>
+        <h2 class="section-title animate-on-scroll" id="titulo-fuentes">Fuentes que analizamos</h2>
         <p class="section-sub animate-on-scroll">
           Verificamos contra 18 fuentes de alta credibilidad: medios de comunicación y entidades oficiales.
         </p>
@@ -313,9 +313,9 @@
     </section>
 
     <!-- Demo section -->
-    <section class="demo-section" id="verificaciones" aria-labelledby="demo-title">
+    <section class="demo-section" id="verificaciones" aria-labelledby="titulo-verificaciones">
       <div class="section-inner">
-        <h2 class="section-title animate-on-scroll" id="demo-title">Así se ve un análisis real</h2>
+        <h2 class="section-title animate-on-scroll" id="titulo-verificaciones">Así se ve un análisis real</h2>
         <p class="section-sub animate-on-scroll">
           Cada verificación incluye puntuación, evidencia trazable y fuentes consultadas.
         </p>
@@ -324,14 +324,14 @@
           <button class="tab-btn" role="tab" data-demo="dudosa" aria-selected="false" tabindex="-1">⚠ Dudosa (51)</button>
           <button class="tab-btn" role="tab" data-demo="falsa" aria-selected="false" tabindex="-1">✕ Falsa (21)</button>
         </div>
-        <div id="demoCard" class="analysis-card" role="tabpanel"></div>
+        <div id="tarjeta-verificaciones" class="analysis-card" role="tabpanel"></div>
       </div>
     </section>
 
     <!-- Categories section -->
-    <section class="categories-section" aria-labelledby="cat-title">
+    <section class="categories-section" aria-labelledby="titulo-categorias">
       <div class="section-inner">
-        <h2 class="section-title animate-on-scroll" id="cat-title">Verificar por categoría</h2>
+        <h2 class="section-title animate-on-scroll" id="titulo-categorias">Verificar por categoría</h2>
         <p class="section-sub animate-on-scroll">Selecciona una categoría y te preparamos una consulta de ejemplo.</p>
         <div class="categories-grid">
           <button class="cat-card animate-on-scroll stagger-1" type="button" data-topic="politica" data-query="Noticias y afirmaciones de política dominicana en 2025 que necesitan verificación">

@@ -1,6 +1,6 @@
 const queryInput = document.getElementById("newsQuery");
 const validateBtn = document.getElementById("validateBtn");
-const resultSection = document.getElementById("resultSection");
+const resultSection = document.getElementById("seccion-resultado");
 const resultCard = document.getElementById("resultCard");
 const errorMsg = document.getElementById("error");
 const errorContainer = document.getElementById("errorContainer");
@@ -254,7 +254,7 @@ document.addEventListener("click", (e) => {
 
 let stepTimerIds = [];
 const STEP_DELAYS = [600, 2200, 4400, 7000, 9800];
-const progressSection = document.getElementById("progressSection");
+const progressSection = document.getElementById("seccion-progreso");
 let lastFocusedElement = null;
 
 function enforceProgressFocus(event) {
@@ -324,7 +324,7 @@ function stopProgressAnimation() {
 }
 
 function updateProgressBar(pct) {
-  const bar = document.getElementById("progressBar");
+  const bar = document.getElementById("barra-progreso");
   if (bar) bar.style.width = `${pct}%`;
 }
 
@@ -778,7 +778,7 @@ function saveToHistory(query, result) {
 }
 
 function renderHistory() {
-  const histSection = document.getElementById("historySection");
+  const histSection = document.getElementById("seccion-historial");
   if (!histSection) return;
   const history = loadHistory();
 
@@ -904,7 +904,7 @@ const DEMO_DATA = {
 };
 
 function renderDemoCard(key) {
-  document.getElementById("demoCard").innerHTML = buildAnalysisCard(DEMO_DATA[key]);
+  document.getElementById("tarjeta-verificaciones").innerHTML = buildAnalysisCard(DEMO_DATA[key]);
 }
 
 document.querySelectorAll(".tab-btn").forEach((btn) => {
@@ -915,7 +915,7 @@ document.querySelectorAll(".tab-btn").forEach((btn) => {
       b.setAttribute("aria-selected", String(isActive));
       b.tabIndex = isActive ? 0 : -1;
     });
-    document.getElementById("demoCard").setAttribute("aria-labelledby", btn.id);
+    document.getElementById("tarjeta-verificaciones").setAttribute("aria-labelledby", btn.id);
     renderDemoCard(btn.dataset.demo);
   });
 });
