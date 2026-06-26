@@ -1,5 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="8" fill="#6366f1"/>
-  <path d="M16 6 L26 10 L26 17 C26 22 21 26.5 16 28 C11 26.5 6 22 6 17 L6 10 Z" fill="none" stroke="white" stroke-width="2.2" stroke-linejoin="round"/>
-  <path d="M11.5 16 L14.5 19 L20.5 13" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradiente para la lupa (dorado brillante) -->
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFED4E;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DAA520;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Gradiente radial para profundidad -->
+    <radialGradient id="circleShadow" cx="35%" cy="35%">
+      <stop offset="0%" style="stop-color:#FFFACD;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Sombra proyectada -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="2" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Fondo transparente -->
+  
+  <!-- LUPA DORADA (elemento principal) -->
+  <g transform="translate(100, 100)" filter="url(#shadow)">
+    
+    <!-- Sombra del círculo -->
+    <circle cx="0" cy="0" r="50" fill="none" stroke="#8B7500" stroke-width="8" opacity="0.15"/>
+    
+    <!-- Círculo principal con gradiente -->
+    <circle cx="0" cy="0" r="50" fill="none" stroke="url(#circleShadow)" stroke-width="8"/>
+    
+    <!-- Reflejos brillantes -->
+    <circle cx="-18" cy="-18" r="12" fill="#FFFACD" opacity="0.7"/>
+    <circle cx="-12" cy="-12" r="7" fill="#FFFFFF" opacity="0.9"/>
+    
+    <!-- Reflejo secundario -->
+    <ellipse cx="15" cy="-20" rx="8" ry="6" fill="#FFED4E" opacity="0.5"/>
+    
+    <!-- Mango de la lupa con gradiente -->
+    <!-- Sombra del mango -->
+    <line x1="36" y1="36" x2="85" y2="85" stroke="#8B7500" stroke-width="10" stroke-linecap="round" opacity="0.15"/>
+    
+    <!-- Mango principal -->
+    <line x1="36" y1="36" x2="85" y2="85" stroke="url(#goldGradient)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Reflejo en el mango -->
+    <line x1="36" y1="34" x2="83" y2="81" stroke="#FFFACD" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+    
+    <!-- Punta del mango (esfera 3D) -->
+    <circle cx="85" cy="85" r="6" fill="url(#goldGradient)"/>
+    <circle cx="82" cy="82" r="2.5" fill="#FFFFFF" opacity="0.8"/>
+  </g>
 </svg>
