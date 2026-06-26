@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acerca de ChequealoAI | Verificador de Noticias con IA</title>
+    <meta name="description" content="Conoce el proyecto ChequealoAI, una herramienta de verificación de noticias con inteligencia artificial creada para República Dominicana." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://chequealoai.netlify.app/acerca.html" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Acerca de ChequealoAI" />
+    <meta property="og:description" content="Verificador de noticias con inteligencia artificial para República Dominicana. Conoce el proyecto." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://chequealoai.netlify.app/acerca.html" />
+    <meta property="og:site_name" content="ChequealoAI" />
+
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/theme.js"></script>
+    <style>
+      .about-content { max-width: 760px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+      .about-content h2 { font-size: 1.15rem; font-weight: 700; color: var(--text); margin: 2rem 0 0.6rem; }
+      .about-content p, .about-content li { font-size: 0.925rem; color: var(--muted-2); line-height: 1.7; margin-bottom: 0.5rem; }
+      .about-content ul { padding-left: 1.4rem; margin-bottom: 1rem; }
+      .about-content li { margin-bottom: 0.3rem; }
+      .about-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+      .about-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.25rem;
+        text-align: center;
+      }
+      .about-card-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+      .about-card-title { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+      .about-card-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+      .contact-box {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+      }
+      .contact-box p { margin-bottom: 0.75rem; }
+      .contact-link {
+        display: inline-block;
+        margin-top: 0.5rem;
+        color: var(--accent-light);
+        font-size: 0.875rem;
+        text-decoration: none;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.4rem 1rem;
+        transition: background 0.15s;
+      }
+      .contact-link:hover { background: rgba(99,102,241,0.1); }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+      <div class="navbar-inner">
+        <a href="/" class="logo" aria-label="ChequealoAI inicio">
+          <span class="brand-logo brand-logo-nav" aria-hidden="true"></span>
+          <span class="sr-only">ChequealoAI</span>
+        </a>
+        <div class="navbar-links">
+          <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
+          <a href="/fuentes.html" class="nav-link">Fuentes</a>
+          <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+        </div>
+        <a href="/" class="nav-cta-btn">Verificar noticia</a>
+        <button class="theme-toggle-btn" id="themeToggleBtn" type="button" aria-label="Cambiar tema">☀️</button>
+        <button class="nav-menu-btn" id="navMenuBtn" aria-label="Abrir menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <div class="navbar-mobile" id="navMobile">
+        <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
+        <a href="/fuentes.html" class="nav-link">Fuentes</a>
+        <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+      </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <div class="page-hero">
+      <div class="page-hero-badge"><span>🇩🇴</span> El proyecto</div>
+      <h1 class="page-title">Acerca de ChequealoAI</h1>
+      <p class="page-subtitle">
+        Una herramienta de verificación de noticias con inteligencia artificial, creada para República Dominicana.
+      </p>
+    </div>
+
+    <main class="about-content">
+
+      <h2>¿Qué es ChequealoAI?</h2>
+      <p>
+        ChequealoAI es una plataforma gratuita de fact-checking que combina búsqueda en tiempo real e inteligencia artificial
+        para verificar afirmaciones, titulares y rumores de noticias dominicanas. El resultado es un veredicto claro
+        (<strong>Confiable</strong>, <strong>Dudosa</strong> o <strong>Falsa</strong>) acompañado de evidencia trazable y fuentes consultadas.
+      </p>
+
+      <div class="about-cards">
+        <div class="about-card">
+          <div class="about-card-icon">🆓</div>
+          <div class="about-card-title">100% gratuito</div>
+          <div class="about-card-desc">Sin registro ni suscripción requerida.</div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">🔍</div>
+          <div class="about-card-title">Fuentes reales</div>
+          <div class="about-card-desc">Busca en medios dominicanos y fuentes oficiales del gobierno.</div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">⚡</div>
+          <div class="about-card-title">En segundos</div>
+          <div class="about-card-desc">Resultados en aproximadamente 8 segundos.</div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">🔒</div>
+          <div class="about-card-title">Privacidad</div>
+          <div class="about-card-desc">No almacenamos consultas. El historial es solo tuyo.</div>
+        </div>
+      </div>
+
+      <h2>Misión</h2>
+      <p>
+        En un entorno de redes sociales donde la desinformación se propaga en segundos, ChequealoAI busca dar a cualquier
+        ciudadano dominicano una herramienta accesible para cuestionar, verificar y compartir información con mayor confianza.
+      </p>
+      <p>
+        No pretendemos reemplazar el periodismo de investigación profesional. Los resultados son orientativos
+        y siempre recomendamos contrastar con fuentes primarias.
+      </p>
+
+      <h2>Tecnología</h2>
+      <ul>
+        <li><strong>Motor de IA:</strong> GPT-4o mini (OpenAI) — análisis de credibilidad y generación del veredicto.</li>
+        <li><strong>Búsqueda en tiempo real:</strong> Serper API — resultados de Google contextualizados para República Dominicana.</li>
+        <li><strong>Infraestructura:</strong> Netlify — hosting estático y funciones serverless.</li>
+        <li><strong>Frontend:</strong> HTML, CSS y JavaScript vanilla — sin frameworks, sin dependencias.</li>
+      </ul>
+
+      <h2>Limitaciones conocidas</h2>
+      <ul>
+        <li>La IA puede cometer errores. Siempre verifica con fuentes primarias ante decisiones importantes.</li>
+        <li>El análisis está optimizado para noticias de República Dominicana.</li>
+        <li>La búsqueda en tiempo real depende de la disponibilidad de Serper API.</li>
+        <li>Los resultados de la IA son probabilísticos, no deterministas.</li>
+      </ul>
+
+      <h2>Reporte de errores o sugerencias</h2>
+      <div class="contact-box">
+        <p>¿Encontraste un error en un análisis? ¿Tienes sugerencias para mejorar la plataforma?
+          Puedes reportarlo directamente en nuestro repositorio de GitHub.</p>
+        <a class="contact-link" href="https://github.com/jeremyagnz/chequealoAI/issues" target="_blank" rel="noopener noreferrer">
+          🐛 Reportar en GitHub →
+        </a>
+        <a class="contact-link" href="https://github.com/jeremyagnz/chequealoAI" target="_blank" rel="noopener noreferrer" style="margin-left: 0.5rem;">
+          ⭐ Ver código fuente →
+        </a>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <span class="footer-logo">
+              <span class="brand-logo brand-logo-footer" aria-hidden="true"></span>
+              <span class="sr-only">ChequealoAI</span>
+            </span>
+            <p class="footer-desc">Verificador de noticias con inteligencia artificial para República Dominicana.</p>
+          </div>
+          <nav class="footer-nav" aria-label="Navegación del pie de página">
+            <div class="footer-col">
+              <h4 class="footer-col-title">Plataforma</h4>
+              <a href="/" class="footer-link">Inicio</a>
+              <a href="/como-funciona.html" class="footer-link">Cómo funciona</a>
+              <a href="/verificaciones.html" class="footer-link">Verificaciones</a>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Recursos</h4>
+              <a href="/fuentes.html" class="footer-link">Fuentes confiables</a>
+              <a href="/#como-funciona" class="footer-link">Metodología</a>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Legal</h4>
+              <a href="/privacidad.html" class="footer-link">Privacidad</a>
+              <a href="/acerca.html" class="footer-link" aria-current="page">Acerca de</a>
+            </div>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2025 ChequealoAI · Hecho en República Dominicana 🇩🇴</p>
+          <p class="footer-disclaimer">Los resultados son orientativos y no reemplazan la verificación periodística profesional.</p>
+        </div>
+      </div>
+    </footer>
+
+    <button id="scrollTopBtn" aria-label="Volver arriba">&#8679;</button>
+    <script>
+      const btn = document.getElementById("navMenuBtn");
+      const mob = document.getElementById("navMobile");
+      if (btn && mob) btn.addEventListener("click", () => {
+        const open = mob.classList.toggle("open");
+        btn.setAttribute("aria-expanded", String(open));
+      });
+      const scrollTopBtn = document.getElementById("scrollTopBtn");
+      if (scrollTopBtn) {
+        window.addEventListener("scroll", () => { scrollTopBtn.classList.toggle("visible", window.scrollY > 300); }, { passive: true });
+        scrollTopBtn.addEventListener("click", () => { window.scrollTo({ top: 0, behavior: "smooth" }); });
+      }
+    </script>
+  </body>
+</html>

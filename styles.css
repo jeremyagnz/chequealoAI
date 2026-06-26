@@ -725,13 +725,68 @@ body.loading-active {
 }
 
 /* ---- ERROR ---- */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
 .error-msg {
   display: block;
   color: var(--red);
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1.5rem 0;
   text-align: center;
   font-size: 0.9rem;
 }
+.retry-btn {
+  background: rgba(239,68,68,0.12);
+  color: var(--red);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 8px;
+  padding: 0.45rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.retry-btn:hover { background: rgba(239,68,68,0.22); }
+
+/* ---- CHAR COUNTER ---- */
+.char-counter-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.2rem 0.5rem 0;
+}
+.char-counter {
+  font-size: 0.75rem;
+  color: var(--muted);
+  transition: color 0.15s;
+}
+.char-counter.char-counter-warn { color: var(--orange); }
+.char-counter.char-counter-over { color: var(--red); font-weight: 700; }
+
+/* ---- HISTORY HEADER ---- */
+.hist-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.hist-clear-btn {
+  background: rgba(239,68,68,0.1);
+  color: var(--muted-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.hist-clear-btn:hover { background: rgba(239,68,68,0.2); color: var(--red); }
 
 /* ---- UTILITIES ---- */
 .hidden {

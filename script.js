@@ -1,8 +1,12 @@
 const queryInput = document.getElementById("newsQuery");
 const validateBtn = document.getElementById("validateBtn");
-const resultSection = document.getElementById("resultSection");
+const resultSection = document.getElementById("seccion-resultado");
 const resultCard = document.getElementById("resultCard");
 const errorMsg = document.getElementById("error");
+const errorContainer = document.getElementById("errorContainer");
+const retryBtn = document.getElementById("retryBtn");
+const charCounter = document.getElementById("charCounter");
+const QUERY_MAX_LENGTH = 600;
 const API_TIMEOUT_MS = 20000;
 
 const SUPPORTED_TOPICS = new Set(["politica", "economia", "salud", "seguridad", "deportes", "tecnologia"]);
@@ -25,6 +29,12 @@ if (navMenuBtn && navMobile) {
   navMenuBtn.addEventListener("click", () => {
     const isOpen = navMobile.classList.toggle("open");
     navMenuBtn.setAttribute("aria-expanded", String(isOpen));
+  });
+  navMobile.addEventListener("click", (e) => {
+    const link = e.target.closest("a[href^=\"#\"]");
+    if (!link) return;
+    navMobile.classList.remove("open");
+    navMenuBtn.setAttribute("aria-expanded", "false");
   });
 }
 
@@ -73,12 +83,38 @@ queryInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") runValidation();
 });
 
+// ---- Character counter ----
+
+function updateCharCounter() {
+  if (!charCounter) return;
+  const len = queryInput.value.length;
+  charCounter.textContent = `${len} / ${QUERY_MAX_LENGTH}`;
+  charCounter.classList.toggle("char-counter-warn", len > QUERY_MAX_LENGTH * 0.9);
+  charCounter.classList.toggle("char-counter-over", len > QUERY_MAX_LENGTH);
+}
+
+queryInput.addEventListener("input", updateCharCounter);
+updateCharCounter();
+
+// ---- Retry button ----
+
+if (retryBtn) {
+  retryBtn.addEventListener("click", () => {
+    hideError();
+    runValidation();
+  });
+}
+
 async function runValidation() {
   if (validateBtn.disabled) return;
   hideError();
   const query = queryInput.value.trim();
   if (!query) {
     showError("Escribe una noticia o titular para validar.");
+    return;
+  }
+  if (query.length > QUERY_MAX_LENGTH) {
+    showError(`La consulta es demasiado larga. Máximo ${QUERY_MAX_LENGTH} caracteres.`);
     return;
   }
   const detectedTopic = detectTopic(query);
@@ -203,11 +239,22 @@ function renderResult(result, query) {
   renderHistory();
 }
 
+document.addEventListener("click", (e) => {
+  const header = e.target.closest(".summary-accordion-header");
+  if (!header) return;
+  const accordion = header.closest(".summary-accordion");
+  const body = accordion?.querySelector(".summary-accordion-body");
+  if (!accordion || !body) return;
+  const isOpen = accordion.classList.toggle("open");
+  header.setAttribute("aria-expanded", String(isOpen));
+  body.setAttribute("aria-hidden", String(!isOpen));
+});
+
 // ---- Progress animation ----
 
 let stepTimerIds = [];
 const STEP_DELAYS = [600, 2200, 4400, 7000, 9800];
-const progressSection = document.getElementById("progressSection");
+const progressSection = document.getElementById("seccion-progreso");
 let lastFocusedElement = null;
 
 function enforceProgressFocus(event) {
@@ -277,7 +324,7 @@ function stopProgressAnimation() {
 }
 
 function updateProgressBar(pct) {
-  const bar = document.getElementById("progressBar");
+  const bar = document.getElementById("barra-progreso");
   if (bar) bar.style.width = `${pct}%`;
 }
 
@@ -335,8 +382,16 @@ function showToast(message, duration) {
   }, ms);
 }
 
-function showError(msg) { errorMsg.textContent = msg; errorMsg.classList.remove("hidden"); }
-function hideError() { errorMsg.textContent = ""; errorMsg.classList.add("hidden"); }
+function showError(msg) {
+  errorMsg.textContent = msg;
+  if (errorContainer) errorContainer.classList.remove("hidden");
+  else errorMsg.classList.remove("hidden");
+}
+function hideError() {
+  errorMsg.textContent = "";
+  if (errorContainer) errorContainer.classList.add("hidden");
+  else errorMsg.classList.add("hidden");
+}
 
 // ---- Analysis card builder (shared by live result and demo) ----
 
@@ -369,6 +424,9 @@ const TRUSTED_MEDIA_SOURCES = [
   { label: "N Digital", domain: "ndigital.com.do" },
   { label: "RC Noticias", domain: "rcnoticias.com.do" },
   { label: "Z101 Digital", domain: "z101digital.com" },
+  { label: "El Nacional", domain: "elnacional.com.do" },
+  { label: "El Día", domain: "eldia.com.do" },
+  { label: "Perico No Digital", domain: "periconodigital.com" },
 ];
 
 const TRUSTED_OFFICIAL_SOURCES = [
@@ -378,6 +436,12 @@ const TRUSTED_OFFICIAL_SOURCES = [
   { label: "COE", domain: "coe.gob.do" },
   { label: "Migración RD", domain: "migracion.gob.do" },
   { label: "JCE", domain: "jce.gob.do" },
+  { label: "Banco Central RD", domain: "bancentral.gov.do" },
+  { label: "SIPEN", domain: "sipen.gov.do" },
+  { label: "Congreso Nacional", domain: "congreso.gob.do" },
+  { label: "MISPAS", domain: "mispas.gob.do" },
+  { label: "Ministerio de Hacienda", domain: "hacienda.gob.do" },
+  { label: "DGII", domain: "dgii.gov.do" },
 ];
 
 const TRUSTED_SOURCE_LOOKUP = [...TRUSTED_MEDIA_SOURCES, ...TRUSTED_OFFICIAL_SOURCES];
@@ -714,7 +778,7 @@ function saveToHistory(query, result) {
 }
 
 function renderHistory() {
-  const histSection = document.getElementById("historySection");
+  const histSection = document.getElementById("seccion-historial");
   if (!histSection) return;
   const history = loadHistory();
 
@@ -757,10 +821,24 @@ function renderHistory() {
 
   const container = histSection.querySelector(".section-inner");
   container.innerHTML = `
-    <h2 class="section-title">Historial de verificaciones</h2>
+    <div class="hist-header-row">
+      <h2 class="section-title" style="margin:0">Historial de verificaciones</h2>
+      <button class="hist-clear-btn" type="button" id="clearHistoryBtn">🗑 Limpiar historial</button>
+    </div>
     ${tabsHtml}
     <div class="hist-list">${itemsHtml}</div>
   `;
+
+  const clearBtn = container.querySelector("#clearHistoryBtn");
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      if (confirm("¿Eliminar todo el historial de verificaciones?")) {
+        localStorage.removeItem(HISTORY_KEY);
+        historyFilter = "all";
+        renderHistory();
+      }
+    });
+  }
 
   container.querySelectorAll(".hist-tab-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -826,7 +904,7 @@ const DEMO_DATA = {
 };
 
 function renderDemoCard(key) {
-  document.getElementById("demoCard").innerHTML = buildAnalysisCard(DEMO_DATA[key]);
+  document.getElementById("tarjeta-verificaciones").innerHTML = buildAnalysisCard(DEMO_DATA[key]);
 }
 
 document.querySelectorAll(".tab-btn").forEach((btn) => {
@@ -837,7 +915,7 @@ document.querySelectorAll(".tab-btn").forEach((btn) => {
       b.setAttribute("aria-selected", String(isActive));
       b.tabIndex = isActive ? 0 : -1;
     });
-    document.getElementById("demoCard").setAttribute("aria-labelledby", btn.id);
+    document.getElementById("tarjeta-verificaciones").setAttribute("aria-labelledby", btn.id);
     renderDemoCard(btn.dataset.demo);
   });
 });

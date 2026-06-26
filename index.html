@@ -9,13 +9,14 @@
     <meta name="robots" content="index, follow" />
     <meta name="author" content="ChequealoAI" />
     <link rel="canonical" href="https://chequealoai.netlify.app/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
     <!-- Open Graph -->
     <meta property="og:title" content="ChequealoAI | Verificador de Noticias con IA" />
     <meta property="og:description" content="Verifica noticias en segundos con IA. Fuentes oficiales y medios confiables de República Dominicana." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://chequealoai.netlify.app/" />
-    <meta property="og:image" content="https://chequealoai.netlify.app/og-image.png" />
+    <meta property="og:image" content="https://chequealoai.netlify.app/og-image.svg" />
     <meta property="og:locale" content="es_DO" />
     <meta property="og:site_name" content="ChequealoAI" />
 
@@ -24,7 +25,7 @@
     <meta name="twitter:site" content="@chequealoai" />
     <meta name="twitter:title" content="ChequealoAI | Verificador de Noticias con IA" />
     <meta name="twitter:description" content="Verifica noticias en segundos con IA. Fuentes oficiales y medios confiables de República Dominicana." />
-    <meta name="twitter:image" content="https://chequealoai.netlify.app/og-image.png" />
+    <meta name="twitter:image" content="https://chequealoai.netlify.app/og-image.svg" />
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
@@ -46,18 +47,18 @@
     <link rel="stylesheet" href="/styles.css" />
     <script src="/theme.js"></script>
   </head>
-  <body>
+  <body id="inicio">
     <!-- Navigation -->
     <nav class="navbar" role="navigation" aria-label="Navegación principal">
       <div class="navbar-inner">
-        <a href="/" class="logo" aria-label="ChequealoAI inicio">
+        <a href="#inicio" class="logo" aria-label="ChequealoAI inicio">
           <span class="brand-logo brand-logo-nav" aria-hidden="true"></span>
           <span class="sr-only">ChequealoAI</span>
         </a>
         <div class="navbar-links">
-          <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
-          <a href="/fuentes.html" class="nav-link">Fuentes</a>
-          <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+          <a href="#como-funciona" class="nav-link">Cómo funciona</a>
+          <a href="#fuentes" class="nav-link">Fuentes</a>
+          <a href="#verificaciones" class="nav-link">Verificaciones</a>
         </div>
         <button class="nav-cta-btn" id="navVerifyBtn" type="button">Verificar noticia</button>
         <button class="theme-toggle-btn" id="themeToggleBtn" type="button" aria-label="Cambiar tema">☀️</button>
@@ -66,20 +67,20 @@
         </button>
       </div>
       <div class="navbar-mobile" id="navMobile" aria-label="Menú móvil">
-        <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
-        <a href="/fuentes.html" class="nav-link">Fuentes</a>
-        <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+        <a href="#como-funciona" class="nav-link">Cómo funciona</a>
+        <a href="#fuentes" class="nav-link">Fuentes</a>
+        <a href="#verificaciones" class="nav-link">Verificaciones</a>
       </div>
     </nav>
 
     <!-- Hero -->
-    <section class="hero" aria-labelledby="hero-title">
+    <section class="hero" aria-labelledby="titulo-principal">
       <div class="hero-content">
         <div class="hero-badge fade-in-up" style="animation-delay:0.05s">
           <span class="badge-dot"></span>
           Verificación con IA en tiempo real
         </div>
-        <h1 class="hero-title fade-in-up" id="hero-title" style="animation-delay:0.15s">
+        <h1 class="hero-title fade-in-up" id="titulo-principal" style="animation-delay:0.15s">
           ¿Es verdad o es falsa?<br />
           <span class="hero-accent">Verifícalo en segundos.</span>
         </h1>
@@ -97,7 +98,8 @@
               type="text"
               id="newsQuery"
               aria-label="Noticia o titular a verificar"
-              placeholder="Escribe o pega una afirmación, noticia o URL..."
+              placeholder="Escribe o pega una afirmación o titular de noticia..."
+              maxlength="600"
               autocomplete="off"
             />
             <button id="validateBtn" type="button" aria-label="Verificar noticia">
@@ -106,6 +108,9 @@
               </svg>
               <span class="btn-text">Verificar</span>
             </button>
+          </div>
+          <div class="char-counter-row">
+            <span id="charCounter" class="char-counter">0 / 600</span>
           </div>
 
           <!-- Search suggestions -->
@@ -128,7 +133,7 @@
         </div>
 
         <div class="hero-ctas fade-in-up" style="animation-delay:0.45s">
-          <a href="#demo-section" class="cta-secondary">Ver ejemplo real →</a>
+          <a href="#verificaciones" class="cta-secondary">Ver ejemplo real →</a>
         </div>
 
         <div class="features-row fade-in-up" style="animation-delay:0.55s">
@@ -176,7 +181,7 @@
     </section>
 
     <!-- Progress section (shown during validation) -->
-    <section id="progressSection" class="progress-section hidden" aria-live="polite" aria-label="Progreso del análisis" tabindex="-1">
+    <section id="seccion-progreso" class="progress-section hidden" aria-live="polite" aria-label="Progreso del análisis" tabindex="-1">
       <div class="section-inner">
         <div class="progress-card">
           <div class="progress-header">
@@ -191,7 +196,7 @@
             <div class="progress-step" id="step-5" role="listitem"><span class="step-dot"></span><span class="step-text">Generando informe</span></div>
           </div>
           <div class="progress-bar-track" aria-hidden="true">
-            <div class="progress-bar-fill" id="progressBar"></div>
+            <div class="progress-bar-fill" id="barra-progreso"></div>
           </div>
           <div class="skeleton-card" aria-hidden="true">
             <div class="skeleton-line sk-wide"></div>
@@ -212,23 +217,23 @@
     </section>
 
     <!-- Live result (shown after validation) -->
-    <section id="resultSection" class="result-section hidden" aria-live="polite">
+    <section id="seccion-resultado" class="result-section hidden" aria-live="polite">
       <div class="section-inner">
         <div id="resultCard" class="analysis-card result-animate"></div>
       </div>
     </section>
 
     <!-- History section -->
-    <section id="historySection" class="history-section hidden" aria-label="Historial de verificaciones">
+    <section id="seccion-historial" class="history-section hidden" aria-label="Historial de verificaciones">
       <div class="section-inner">
         <!-- populated by JS -->
       </div>
     </section>
 
     <!-- How it works section -->
-    <section class="how-section" id="how-it-works" aria-labelledby="how-title">
+    <section class="how-section" id="como-funciona" aria-labelledby="titulo-como-funciona">
       <div class="section-inner">
-        <h2 class="section-title animate-on-scroll" id="how-title">¿Cómo funciona?</h2>
+        <h2 class="section-title animate-on-scroll" id="titulo-como-funciona">¿Cómo funciona?</h2>
         <p class="section-sub animate-on-scroll">
           Un proceso transparente de 4 pasos para verificar cualquier noticia en segundos.
         </p>
@@ -259,15 +264,15 @@
           </div>
         </div>
         <div class="section-cta animate-on-scroll">
-          <a href="/como-funciona.html" class="cta-link">Saber más sobre el proceso →</a>
+          <a href="#como-funciona" class="cta-link">Saber más sobre el proceso →</a>
         </div>
       </div>
     </section>
 
     <!-- Trusted sources section -->
-    <section class="sources-section" aria-labelledby="sources-title">
+    <section class="sources-section" id="fuentes" aria-labelledby="titulo-fuentes">
       <div class="section-inner">
-        <h2 class="section-title animate-on-scroll" id="sources-title">Fuentes que analizamos</h2>
+        <h2 class="section-title animate-on-scroll" id="titulo-fuentes">Fuentes que analizamos</h2>
         <p class="section-sub animate-on-scroll">
           Verificamos contra 18 fuentes de alta credibilidad: medios de comunicación y entidades oficiales.
         </p>
@@ -302,15 +307,15 @@
           </div>
         </div>
         <div class="section-cta animate-on-scroll">
-          <a href="/fuentes.html" class="cta-link">Ver todas las fuentes →</a>
+          <a href="#fuentes" class="cta-link">Ver todas las fuentes →</a>
         </div>
       </div>
     </section>
 
     <!-- Demo section -->
-    <section class="demo-section" id="demo-section" aria-labelledby="demo-title">
+    <section class="demo-section" id="verificaciones" aria-labelledby="titulo-verificaciones">
       <div class="section-inner">
-        <h2 class="section-title animate-on-scroll" id="demo-title">Así se ve un análisis real</h2>
+        <h2 class="section-title animate-on-scroll" id="titulo-verificaciones">Así se ve un análisis real</h2>
         <p class="section-sub animate-on-scroll">
           Cada verificación incluye puntuación, evidencia trazable y fuentes consultadas.
         </p>
@@ -319,14 +324,14 @@
           <button class="tab-btn" role="tab" data-demo="dudosa" aria-selected="false" tabindex="-1">⚠ Dudosa (51)</button>
           <button class="tab-btn" role="tab" data-demo="falsa" aria-selected="false" tabindex="-1">✕ Falsa (21)</button>
         </div>
-        <div id="demoCard" class="analysis-card" role="tabpanel"></div>
+        <div id="tarjeta-verificaciones" class="analysis-card" role="tabpanel"></div>
       </div>
     </section>
 
     <!-- Categories section -->
-    <section class="categories-section" aria-labelledby="cat-title">
+    <section class="categories-section" aria-labelledby="titulo-categorias">
       <div class="section-inner">
-        <h2 class="section-title animate-on-scroll" id="cat-title">Verificar por categoría</h2>
+        <h2 class="section-title animate-on-scroll" id="titulo-categorias">Verificar por categoría</h2>
         <p class="section-sub animate-on-scroll">Selecciona una categoría y te preparamos una consulta de ejemplo.</p>
         <div class="categories-grid">
           <button class="cat-card animate-on-scroll stagger-1" type="button" data-topic="politica" data-query="Noticias y afirmaciones de política dominicana en 2025 que necesitan verificación">
@@ -357,7 +362,10 @@
       </div>
     </section>
 
-    <p id="error" class="error-msg hidden" role="alert"></p>
+    <div id="errorContainer" class="error-container hidden" role="alert">
+      <p id="error" class="error-msg"></p>
+      <button id="retryBtn" class="retry-btn" type="button">↺ Reintentar</button>
+    </div>
 
     <!-- Toast notification -->
     <div id="toast" class="toast hidden" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -376,14 +384,19 @@
           <nav class="footer-nav" aria-label="Navegación del pie de página">
             <div class="footer-col">
               <h4 class="footer-col-title">Plataforma</h4>
-              <a href="/" class="footer-link">Inicio</a>
-              <a href="/como-funciona.html" class="footer-link">Cómo funciona</a>
-              <a href="/verificaciones.html" class="footer-link">Verificaciones</a>
+              <a href="#inicio" class="footer-link">Inicio</a>
+              <a href="#como-funciona" class="footer-link">Cómo funciona</a>
+              <a href="#verificaciones" class="footer-link">Verificaciones</a>
             </div>
             <div class="footer-col">
               <h4 class="footer-col-title">Recursos</h4>
-              <a href="/fuentes.html" class="footer-link">Fuentes confiables</a>
-              <a href="/#how-it-works" class="footer-link">Metodología</a>
+              <a href="#fuentes" class="footer-link">Fuentes confiables</a>
+              <a href="#como-funciona" class="footer-link">Metodología</a>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Legal</h4>
+              <a href="/privacidad.html" class="footer-link">Privacidad</a>
+              <a href="/acerca.html" class="footer-link">Acerca de</a>
             </div>
           </nav>
         </div>
