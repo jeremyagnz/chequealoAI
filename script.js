@@ -30,6 +30,12 @@ if (navMenuBtn && navMobile) {
     const isOpen = navMobile.classList.toggle("open");
     navMenuBtn.setAttribute("aria-expanded", String(isOpen));
   });
+  navMobile.addEventListener("click", (e) => {
+    const link = e.target.closest("a[href^=\"#\"]");
+    if (!link) return;
+    navMobile.classList.remove("open");
+    navMenuBtn.setAttribute("aria-expanded", "false");
+  });
 }
 
 const navVerifyBtn = document.getElementById("navVerifyBtn");
