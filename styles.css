@@ -109,6 +109,7 @@ body.loading-active {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 1;
 }
 .brand-logo {
   /* Crops the frame included in the original logo image. */
