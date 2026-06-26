@@ -266,7 +266,8 @@ function startCountdown(seconds) {
 
   function tick() {
     if (remaining > 0) {
-      timerEl.textContent = `⏱️ ~${remaining} segundo${remaining !== 1 ? "s" : ""} restante${remaining !== 1 ? "s" : ""}`;
+      const s = remaining !== 1 ? "s" : "";
+      timerEl.textContent = `⏱️ ~${remaining} segundo${s} restante${s}`;
       timerEl.classList.toggle("urgent", remaining < 3);
       remaining--;
     } else {
