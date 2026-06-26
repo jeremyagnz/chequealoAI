@@ -74,20 +74,24 @@
     <!-- Navigation -->
     <nav class="navbar" role="navigation" aria-label="Navegación principal">
       <div class="navbar-inner">
+        <div class="navbar-left">
+          <button class="nav-menu-btn" id="navMenuBtn" aria-label="Abrir menú" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
         <a href="/" class="logo" aria-label="ChequealoAI inicio">
           <span class="brand-logo brand-logo-nav" aria-hidden="true"></span>
           <span class="sr-only">ChequealoAI</span>
         </a>
-        <div class="navbar-links">
-          <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
-          <a href="/fuentes.html" class="nav-link" aria-current="page">Fuentes</a>
-          <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+        <div class="navbar-right">
+          <div class="navbar-links">
+            <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
+            <a href="/fuentes.html" class="nav-link" aria-current="page">Fuentes</a>
+            <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+          </div>
+          <a href="/" class="nav-cta-btn">Verificar noticia</a>
+          <button class="theme-toggle-btn" id="themeToggleBtn" type="button" aria-label="Cambiar tema">☀️</button>
         </div>
-        <a href="/" class="nav-cta-btn">Verificar noticia</a>
-        <button class="theme-toggle-btn" id="themeToggleBtn" type="button" aria-label="Cambiar tema">☀️</button>
-        <button class="nav-menu-btn" id="navMenuBtn" aria-label="Abrir menú" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
       </div>
       <div class="navbar-mobile" id="navMobile">
         <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
