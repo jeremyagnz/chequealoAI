@@ -1,7 +1,7 @@
 (() => {
   const STORAGE_KEY = "chequealoai_theme";
   const BTN_ID = "themeToggleBtn";
-  const GA_MEASUREMENT_ID = "";
+  const GA_MEASUREMENT_ID = ""; // Configura tu ID GA4 (G-XXXXXXXXXX) antes de desplegar.
 
   function applyTheme(theme) {
     if (theme === "light") {
@@ -60,8 +60,8 @@
     if (typeof window.gtag === "function") return;
 
     window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      window.dataLayer.push(arguments);
+    function gtag(...args) {
+      window.dataLayer.push(args);
     }
 
     window.gtag = gtag;
