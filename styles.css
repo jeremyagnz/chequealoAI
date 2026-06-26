@@ -1244,13 +1244,6 @@ body.loading-active {
 .share-btn.x-btn:hover { border-color: #e7e9ea; color: #e7e9ea; }
 .share-btn.fb-btn:hover { border-color: #1877f2; color: #1877f2; }
 .share-btn.tg-btn:hover { border-color: #2aabee; color: #2aabee; }
-.share-btn.print-btn:hover { border-color: #a78bfa; color: #a78bfa; }
-.share-btn.pdf-btn:hover { border-color: #f87171; color: #f87171; }
-.share-btn.pdf-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.share-btn.email-btn:hover { border-color: #34d399; color: #34d399; }
-
-/* ---- Print container (hidden on screen, shown only when printing) ---- */
-#printContainer { display: none; }
 
 /* ---- HOW IT WORKS SECTION ---- */
 .how-section {
@@ -1703,12 +1696,4 @@ body.loading-active {
   .footer-nav { flex-wrap: wrap; gap: 1.5rem; }
 }
 
-@media print {
-  body > *:not(#printContainer) { display: none !important; }
-  #printContainer {
-    display: block !important;
-    position: static !important;
-    left: auto !important;
-    width: auto !important;
-  }
-}
+

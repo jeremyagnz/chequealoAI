@@ -4,7 +4,7 @@ const resultSection = document.getElementById("resultSection");
 const resultCard = document.getElementById("resultCard");
 const errorMsg = document.getElementById("error");
 const API_TIMEOUT_MS = 20000;
-let lastPrintData = null;
+
 const SUPPORTED_TOPICS = new Set(["politica", "economia", "salud", "seguridad", "deportes", "tecnologia"]);
 const TOPIC_PATTERNS = [
   { topic: "deportes", regex: /\b(deporte|deportes|f[úu]tbol|beisbol|b[eé]isbol|baloncesto|nba|mlb|liga|gol|partido|torneo|atleta|selecci[oó]n)\b/i },
@@ -184,18 +184,6 @@ function estimateMetricas(score) {
 // ---- Render live result ----
 
 function renderResult(result, query) {
-  lastPrintData = {
-    claim: query,
-    score: result.puntuacion,
-    veredicto: result.veredicto,
-    metricas: result.metricas,
-    razones: result.razones,
-    fuentes: result.fuentes,
-    mediaFuentes: result.mediaFuentes,
-    officialFuentes: result.officialFuentes,
-    resumen: result.resumen || "",
-    timestamp: result.timestamp || null,
-  };
   resultCard.innerHTML = buildAnalysisCard({
     claim: query,
     score: result.puntuacion,
@@ -670,133 +658,6 @@ function buildTransparencySection(score, timestamp, mediaFuentes, officialFuente
   `;
 }
 
-// ---- Professional print/PDF document builder ----
-
-function buildPrintDocument(data) {
-  const { claim, score, veredicto, metricas, razones = [], fuentes = [], mediaFuentes = [], officialFuentes = [], resumen = "", timestamp = null } = data;
-  const vInfo = verdictInfo(veredicto);
-  const vColors = { confiable: "#16a34a", dudosa: "#d97706", falsa: "#dc2626" };
-  const vColor = vColors[vInfo.cls] || "#6b7280";
-  const scoreColor = score >= 65 ? "#16a34a" : score >= 35 ? "#d97706" : "#dc2626";
-
-  const now = (() => {
-    if (!timestamp) return new Date();
-    const d = new Date(timestamp);
-    return isNaN(d.getTime()) ? new Date() : d;
-  })();
-  const dateStr = now.toLocaleDateString("es-DO", { day: "2-digit", month: "long", year: "numeric" }) +
-    " a las " + now.toLocaleTimeString("es-DO", { hour: "2-digit", minute: "2-digit" });
-  const shareUrl = `${window.location.origin}${window.location.pathname}?q=${encodeURIComponent(String(claim))}`;
-
-  const metricRows = METRIC_ORDER.map((key) => {
-    const val = typeof metricas[key] === "number" ? metricas[key] : 50;
-    const mColor = val >= 65 ? "#16a34a" : val >= 35 ? "#d97706" : "#dc2626";
-    return `<tr style="border-bottom:1px solid #f3f4f6;">
-      <td style="padding:7px 10px;font-size:13px;color:#374151;">${escapeHtml(METRIC_LABELS[key] || key)}</td>
-      <td style="padding:7px 10px;font-size:13px;font-weight:700;color:${mColor};text-align:right;white-space:nowrap;">${val} / 100</td>
-      <td style="padding:7px 10px;width:130px;">
-        <div style="background:#e5e7eb;border-radius:4px;height:7px;">
-          <div style="background:${mColor};height:7px;border-radius:4px;width:${val}%;"></div>
-        </div>
-      </td>
-    </tr>`;
-  }).join("");
-
-  const razonesHtml = razones.length
-    ? razones.map((r) => `<li style="margin-bottom:6px;font-size:13px;color:#374151;line-height:1.5;">${escapeHtml(String(r))}</li>`).join("")
-    : "";
-
-  const buildSourceBadge = (url) => {
-    const href = normalizeSourceUrl(url);
-    const label = getSourceLabel(url, href);
-    return `<span style="display:inline-block;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:3px 10px;font-size:12px;color:#374151;margin:2px;">${escapeHtml(label)}</span>`;
-  };
-
-  const allSourceBadges = [
-    ...fuentes.filter(f => normalizeSourceUrl(f) !== "#").slice(0, 6).map(buildSourceBadge),
-    ...(mediaFuentes || []).slice(0, 6).map(buildSourceBadge),
-    ...(officialFuentes || []).slice(0, 6).map(buildSourceBadge),
-  ];
-
-  const sourcesSection = allSourceBadges.length ? `
-    <div style="padding:14px 28px;border-bottom:1px solid #e5e7eb;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6b7280;margin-bottom:8px;">Fuentes consultadas</div>
-      <div>${allSourceBadges.join("")}</div>
-    </div>` : "";
-
-  const summarySection = resumen ? `
-    <div style="padding:14px 28px;background:#fafafa;border-bottom:1px solid #e5e7eb;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6b7280;margin-bottom:8px;">Resumen del análisis</div>
-      <p style="font-size:13px;color:#374151;line-height:1.6;margin:0;">${escapeHtml(String(resumen))}</p>
-    </div>` : "";
-
-  const evidenceSection = razonesHtml ? `
-    <div style="padding:14px 28px;border-bottom:1px solid #e5e7eb;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6b7280;margin-bottom:8px;">Evidencia clave</div>
-      <ul style="margin:0;padding-left:18px;">${razonesHtml}</ul>
-    </div>` : "";
-
-  return `
-    <div style="font-family:'Segoe UI',Arial,Helvetica,sans-serif;background:#fff;color:#111;max-width:720px;margin:0 auto;">
-
-      <!-- Header -->
-      <div style="background:#7c3aed;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;">
-        <div>
-          <div style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;">ChequealoAI</div>
-          <div style="font-size:10px;color:#c4b5fd;margin-top:3px;letter-spacing:0.08em;text-transform:uppercase;">Verificador de Noticias · República Dominicana</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="font-size:11px;color:#ddd6fe;">${escapeHtml(dateStr)}</div>
-          <div style="font-size:10px;color:#c4b5fd;margin-top:3px;">Análisis generado con IA</div>
-        </div>
-      </div>
-
-      <!-- Claim title bar -->
-      <div style="background:#f5f3ff;border-left:4px solid #7c3aed;padding:14px 28px;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7c3aed;margin-bottom:6px;">Afirmación verificada</div>
-        <div style="font-size:14px;color:#1f2937;font-style:italic;line-height:1.5;">"${escapeHtml(String(claim))}"</div>
-      </div>
-
-      <!-- Score + Verdict -->
-      <div style="display:flex;border-bottom:1px solid #e5e7eb;">
-        <div style="flex:1;padding:22px 28px;border-right:1px solid #e5e7eb;text-align:center;">
-          <div style="font-size:56px;font-weight:800;color:${scoreColor};line-height:1;">${score}</div>
-          <div style="font-size:10px;color:#6b7280;margin-top:5px;text-transform:uppercase;letter-spacing:0.06em;">Puntuación de credibilidad</div>
-        </div>
-        <div style="flex:1;padding:22px 28px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-          <div style="display:inline-block;border:2px solid ${vColor};border-radius:24px;padding:9px 24px;background:${vColor}18;">
-            <span style="font-size:20px;font-weight:800;color:${vColor};">${vInfo.icon} ${vInfo.label}</span>
-          </div>
-          <div style="font-size:10px;color:#6b7280;margin-top:8px;text-transform:uppercase;letter-spacing:0.06em;">Veredicto final</div>
-        </div>
-      </div>
-
-      ${summarySection}
-
-      <!-- Metrics -->
-      <div style="padding:14px 28px;border-bottom:1px solid #e5e7eb;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6b7280;margin-bottom:10px;">Métricas de evaluación</div>
-        <table style="width:100%;border-collapse:collapse;">
-          <tbody>${metricRows}</tbody>
-        </table>
-      </div>
-
-      ${evidenceSection}
-      ${sourcesSection}
-
-      <!-- Transparency -->
-      <div style="padding:14px 28px;background:#fafafa;border-bottom:1px solid #e5e7eb;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6b7280;margin-bottom:8px;">Transparencia del análisis</div>
-        <div style="display:flex;flex-wrap:wrap;gap:16px;">
-          <div><span style="font-size:11px;color:#9ca3af;">Motor de análisis:</span> <span style="font-size:12px;color:#374151;font-weight:600;">GPT-4o + Serper API</span></div>
-          <div><span style="font-size:11px;color:#9ca3af;">Total fuentes:</span> <span style="font-size:12px;color:#374151;font-weight:600;">${(fuentes.length + (mediaFuentes || []).length + (officialFuentes || []).length)} fuentes</span></div>
-          <div><span style="font-size:11px;color:#9ca3af;">Fecha:</span> <span style="font-size:12px;color:#374151;font-weight:600;">${escapeHtml(dateStr)}</span></div>
-        </div>
-      </div>
-
-    </div>`;
-}
-
 function buildShareSection(claim) {
   const claimStr = String(claim);
   const encodedQuery = encodeURIComponent(claimStr);
@@ -811,98 +672,10 @@ function buildShareSection(claim) {
         <a class="share-btn x-btn" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener noreferrer">𝕏 Twitter</a>
         <a class="share-btn fb-btn" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}" target="_blank" rel="noopener noreferrer">f Facebook</a>
         <a class="share-btn tg-btn" href="https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener noreferrer">✈ Telegram</a>
-        <button class="share-btn print-btn" type="button" data-action="print">🖨️ Imprimir</button>
-        <button class="share-btn pdf-btn" type="button" data-action="pdf" data-filename="${escapeHtml("chequealoai-" + claimStr.slice(0, 40).replace(/\s+/g, "-").toLowerCase())}">📄 Descargar PDF</button>
       </div>
     </div>
   `;
 }
-
-// ---- Summary accordion toggle ----
-
-document.addEventListener("click", (e) => {
-  const header = e.target.closest(".summary-accordion-header");
-  if (!header) return;
-  const accordion = header.closest(".summary-accordion");
-  if (!accordion) return;
-  const isOpen = accordion.classList.toggle("open");
-  header.setAttribute("aria-expanded", String(isOpen));
-  const body = accordion.querySelector(".summary-accordion-body");
-  if (body) body.setAttribute("aria-hidden", String(!isOpen));
-});
-
-// ---- Copy-link event delegation ----
-
-document.addEventListener("click", (e) => {
-  if (e.target.closest && e.target.closest(".copy-btn")) {
-    const btn = e.target.closest(".copy-btn");
-    const url = btn.dataset.url;
-    if (!url) return;
-    navigator.clipboard.writeText(url).then(() => {
-      const prev = btn.textContent;
-      btn.textContent = "✓ Enlace copiado";
-      btn.classList.add("copied");
-      showToast("Enlace copiado al portapapeles 📋");
-      setTimeout(() => { btn.textContent = "📋 Copiar enlace"; btn.classList.remove("copied"); }, 2500);
-    }).catch(() => showToast("No se pudo copiar el enlace"));
-  }
-});
-
-// ---- Print event delegation ----
-
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest("[data-action='print']");
-  if (!btn) return;
-  if (!lastPrintData) return;
-  const printContainer = document.getElementById("printContainer");
-  if (printContainer) {
-    printContainer.innerHTML = buildPrintDocument(lastPrintData);
-  }
-  window.print();
-});
-
-// ---- PDF download event delegation ----
-
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest("[data-action='pdf']");
-  if (!btn) return;
-  if (!lastPrintData) return;
-  const filename = (btn.dataset.filename || "chequealoai-resultado") + ".pdf";
-  const prev = btn.textContent;
-  btn.textContent = "⏳ Generando…";
-  btn.disabled = true;
-
-  const tempEl = document.createElement("div");
-  tempEl.style.cssText = "position:absolute;left:-9999px;top:0;width:720px;background:#fff;";
-  tempEl.innerHTML = buildPrintDocument(lastPrintData);
-  document.body.appendChild(tempEl);
-
-  const opt = {
-    margin: [10, 12, 10, 12], // html2pdf array order: [top, left, bottom, right] in mm
-    filename,
-    image: { type: "jpeg", quality: 0.97 },
-    html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: "#ffffff" },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-  };
-  if (typeof html2pdf !== "undefined") {
-    html2pdf().set(opt).from(tempEl).save().then(() => {
-      document.body.removeChild(tempEl);
-      btn.textContent = prev;
-      btn.disabled = false;
-    }).catch(() => {
-      document.body.removeChild(tempEl);
-      showToast("No se pudo generar el PDF");
-      btn.textContent = prev;
-      btn.disabled = false;
-    });
-  } else {
-    document.body.removeChild(tempEl);
-    showToast("No se pudo cargar la librería de PDF. Intenta usar Imprimir.");
-    btn.textContent = prev;
-    btn.disabled = false;
-    window.print();
-  }
-});
 
 // ---- History ----
 
