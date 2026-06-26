@@ -1,7 +1,7 @@
 (() => {
   const STORAGE_KEY = "chequealoai_theme";
   const BTN_ID = "themeToggleBtn";
-  const GA_MEASUREMENT_ID = "";
+  const GA_MEASUREMENT_ID = null;
 
   function applyTheme(theme) {
     if (theme === "light") {
@@ -55,13 +55,13 @@
   }
 
   function initAnalytics() {
-    if (!GA_MEASUREMENT_ID) return;
+    if (typeof GA_MEASUREMENT_ID !== "string" || !GA_MEASUREMENT_ID) return;
     if (!/^G-[A-Z0-9]+$/.test(GA_MEASUREMENT_ID)) return;
     if (typeof window.gtag === "function") return;
 
     window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      window.dataLayer.push(arguments);
+    function gtag(...args) {
+      window.dataLayer.push(args);
     }
 
     window.gtag = gtag;
