@@ -1,6 +1,9 @@
 [build]
   # Este repo todavía no tiene carpeta de build; se publica el contenido estático actual.
   publish = "."
+  [build.environment]
+    # GA_MEASUREMENT_ID no es secreto (identificador público) y puede vivir en theme.js.
+    SECRETS_SCAN_OMIT_KEYS = "GA_MEASUREMENT_ID"
 
 [functions]
   directory = "netlify/functions"
