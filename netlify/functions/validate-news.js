@@ -4,16 +4,72 @@ const SERPER_MAX_RESULTS = 20;
 const SERPER_CONTEXT_RESULTS = 10;
 const MAX_MEDIA_SOURCES = 6;
 const MAX_OFFICIAL_SOURCES = 4;
+const QUERY_MAX_LENGTH = 600;
+
+// ---- Simple in-memory rate limiter ----
+// Keys: IP address. Value: { count, resetAt }
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 10;
+
+function getClientIp(event) {
+  return (
+    event.headers?.["x-forwarded-for"]?.split(",")[0]?.trim() ||
+    event.headers?.["client-ip"] ||
+    "unknown"
+  );
+}
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return false; // not limited
+  }
+  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return true; // limited
+  }
+  entry.count++;
+  return false;
+}
+
+// ---- Simple in-memory response cache ----
+// Key: normalized query string. Value: { data, expiresAt }
+const responseCache = new Map();
+const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
+function getCached(query) {
+  const entry = responseCache.get(query);
+  if (!entry) return null;
+  if (Date.now() > entry.expiresAt) {
+    responseCache.delete(query);
+    return null;
+  }
+  return entry.data;
+}
+
+function setCached(query, data) {
+  responseCache.set(query, { data, expiresAt: Date.now() + CACHE_TTL_MS });
+  // Evict oldest entries if cache grows too large
+  if (responseCache.size > 200) {
+    const firstKey = responseCache.keys().next().value;
+    responseCache.delete(firstKey);
+  }
+}
 
 const MEDIA_DOMAINS = [
   "listindiario.com", "diariolibre.com", "noticiassin.com", "cdn.com.do",
   "acento.com.do", "elcaribe.com.do", "hoy.com.do", "elnuevodiario.com.do",
   "rnn.com.do", "ndigital.com.do", "rcnoticias.com.do", "z101digital.com",
+  "elnacional.com.do", "eldia.com.do", "periconodigital.com",
 ];
 
 const OFFICIAL_DOMAINS = [
   "presidencia.gob.do", "policia.gob.do", "ministeriopublico.gob.do",
   "pgr.gob.do", "coe.gob.do", "migracion.gob.do", "jce.gob.do",
+  "bancentral.gov.do", "sipen.gov.do", "congreso.gob.do",
+  "mispas.gob.do", "hacienda.gob.do", "dgii.gov.do",
 ];
 
 const promptRules = `
@@ -54,8 +110,8 @@ Reglas de coherencia (OBLIGATORIO):
   * FALSA: promedio de métricas < 35 (la mayoría <= 35, reflejando falta de respaldo o contradicción)
 - Nunca asignes métricas altas a una noticia FALSA ni métricas bajas a una CONFIABLE.
 - Para validar noticias nacionales, consulta y cruza estas fuentes confiables de RD (medios y oficiales):
-  Medios: listindiario.com, diariolibre.com, noticiassin.com, cdn.com.do, acento.com.do, elcaribe.com.do, hoy.com.do, elnuevodiario.com.do, rnn.com.do, ndigital.com.do, rcnoticias.com.do, z101digital.com
-  Oficiales: presidencia.gob.do, policia.gob.do, ministeriopublico.gob.do, pgr.gob.do, coe.gob.do, migracion.gob.do, jce.gob.do
+  Medios: listindiario.com, diariolibre.com, noticiassin.com, cdn.com.do, acento.com.do, elcaribe.com.do, hoy.com.do, elnuevodiario.com.do, rnn.com.do, ndigital.com.do, rcnoticias.com.do, z101digital.com, elnacional.com.do, eldia.com.do
+  Oficiales: presidencia.gob.do, policia.gob.do, ministeriopublico.gob.do, pgr.gob.do, coe.gob.do, migracion.gob.do, jce.gob.do, bancentral.gov.do, sipen.gov.do, congreso.gob.do, mispas.gob.do, hacienda.gob.do, dgii.gov.do
 - Usa tantas de estas fuentes como sea posible para confirmar o desmentir la afirmación, priorizando coincidencia entre varios medios y fuentes oficiales cuando aplique.
 - En "fuentes" devuelve solo URLs clicables que apunten directamente a artículos, comunicados o páginas específicas claramente relacionadas con la consulta.
 - No inventes enlaces ni devuelvas portadas genéricas/homepages si no tienes una URL específica y pertinente para esa fuente; en ese caso omite esa fuente del arreglo.
@@ -108,6 +164,12 @@ exports.handler = async (event) => {
     return jsonResponse(405, { error: "Método no permitido." });
   }
 
+  // Rate limiting
+  const clientIp = getClientIp(event);
+  if (checkRateLimit(clientIp)) {
+    return jsonResponse(429, { error: "Demasiadas solicitudes. Espera un momento antes de intentar de nuevo." });
+  }
+
   if (!process.env.OPENAI_API_KEY) {
     return jsonResponse(500, {
       error: "Falta configurar OPENAI_API_KEY en Netlify.",
@@ -119,6 +181,17 @@ exports.handler = async (event) => {
 
   if (!query) {
     return jsonResponse(400, { error: "Debes enviar una noticia para validar." });
+  }
+
+  if (query.length > QUERY_MAX_LENGTH) {
+    return jsonResponse(400, { error: `La consulta es demasiado larga. Máximo ${QUERY_MAX_LENGTH} caracteres.` });
+  }
+
+  // Check cache
+  const cacheKey = query.toLowerCase();
+  const cached = getCached(cacheKey);
+  if (cached) {
+    return jsonResponse(200, cached);
   }
 
   // Search Serper (soft fail — does not block if unavailable or slow)
@@ -199,7 +272,7 @@ exports.handler = async (event) => {
         }
       : null;
 
-    return jsonResponse(200, {
+    const responseData = {
       veredicto: String(parsed.veredicto).toUpperCase(),
       puntuacion: typeof parsed.puntuacion === "number"
         ? Math.round(Math.max(0, Math.min(100, parsed.puntuacion)))
@@ -210,7 +283,10 @@ exports.handler = async (event) => {
       metricas,
       mediaFuentes,
       officialFuentes,
-    });
+    };
+
+    setCached(cacheKey, responseData);
+    return jsonResponse(200, responseData);
   } catch (error) {
     if (error.name === "AbortError") {
       return jsonResponse(504, {

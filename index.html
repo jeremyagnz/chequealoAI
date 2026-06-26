@@ -9,13 +9,14 @@
     <meta name="robots" content="index, follow" />
     <meta name="author" content="ChequealoAI" />
     <link rel="canonical" href="https://chequealoai.netlify.app/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
     <!-- Open Graph -->
     <meta property="og:title" content="ChequealoAI | Verificador de Noticias con IA" />
     <meta property="og:description" content="Verifica noticias en segundos con IA. Fuentes oficiales y medios confiables de República Dominicana." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://chequealoai.netlify.app/" />
-    <meta property="og:image" content="https://chequealoai.netlify.app/og-image.png" />
+    <meta property="og:image" content="https://chequealoai.netlify.app/og-image.svg" />
     <meta property="og:locale" content="es_DO" />
     <meta property="og:site_name" content="ChequealoAI" />
 
@@ -24,7 +25,7 @@
     <meta name="twitter:site" content="@chequealoai" />
     <meta name="twitter:title" content="ChequealoAI | Verificador de Noticias con IA" />
     <meta name="twitter:description" content="Verifica noticias en segundos con IA. Fuentes oficiales y medios confiables de República Dominicana." />
-    <meta name="twitter:image" content="https://chequealoai.netlify.app/og-image.png" />
+    <meta name="twitter:image" content="https://chequealoai.netlify.app/og-image.svg" />
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
@@ -97,7 +98,8 @@
               type="text"
               id="newsQuery"
               aria-label="Noticia o titular a verificar"
-              placeholder="Escribe o pega una afirmación, noticia o URL..."
+              placeholder="Escribe o pega una afirmación o titular de noticia..."
+              maxlength="600"
               autocomplete="off"
             />
             <button id="validateBtn" type="button" aria-label="Verificar noticia">
@@ -106,6 +108,9 @@
               </svg>
               <span class="btn-text">Verificar</span>
             </button>
+          </div>
+          <div class="char-counter-row">
+            <span id="charCounter" class="char-counter">0 / 600</span>
           </div>
 
           <!-- Search suggestions -->
@@ -357,7 +362,10 @@
       </div>
     </section>
 
-    <p id="error" class="error-msg hidden" role="alert"></p>
+    <div id="errorContainer" class="error-container hidden" role="alert">
+      <p id="error" class="error-msg"></p>
+      <button id="retryBtn" class="retry-btn" type="button">↺ Reintentar</button>
+    </div>
 
     <!-- Toast notification -->
     <div id="toast" class="toast hidden" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -384,6 +392,11 @@
               <h4 class="footer-col-title">Recursos</h4>
               <a href="/fuentes.html" class="footer-link">Fuentes confiables</a>
               <a href="/#how-it-works" class="footer-link">Metodología</a>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Legal</h4>
+              <a href="/privacidad.html" class="footer-link">Privacidad</a>
+              <a href="/acerca.html" class="footer-link">Acerca de</a>
             </div>
           </nav>
         </div>

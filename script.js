@@ -3,6 +3,10 @@ const validateBtn = document.getElementById("validateBtn");
 const resultSection = document.getElementById("resultSection");
 const resultCard = document.getElementById("resultCard");
 const errorMsg = document.getElementById("error");
+const errorContainer = document.getElementById("errorContainer");
+const retryBtn = document.getElementById("retryBtn");
+const charCounter = document.getElementById("charCounter");
+const QUERY_MAX_LENGTH = 600;
 const API_TIMEOUT_MS = 20000;
 
 const SUPPORTED_TOPICS = new Set(["politica", "economia", "salud", "seguridad", "deportes", "tecnologia"]);
@@ -73,12 +77,38 @@ queryInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") runValidation();
 });
 
+// ---- Character counter ----
+
+function updateCharCounter() {
+  if (!charCounter) return;
+  const len = queryInput.value.length;
+  charCounter.textContent = `${len} / ${QUERY_MAX_LENGTH}`;
+  charCounter.classList.toggle("char-counter-warn", len > QUERY_MAX_LENGTH * 0.9);
+  charCounter.classList.toggle("char-counter-over", len > QUERY_MAX_LENGTH);
+}
+
+queryInput.addEventListener("input", updateCharCounter);
+updateCharCounter();
+
+// ---- Retry button ----
+
+if (retryBtn) {
+  retryBtn.addEventListener("click", () => {
+    hideError();
+    runValidation();
+  });
+}
+
 async function runValidation() {
   if (validateBtn.disabled) return;
   hideError();
   const query = queryInput.value.trim();
   if (!query) {
     showError("Escribe una noticia o titular para validar.");
+    return;
+  }
+  if (query.length > QUERY_MAX_LENGTH) {
+    showError(`La consulta es demasiado larga. Máximo ${QUERY_MAX_LENGTH} caracteres.`);
     return;
   }
   const detectedTopic = detectTopic(query);
@@ -335,8 +365,16 @@ function showToast(message, duration) {
   }, ms);
 }
 
-function showError(msg) { errorMsg.textContent = msg; errorMsg.classList.remove("hidden"); }
-function hideError() { errorMsg.textContent = ""; errorMsg.classList.add("hidden"); }
+function showError(msg) {
+  errorMsg.textContent = msg;
+  if (errorContainer) errorContainer.classList.remove("hidden");
+  else errorMsg.classList.remove("hidden");
+}
+function hideError() {
+  errorMsg.textContent = "";
+  if (errorContainer) errorContainer.classList.add("hidden");
+  else errorMsg.classList.add("hidden");
+}
 
 // ---- Analysis card builder (shared by live result and demo) ----
 
@@ -757,10 +795,24 @@ function renderHistory() {
 
   const container = histSection.querySelector(".section-inner");
   container.innerHTML = `
-    <h2 class="section-title">Historial de verificaciones</h2>
+    <div class="hist-header-row">
+      <h2 class="section-title" style="margin:0">Historial de verificaciones</h2>
+      <button class="hist-clear-btn" type="button" id="clearHistoryBtn">🗑 Limpiar historial</button>
+    </div>
     ${tabsHtml}
     <div class="hist-list">${itemsHtml}</div>
   `;
+
+  const clearBtn = container.querySelector("#clearHistoryBtn");
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      if (confirm("¿Eliminar todo el historial de verificaciones?")) {
+        localStorage.removeItem(HISTORY_KEY);
+        historyFilter = "all";
+        renderHistory();
+      }
+    });
+  }
 
   container.querySelectorAll(".hist-tab-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
