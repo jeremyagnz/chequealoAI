@@ -1,6 +1,7 @@
 (() => {
   const STORAGE_KEY = "chequealoai_theme";
   const BTN_ID = "themeToggleBtn";
+  const GA_MEASUREMENT_ID = "G-JD5ZNESVTH"; // Configura tu ID GA4 (G-XXXXXXXXXX) antes de desplegar.
 
   function applyTheme(theme) {
     if (theme === "light") {
@@ -53,8 +54,29 @@
     return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
   }
 
+  function initAnalytics() {
+    if (!GA_MEASUREMENT_ID) return;
+    if (!/^G-[A-Z0-9]+$/.test(GA_MEASUREMENT_ID)) return;
+    if (typeof window.gtag === "function") return;
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag(...args) {
+      window.dataLayer.push(args);
+    }
+
+    window.gtag = gtag;
+    gtag("js", new Date());
+    gtag("config", GA_MEASUREMENT_ID);
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID)}`;
+    document.head.appendChild(script);
+  }
+
   // Apply saved/preferred theme immediately (runs before DOM paint)
   applyTheme(getPreferredTheme());
+  initAnalytics();
 
   // Wire up the toggle button once DOM is ready
   function wireButton() {
