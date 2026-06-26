@@ -233,6 +233,17 @@ function renderResult(result, query) {
   renderHistory();
 }
 
+document.addEventListener("click", (e) => {
+  const header = e.target.closest(".summary-accordion-header");
+  if (!header) return;
+  const accordion = header.closest(".summary-accordion");
+  const body = accordion?.querySelector(".summary-accordion-body");
+  if (!accordion || !body) return;
+  const isOpen = accordion.classList.toggle("open");
+  header.setAttribute("aria-expanded", String(isOpen));
+  body.setAttribute("aria-hidden", String(!isOpen));
+});
+
 // ---- Progress animation ----
 
 let stepTimerIds = [];
