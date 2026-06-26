@@ -110,7 +110,7 @@ Reglas de coherencia (OBLIGATORIO):
   * FALSA: promedio de métricas < 35 (la mayoría <= 35, reflejando falta de respaldo o contradicción)
 - Nunca asignes métricas altas a una noticia FALSA ni métricas bajas a una CONFIABLE.
 - Para validar noticias nacionales, consulta y cruza estas fuentes confiables de RD (medios y oficiales):
-  Medios: listindiario.com, diariolibre.com, noticiassin.com, cdn.com.do, acento.com.do, elcaribe.com.do, hoy.com.do, elnuevodiario.com.do, rnn.com.do, ndigital.com.do, rcnoticias.com.do, z101digital.com, elnacional.com.do, eldia.com.do
+  Medios: listindiario.com, diariolibre.com, noticiassin.com, cdn.com.do, acento.com.do, elcaribe.com.do, hoy.com.do, elnuevodiario.com.do, rnn.com.do, ndigital.com.do, rcnoticias.com.do, z101digital.com, elnacional.com.do, eldia.com.do, periconodigital.com
   Oficiales: presidencia.gob.do, policia.gob.do, ministeriopublico.gob.do, pgr.gob.do, coe.gob.do, migracion.gob.do, jce.gob.do, bancentral.gov.do, sipen.gov.do, congreso.gob.do, mispas.gob.do, hacienda.gob.do, dgii.gov.do
 - Usa tantas de estas fuentes como sea posible para confirmar o desmentir la afirmación, priorizando coincidencia entre varios medios y fuentes oficiales cuando aplique.
 - En "fuentes" devuelve solo URLs clicables que apunten directamente a artículos, comunicados o páginas específicas claramente relacionadas con la consulta.

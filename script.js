@@ -407,6 +407,9 @@ const TRUSTED_MEDIA_SOURCES = [
   { label: "N Digital", domain: "ndigital.com.do" },
   { label: "RC Noticias", domain: "rcnoticias.com.do" },
   { label: "Z101 Digital", domain: "z101digital.com" },
+  { label: "El Nacional", domain: "elnacional.com.do" },
+  { label: "El Día", domain: "eldia.com.do" },
+  { label: "Perico No Digital", domain: "periconodigital.com" },
 ];
 
 const TRUSTED_OFFICIAL_SOURCES = [
@@ -416,6 +419,12 @@ const TRUSTED_OFFICIAL_SOURCES = [
   { label: "COE", domain: "coe.gob.do" },
   { label: "Migración RD", domain: "migracion.gob.do" },
   { label: "JCE", domain: "jce.gob.do" },
+  { label: "Banco Central RD", domain: "bancentral.gov.do" },
+  { label: "SIPEN", domain: "sipen.gov.do" },
+  { label: "Congreso Nacional", domain: "congreso.gob.do" },
+  { label: "MISPAS", domain: "mispas.gob.do" },
+  { label: "Ministerio de Hacienda", domain: "hacienda.gob.do" },
+  { label: "DGII", domain: "dgii.gov.do" },
 ];
 
 const TRUSTED_SOURCE_LOOKUP = [...TRUSTED_MEDIA_SOURCES, ...TRUSTED_OFFICIAL_SOURCES];

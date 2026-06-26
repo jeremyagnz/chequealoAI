@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página no encontrada | ChequealoAI</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/theme.js"></script>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+      <div class="navbar-inner">
+        <a href="/" class="logo" aria-label="ChequealoAI inicio">
+          <span class="brand-logo brand-logo-nav" aria-hidden="true"></span>
+          <span class="sr-only">ChequealoAI</span>
+        </a>
+        <div class="navbar-links">
+          <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
+          <a href="/fuentes.html" class="nav-link">Fuentes</a>
+          <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+        </div>
+        <a href="/" class="nav-cta-btn">Verificar noticia</a>
+        <button class="theme-toggle-btn" id="themeToggleBtn" type="button" aria-label="Cambiar tema">☀️</button>
+        <button class="nav-menu-btn" id="navMenuBtn" aria-label="Abrir menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <div class="navbar-mobile" id="navMobile">
+        <a href="/como-funciona.html" class="nav-link">Cómo funciona</a>
+        <a href="/fuentes.html" class="nav-link">Fuentes</a>
+        <a href="/verificaciones.html" class="nav-link">Verificaciones</a>
+      </div>
+    </nav>
+
+    <main style="max-width: 560px; margin: 0 auto; padding: 5rem 1.5rem; text-align: center;">
+      <div style="font-size: 5rem; margin-bottom: 1rem;" aria-hidden="true">🔍</div>
+      <h1 style="font-size: 2rem; font-weight: 800; color: var(--text); margin-bottom: 0.75rem; letter-spacing: -0.03em;">
+        Página no encontrada
+      </h1>
+      <p style="color: var(--muted-2); font-size: 1rem; line-height: 1.65; margin-bottom: 2rem;">
+        La página que buscas no existe o fue movida.<br />
+        Puedes volver al inicio y verificar cualquier noticia con IA.
+      </p>
+      <a href="/" class="nav-cta-btn" style="display: inline-block; padding: 0.75rem 2rem; font-size: 1rem; text-decoration: none; border-radius: 10px;">
+        ← Volver al inicio
+      </a>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <span class="footer-logo">
+              <span class="brand-logo brand-logo-footer" aria-hidden="true"></span>
+              <span class="sr-only">ChequealoAI</span>
+            </span>
+            <p class="footer-desc">Verificador de noticias con inteligencia artificial para República Dominicana.</p>
+          </div>
+          <nav class="footer-nav" aria-label="Navegación del pie de página">
+            <div class="footer-col">
+              <h4 class="footer-col-title">Plataforma</h4>
+              <a href="/" class="footer-link">Inicio</a>
+              <a href="/como-funciona.html" class="footer-link">Cómo funciona</a>
+              <a href="/verificaciones.html" class="footer-link">Verificaciones</a>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Recursos</h4>
+              <a href="/fuentes.html" class="footer-link">Fuentes confiables</a>
+              <a href="/#how-it-works" class="footer-link">Metodología</a>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Legal</h4>
+              <a href="/privacidad.html" class="footer-link">Privacidad</a>
+              <a href="/acerca.html" class="footer-link">Acerca de</a>
+            </div>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2025 ChequealoAI · Hecho en República Dominicana 🇩🇴</p>
+          <p class="footer-disclaimer">Los resultados son orientativos y no reemplazan la verificación periodística profesional.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const btn = document.getElementById("navMenuBtn");
+      const mob = document.getElementById("navMobile");
+      if (btn && mob) btn.addEventListener("click", () => {
+        const open = mob.classList.toggle("open");
+        btn.setAttribute("aria-expanded", String(open));
+      });
+    </script>
+  </body>
+</html>
