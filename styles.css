@@ -390,6 +390,12 @@ body.loading-active {
   width: 15px;
   height: 15px;
 }
+.btn-logo {
+  display: block;
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+}
 .search-bar button:hover:not(:disabled) {
   background: #6d28d9;
 }
