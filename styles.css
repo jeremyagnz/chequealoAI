@@ -372,6 +372,7 @@ body.loading-active {
 .search-bar button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   background: var(--accent);
   color: #fff;
